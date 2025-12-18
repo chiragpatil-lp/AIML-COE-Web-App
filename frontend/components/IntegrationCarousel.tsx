@@ -16,102 +16,102 @@ type IntegrationCarouselProps = {
 }
 const defaultTopRowApps: IntegrationApp[] = [
   {
-    name: "Integration 1",
-    logo: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logoipsum-389-Hc8XBOUI8vkVmIwWQZs33kxMF353Xj.png",
+    name: "Vertex AI",
+    logo: "/Product-Icons/Unique Icons/Vertex AI/SVG/VertexAI-512-color.svg",
   },
   {
-    name: "Integration 2",
-    logo: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logoipsum-407-eyikTTM6ccO0f4I7ZmNk5LpFI4EKOG.png",
+    name: "GKE",
+    logo: "/Product-Icons/Unique Icons/GKE/SVG/GKE-512-color.svg",
   },
   {
-    name: "Integration 3",
-    logo: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logoipsum-379-5hDaxwIw4LzjwXzWuorEXi7ESrGYl1.png",
+    name: "Cloud Run",
+    logo: "/Product-Icons/Unique Icons/Cloud Run/SVG/CloudRun-512-color-rgb.svg",
   },
   {
-    name: "Integration 4",
-    logo: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logoipsum-374-bp0RaoVnQI1JMqR9fjessWI8v33kLV.png",
+    name: "Compute Engine",
+    logo: "/Product-Icons/Unique Icons/Compute Engine/SVG/ComputeEngine-512-color-rgb.svg",
   },
   {
-    name: "Integration 5",
-    logo: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logoipsum-381-eKw7vkCp2Wq9hivZJaN1ERJdjCqR0d.png",
+    name: "BigQuery",
+    logo: "/Product-Icons/Unique Icons/BigQuery/SVG/BigQuery-512-color.svg",
   },
   {
-    name: "Integration 6",
-    logo: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logoipsum-401-F6mjMLGEZt4HAohKA889Z8Gf5fMzIw.png",
+    name: "AI Hypercomputer",
+    logo: "/Product-Icons/Unique Icons/AI Hypercomputer/SVG/AIHypercomputer-512-color.svg",
   },
   {
-    name: "Integration 7",
-    logo: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logoipsum-403-HnBAGFYWgxxMGrH2PI45UorQOsQHFo.png",
+    name: "Cloud Storage",
+    logo: "/Product-Icons/Unique Icons/Cloud Storage/SVG/Cloud_Storage-512-color.svg",
   },
   {
-    name: "Integration 1",
-    logo: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logoipsum-389-Hc8XBOUI8vkVmIwWQZs33kxMF353Xj.png",
+    name: "Vertex AI",
+    logo: "/Product-Icons/Unique Icons/Vertex AI/SVG/VertexAI-512-color.svg",
   },
   {
-    name: "Integration 2",
-    logo: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logoipsum-407-eyikTTM6ccO0f4I7ZmNk5LpFI4EKOG.png",
+    name: "GKE",
+    logo: "/Product-Icons/Unique Icons/GKE/SVG/GKE-512-color.svg",
   },
   {
-    name: "Integration 3",
-    logo: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logoipsum-379-5hDaxwIw4LzjwXzWuorEXi7ESrGYl1.png",
+    name: "Cloud Run",
+    logo: "/Product-Icons/Unique Icons/Cloud Run/SVG/CloudRun-512-color-rgb.svg",
   },
   {
-    name: "Integration 4",
-    logo: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logoipsum-374-bp0RaoVnQI1JMqR9fjessWI8v33kLV.png",
+    name: "Compute Engine",
+    logo: "/Product-Icons/Unique Icons/Compute Engine/SVG/ComputeEngine-512-color-rgb.svg",
   },
   {
-    name: "Integration 5",
-    logo: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logoipsum-381-eKw7vkCp2Wq9hivZJaN1ERJdjCqR0d.png",
+    name: "BigQuery",
+    logo: "/Product-Icons/Unique Icons/BigQuery/SVG/BigQuery-512-color.svg",
   },
 ]
 const defaultBottomRowApps: IntegrationApp[] = [
   {
-    name: "Integration 6",
-    logo: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logoipsum-401-F6mjMLGEZt4HAohKA889Z8Gf5fMzIw.png",
+    name: "Anthos",
+    logo: "/Product-Icons/Unique Icons/Anthos/SVG/Anthos-512-color.svg",
   },
   {
-    name: "Integration 7",
-    logo: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logoipsum-403-HnBAGFYWgxxMGrH2PI45UorQOsQHFo.png",
+    name: "Cloud SQL",
+    logo: "/Product-Icons/Unique Icons/Cloud SQL/SVG/CloudSQL-512-color.svg",
   },
   {
-    name: "Integration 1",
-    logo: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logoipsum-389-Hc8XBOUI8vkVmIwWQZs33kxMF353Xj.png",
+    name: "AlloyDB",
+    logo: "/Product-Icons/Unique Icons/AlloyDB/SVG/AlloyDB-512-color.svg",
   },
   {
-    name: "Integration 2",
-    logo: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logoipsum-407-eyikTTM6ccO0f4I7ZmNk5LpFI4EKOG.png",
+    name: "Looker",
+    logo: "/Product-Icons/Unique Icons/Looker/SVG/Looker-512-color.svg",
   },
   {
-    name: "Integration 3",
-    logo: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logoipsum-379-5hDaxwIw4LzjwXzWuorEXi7ESrGYl1.png",
+    name: "Apigee",
+    logo: "/Product-Icons/Unique Icons/Apigee/SVG/Apigee-512-color-rgb.svg",
   },
   {
-    name: "Integration 4",
-    logo: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logoipsum-374-bp0RaoVnQI1JMqR9fjessWI8v33kLV.png",
+    name: "Cloud Spanner",
+    logo: "/Product-Icons/Unique Icons/Cloud Spanner/SVG/CloudSpanner-512-color.svg",
   },
   {
-    name: "Integration 5",
-    logo: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logoipsum-381-eKw7vkCp2Wq9hivZJaN1ERJdjCqR0d.png",
+    name: "Anthos",
+    logo: "/Product-Icons/Unique Icons/Anthos/SVG/Anthos-512-color.svg",
   },
   {
-    name: "Integration 6",
-    logo: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logoipsum-401-F6mjMLGEZt4HAohKA889Z8Gf5fMzIw.png",
+    name: "Cloud SQL",
+    logo: "/Product-Icons/Unique Icons/Cloud SQL/SVG/CloudSQL-512-color.svg",
   },
   {
-    name: "Integration 7",
-    logo: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logoipsum-403-HnBAGFYWgxxMGrH2PI45UorQOsQHFo.png",
+    name: "AlloyDB",
+    logo: "/Product-Icons/Unique Icons/AlloyDB/SVG/AlloyDB-512-color.svg",
   },
   {
-    name: "Integration 1",
-    logo: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logoipsum-389-Hc8XBOUI8vkVmIwWQZs33kxMF353Xj.png",
+    name: "OpenAI",
+    logo: "/OpenAI-black-monoblossom.png",
   },
   {
-    name: "Integration 2",
-    logo: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logoipsum-407-eyikTTM6ccO0f4I7ZmNk5LpFI4EKOG.png",
+    name: "Gemini",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Google_Gemini_icon_2025.svg/1024px-Google_Gemini_icon_2025.svg.png?20250728014952",
   },
   {
-    name: "Integration 3",
-    logo: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logoipsum-379-5hDaxwIw4LzjwXzWuorEXi7ESrGYl1.png",
+    name: "Google Agent Development Kit",
+    logo: "https://google.github.io/adk-docs/assets/agent-development-kit.png",
   },
 ]
 
