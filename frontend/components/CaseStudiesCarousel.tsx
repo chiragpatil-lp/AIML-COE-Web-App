@@ -32,7 +32,7 @@ const caseStudies: CaseStudy[] = [
     features: ["ROI Tracking", "Leadership Dashboards", "Impact Metrics"],
     quote: "Clear visibility into AI investments enables data-driven decision making and demonstrates tangible business value.",
     attribution: "Strategic Pillar 1",
-    accentColor: "#16b364",
+    accentColor: "#f2545b",
     cards: [
       {
         type: "notion",
@@ -51,7 +51,7 @@ const caseStudies: CaseStudy[] = [
     company: "Innovation & IP Development",
     logo: (
       <svg fill="none" height="48" viewBox="0 0 48 48" width="48" xmlns="http://www.w3.org/2000/svg">
-        <rect width="48" height="48" rx="12" fill="#3b82f6"/>
+        <rect width="48" height="48" rx="12" fill="#2c3e50"/>
         <path d="M24 12L28 16L24 20L20 16L24 12Z M16 20L20 24L16 28L12 24L16 20Z M32 20L36 24L32 28L28 24L32 20Z M24 28L28 32L24 36L20 32L24 28Z" fill="white"/>
       </svg>
     ),
@@ -59,7 +59,7 @@ const caseStudies: CaseStudy[] = [
     features: ["AI Accelerators", "Frameworks", "Enterprise Assets"],
     quote: "Building a robust IP portfolio of AI assets accelerates innovation and reduces time-to-value across projects.",
     attribution: "Strategic Pillar 2",
-    accentColor: "#3b82f6",
+    accentColor: "#2c3e50",
     cards: [
       {
         type: "stripe",
@@ -78,7 +78,7 @@ const caseStudies: CaseStudy[] = [
     company: "Platforms & Engineering",
     logo: (
       <svg fill="none" height="48" viewBox="0 0 48 48" width="48" xmlns="http://www.w3.org/2000/svg">
-        <rect width="48" height="48" rx="12" fill="#8B5CF6"/>
+        <rect width="48" height="48" rx="12" fill="#f2545b"/>
         <rect x="14" y="14" width="8" height="8" rx="1" fill="white"/>
         <rect x="26" y="14" width="8" height="8" rx="1" fill="white"/>
         <rect x="14" y="26" width="8" height="8" rx="1" fill="white"/>
@@ -89,7 +89,7 @@ const caseStudies: CaseStudy[] = [
     features: ["AI Tools", "Templates", "Standards"],
     quote: "Standardized platforms and engineering practices ensure quality, reliability, and scalability of AI solutions.",
     attribution: "Strategic Pillar 3",
-    accentColor: "#8B5CF6",
+    accentColor: "#f2545b",
     cards: [
       {
         type: "meeting",
@@ -108,7 +108,7 @@ const caseStudies: CaseStudy[] = [
     company: "People & Capability",
     logo: (
       <svg fill="none" height="48" viewBox="0 0 48 48" width="48" xmlns="http://www.w3.org/2000/svg">
-        <rect width="48" height="48" rx="12" fill="#F59E0B"/>
+        <rect width="48" height="48" rx="12" fill="#2c3e50"/>
         <circle cx="24" cy="18" r="5" fill="white"/>
         <path d="M14 34C14 28 18 26 24 26C30 26 34 28 34 34" stroke="white" strokeWidth="3" strokeLinecap="round"/>
       </svg>
@@ -117,7 +117,7 @@ const caseStudies: CaseStudy[] = [
     features: ["Skills Development", "Training", "Maturity Assessment"],
     quote: "Investing in people and capability development ensures long-term AI success and organizational transformation.",
     attribution: "Strategic Pillar 4",
-    accentColor: "#F59E0B",
+    accentColor: "#2c3e50",
     cards: [
       {
         type: "figma",
@@ -136,7 +136,7 @@ const caseStudies: CaseStudy[] = [
     company: "Operational Excellence",
     logo: (
       <svg fill="none" height="48" viewBox="0 0 48 48" width="48" xmlns="http://www.w3.org/2000/svg">
-        <rect width="48" height="48" rx="12" fill="#10B981"/>
+        <rect width="48" height="48" rx="12" fill="#f2545b"/>
         <path d="M14 24L20 30L34 16" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
       </svg>
     ),
@@ -144,7 +144,7 @@ const caseStudies: CaseStudy[] = [
     features: ["Quality Assurance", "Best Practices", "Continuous Improvement"],
     quote: "Operational excellence through standardized processes and continuous improvement drives consistent AI delivery.",
     attribution: "Strategic Pillar 5",
-    accentColor: "#10B981",
+    accentColor: "#f2545b",
     cards: [
       {
         type: "notion",
@@ -163,7 +163,7 @@ const caseStudies: CaseStudy[] = [
     company: "Communication & Intelligence",
     logo: (
       <svg fill="none" height="48" viewBox="0 0 48 48" width="48" xmlns="http://www.w3.org/2000/svg">
-        <rect width="48" height="48" rx="12" fill="#EC4899"/>
+        <rect width="48" height="48" rx="12" fill="#2c3e50"/>
         <path d="M16 20C16 17 18 15 21 15H27C30 15 32 17 32 20V24C32 27 30 29 27 29H24L19 33V29C17 29 16 27 16 24V20Z" fill="white"/>
       </svg>
     ),
@@ -171,7 +171,7 @@ const caseStudies: CaseStudy[] = [
     features: ["Market Insights", "AI Trends", "COE Showcase"],
     quote: "Strategic communication and market intelligence keep the COE aligned with industry trends and showcase our impact.",
     attribution: "Strategic Pillar 6",
-    accentColor: "#EC4899",
+    accentColor: "#2c3e50",
     cards: [
       {
         type: "stripe",
@@ -639,7 +639,23 @@ export const CaseStudiesCarousel = () => {
                 }}
                 className="space-y-6"
               >
-                <div className="text-foreground/60">{currentStudy.logo}</div>
+                <div className="flex flex-col gap-2">
+                  <div className="flex items-center gap-4 mb-2">
+                    <span 
+                      className="text-6xl font-bold opacity-20"
+                      style={{ color: currentStudy.accentColor }}
+                    >
+                      {currentIndex + 1}
+                    </span>
+                    <div className="h-12 w-[2px] bg-foreground/10" />
+                    <h3 
+                      className="text-2xl font-bold tracking-tight uppercase"
+                      style={{ color: currentStudy.accentColor }}
+                    >
+                      {currentStudy.company}
+                    </h3>
+                  </div>
+                </div>
 
                 <h2
                   className="text-4xl font-bold text-foreground leading-tight tracking-tight"
