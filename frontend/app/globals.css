@@ -1,6 +1,9 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* Add daisyUI plugin */
+@plugin "daisyui";
+
 @custom-variant dark (&:is(.dark *));
 
 :root {
@@ -10,8 +13,8 @@
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.66 0.22 20);
+  --primary-foreground: oklch(1 0 0);
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
@@ -31,8 +34,8 @@
   --radius: 0.625rem;
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.66 0.22 20);
+  --sidebar-primary-foreground: oklch(1 0 0);
   --sidebar-accent: oklch(0.97 0 0);
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
@@ -46,8 +49,8 @@
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.145 0 0);
   --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.985 0 0);
-  --primary-foreground: oklch(0.205 0 0);
+  --primary: oklch(0.66 0.22 20);
+  --primary-foreground: oklch(1 0 0);
   --secondary: oklch(0.269 0 0);
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.269 0 0);
@@ -66,8 +69,8 @@
   --chart-5: oklch(0.645 0.246 16.439);
   --sidebar: oklch(0.205 0 0);
   --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.66 0.22 20);
+  --sidebar-primary-foreground: oklch(1 0 0);
   --sidebar-accent: oklch(0.269 0 0);
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(0.269 0 0);
@@ -116,6 +119,30 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+
+  /* daisyUI theme variable mappings */
+  --color-primary-content: var(--primary-foreground);
+  --color-secondary-content: var(--secondary-foreground);
+  --color-accent-content: var(--accent-foreground);
+  --color-base-100: var(--background);
+  --color-base-200: var(--secondary);
+  --color-base-300: var(--muted);
+  --color-base-content: var(--foreground);
+  --color-error: var(--destructive);
+  --color-error-content: var(--destructive-foreground);
+
+  /* Success, warning, info colors (new OKLCH values) */
+  --color-success: oklch(0.6 0.15 142);
+  --color-success-content: oklch(0.98 0 0);
+  --color-warning: oklch(0.75 0.15 85);
+  --color-warning-content: oklch(0.2 0 0);
+  --color-info: oklch(0.6 0.15 220);
+  --color-info-content: oklch(0.98 0 0);
+
+  /* Border radius mappings for daisyUI */
+  --rounded-box: 1rem;
+  --rounded-btn: 0.5rem;
+  --rounded-badge: 1.9rem;
 }
 
 @layer base {

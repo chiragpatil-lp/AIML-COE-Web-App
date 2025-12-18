@@ -1,27 +1,83 @@
 'use client'
 
 import * as React from 'react'
-import * as AccordionPrimitive from '@radix-ui/react-accordion'
 import { ChevronDownIcon } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
 
+const AccordionContext = React.createContext<{
+  type: 'single' | 'multiple'
+  openItems: Set<string>
+  toggleItem: (value: string) => void
+} | null>(null)
+
 function Accordion({
+  className,
+  type = 'single',
+  defaultValue,
   ...props
-}: React.ComponentProps<typeof AccordionPrimitive.Root>) {
-  return <AccordionPrimitive.Root data-slot="accordion" {...props} />
+}: React.ComponentProps<'div'> & {
+  type?: 'single' | 'multiple'
+  defaultValue?: string | string[]
+}) {
+  const [openItems, setOpenItems] = React.useState<Set<string>>(() => {
+    if (defaultValue) {
+      return new Set(Array.isArray(defaultValue) ? defaultValue : [defaultValue])
+    }
+    return new Set()
+  })
+
+  const toggleItem = React.useCallback((value: string) => {
+    setOpenItems(prev => {
+      const next = new Set(prev)
+      if (next.has(value)) {
+        next.delete(value)
+      } else {
+        if (type === 'single') {
+          next.clear()
+        }
+        next.add(value)
+      }
+      return next
+    })
+  }, [type])
+
+  return (
+    <AccordionContext.Provider value={{ type, openItems, toggleItem }}>
+      <div
+        data-slot="accordion"
+        className={cn('space-y-2', className)}
+        {...props}
+      />
+    </AccordionContext.Provider>
+  )
 }
 
 function AccordionItem({
   className,
+  value,
   ...props
-}: React.ComponentProps<typeof AccordionPrimitive.Item>) {
+}: React.ComponentProps<'div'> & { value: string }) {
+  const context = React.useContext(AccordionContext)
+  if (!context) throw new Error('AccordionItem must be used within Accordion')
+
+  const isOpen = context.openItems.has(value)
+
   return (
-    <AccordionPrimitive.Item
+    <div
       data-slot="accordion-item"
-      className={cn('border-b last:border-b-0', className)}
+      className={cn('collapse collapse-arrow bg-base-200 border border-base-300', className)}
       {...props}
-    />
+    >
+      <input
+        type={context.type === 'single' ? 'radio' : 'checkbox'}
+        name={context.type === 'single' ? 'accordion' : undefined}
+        checked={isOpen}
+        onChange={() => context.toggleItem(value)}
+        className="peer"
+      />
+      {props.children}
+    </div>
   )
 }
 
@@ -29,21 +85,18 @@ function AccordionTrigger({
   className,
   children,
   ...props
-}: React.ComponentProps<typeof AccordionPrimitive.Trigger>) {
+}: React.ComponentProps<'div'>) {
   return (
-    <AccordionPrimitive.Header className="flex">
-      <AccordionPrimitive.Trigger
-        data-slot="accordion-trigger"
-        className={cn(
-          'focus-visible:border-ring focus-visible:ring-ring/50 flex flex-1 items-start justify-between gap-4 rounded-md py-4 text-left text-sm font-medium transition-all outline-none hover:underline focus-visible:ring-[3px] disabled:pointer-events-none disabled:opacity-50 [&[data-state=open]>svg]:rotate-180',
-          className,
-        )}
-        {...props}
-      >
-        {children}
-        <ChevronDownIcon className="text-muted-foreground pointer-events-none size-4 shrink-0 translate-y-0.5 transition-transform duration-200" />
-      </AccordionPrimitive.Trigger>
-    </AccordionPrimitive.Header>
+    <div
+      data-slot="accordion-trigger"
+      className={cn(
+        'collapse-title text-sm font-medium flex items-center justify-between',
+        className,
+      )}
+      {...props}
+    >
+      {children}
+    </div>
   )
 }
 
@@ -51,15 +104,15 @@ function AccordionContent({
   className,
   children,
   ...props
-}: React.ComponentProps<typeof AccordionPrimitive.Content>) {
+}: React.ComponentProps<'div'>) {
   return (
-    <AccordionPrimitive.Content
+    <div
       data-slot="accordion-content"
-      className="data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down overflow-hidden text-sm"
+      className={cn('collapse-content text-sm', className)}
       {...props}
     >
-      <div className={cn('pt-0 pb-4', className)}>{children}</div>
-    </AccordionPrimitive.Content>
+      {children}
+    </div>
   )
 }
 
