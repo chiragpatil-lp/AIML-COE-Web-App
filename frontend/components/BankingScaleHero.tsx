@@ -124,7 +124,7 @@ export const BankingScaleHero = () => {
             <h2
               className="text-[40px] font-normal leading-tight tracking-tight text-[#111A4A] mb-6"
               style={{
-                fontFamily: "var(--font-figtree), Figtree",
+                fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
                 fontSize: "40px",
                 fontWeight: "400",
               }}
@@ -144,7 +144,7 @@ export const BankingScaleHero = () => {
             <p
               className="text-lg leading-6 text-[#111A4A] opacity-60 mt-0 mb-6"
               style={{
-                fontFamily: "var(--font-figtree), Figtree",
+                fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
               }}
             >
               As the intelligence layer for modern communication, we provide real-time insights and emotional detection

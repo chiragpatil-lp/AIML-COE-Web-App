@@ -94,7 +94,7 @@ export const ProductTeaserCard = (props: ProductTeaserCardProps) => {
               className="text-[56px] leading-[60px] tracking-tight text-[#202020] max-w-[520px] mb-6"
               style={{
                 fontWeight: "500",
-                fontFamily: "var(--font-figtree), Figtree",
+                fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
               }}
             >
               {headline}
@@ -103,7 +103,7 @@ export const ProductTeaserCard = (props: ProductTeaserCardProps) => {
             <p
               className="text-lg leading-7 text-[#404040] max-w-[520px] mb-6"
               style={{
-                fontFamily: "var(--font-figtree), Figtree",
+                fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
               }}
             >
               {subheadline}

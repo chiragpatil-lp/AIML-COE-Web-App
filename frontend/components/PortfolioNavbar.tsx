@@ -65,7 +65,7 @@ export const PortfolioNavbar = () => {
               <span
                 className="mt-1"
                 style={{
-                  fontFamily: "Figtree",
+                  fontFamily: "Plus Jakarta Sans",
                   fontWeight: "800",
                 }}
               >
@@ -82,7 +82,7 @@ export const PortfolioNavbar = () => {
                   onClick={() => handleLinkClick(link.href)}
                   className="text-foreground hover:text-primary px-3 py-2 text-base font-medium transition-colors duration-200 relative group"
                   style={{
-                    fontFamily: "Figtree, sans-serif",
+                    fontFamily: "Plus Jakarta Sans, sans-serif",
                     fontWeight: "400",
                   }}
                 >
@@ -103,7 +103,7 @@ export const PortfolioNavbar = () => {
             >
               <span
                 style={{
-                  fontFamily: "Figtree",
+                  fontFamily: "Plus Jakarta Sans",
                   fontWeight: "500",
                 }}
               >
@@ -152,7 +152,7 @@ export const PortfolioNavbar = () => {
                   onClick={() => handleLinkClick(link.href)}
                   className="block w-full text-left text-foreground hover:text-primary py-3 text-lg font-medium transition-colors duration-200"
                   style={{
-                    fontFamily: "Figtree, sans-serif",
+                    fontFamily: "Plus Jakarta Sans, sans-serif",
                     fontWeight: "400",
                   }}
                 >

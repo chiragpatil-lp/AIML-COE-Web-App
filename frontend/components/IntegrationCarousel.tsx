@@ -174,7 +174,7 @@ export const IntegrationCarousel = ({
             <h2
               className="text-[40px] leading-tight font-normal text-[#222222] text-center tracking-tight mb-0"
               style={{
-                fontFamily: "var(--font-figtree), Figtree",
+                fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
                 fontWeight: "400",
                 fontSize: "40px",
               }}
@@ -184,7 +184,7 @@ export const IntegrationCarousel = ({
             <p
               className="text-lg leading-7 text-[#666666] text-center max-w-[600px] mt-2"
               style={{
-                fontFamily: "var(--font-figtree), Figtree",
+                fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
               }}
             >
               {subtitle}

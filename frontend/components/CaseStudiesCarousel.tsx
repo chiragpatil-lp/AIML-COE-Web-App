@@ -600,7 +600,7 @@ export const CaseStudiesCarousel = () => {
             className="text-[40px] leading-tight font-normal text-foreground mb-6 tracking-tight"
             style={{
               fontWeight: "400",
-              fontFamily: "var(--font-figtree), Figtree",
+              fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
               fontSize: "40px",
             }}
           >
@@ -609,7 +609,7 @@ export const CaseStudiesCarousel = () => {
           <p
             className="text-lg leading-7 text-muted-foreground max-w-2xl mx-auto"
             style={{
-              fontFamily: "var(--font-figtree), Figtree",
+              fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
             }}
           >
             Our Centre of Excellence is architected around six strategic pillars that enable innovation, scale, quality, and measurable business impact across the enterprise.
@@ -644,7 +644,7 @@ export const CaseStudiesCarousel = () => {
                 <h2
                   className="text-4xl font-bold text-foreground leading-tight tracking-tight"
                   style={{
-                    fontFamily: "var(--font-figtree), Figtree",
+                    fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
                     fontWeight: "400",
                     fontSize: "32px",
                   }}
@@ -662,7 +662,7 @@ export const CaseStudiesCarousel = () => {
                   <p
                     className="text-lg leading-7 text-foreground/80 italic mb-3"
                     style={{
-                      fontFamily: "var(--font-figtree), Figtree",
+                      fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
                     }}
                   >
                     "{currentStudy.quote}"
@@ -670,7 +670,7 @@ export const CaseStudiesCarousel = () => {
                   <footer
                     className="text-sm text-muted-foreground"
                     style={{
-                      fontFamily: "var(--font-inter), Inter",
+                      fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
                     }}
                   >
                     {currentStudy.attribution}

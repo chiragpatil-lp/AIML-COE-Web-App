@@ -1,13 +1,13 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Figtree, Inter, Geist_Mono } from "next/font/google"
+import { Plus_Jakarta_Sans, Inter, Geist_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
 
-const figtree = Figtree({
+const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
-  variable: "--font-figtree",
-  weight: ["400", "500", "600"],
+  variable: "--font-plus-jakarta-sans",
+  weight: ["400", "500", "600", "700"],
 })
 
 const inter = Inter({
@@ -37,7 +37,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" data-theme="light">
-      <body className={`${inter.variable} ${figtree.variable} ${geistMono.variable} font-sans antialiased`}>
+      <body className={`${inter.variable} ${plusJakartaSans.variable} ${geistMono.variable} font-sans antialiased`}>
         {children}
         <Analytics />
       </body>
