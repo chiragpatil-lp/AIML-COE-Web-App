@@ -107,7 +107,7 @@ export const PortfolioNavbar = () => {
                   fontWeight: "500",
                 }}
               >
-                Start Free Trial
+                Get Started
               </span>
             </button>
           </div>

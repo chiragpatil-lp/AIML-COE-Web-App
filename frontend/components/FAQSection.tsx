@@ -13,19 +13,24 @@ type FAQSectionProps = {
 }
 const defaultFAQs: FAQItem[] = [
   {
-    question: "What is CoE and how does it work?",
+    question: "What is an AI Center of Excellence (CoE)?",
     answer:
-      "CoE is an AI-powered intelligence layer that connects all your communication tools—calls, chats, and meetings—into a unified system. It analyzes conversations in real-time to provide insights on sentiment, tone, team alignment, and collaboration patterns. Simply integrate CoE with your existing tools like Slack, Zoom, or Microsoft Teams, and start gaining actionable insights immediately.",
+      "An AI Center of Excellence (CoE) is a specialized team within an organization dedicated to the strategic implementation and governance of Artificial Intelligence. It serves as a central hub for sharing best practices, driving innovation, and ensuring that AI initiatives align with broader business goals while maintaining security and compliance standards.",
   },
   {
-    question: "How does CoE use my data to build a custom AI chat?",
+    question: "How does the CoE support AI adoption across different departments?",
     answer:
-      "CoE processes your communication data using advanced natural language processing and machine learning models. All data is encrypted end-to-end and processed in compliance with enterprise-grade security standards. Your data is never shared with third parties, and you maintain complete control over what gets analyzed. The AI learns from patterns in your team's communication to provide personalized insights specific to your organization.",
+      "The CoE acts as a bridge between technical teams and business units. We provide standardized tools, shared infrastructure, and expert guidance to help departments—from HR to Finance—identify high-impact AI use cases, develop prototypes, and scale successful solutions responsibly across the enterprise.",
   },
   {
-    question: "How do I get started with CoE and what are the pricing options?",
+    question: "What governance and security measures does the AI CoE implement?",
     answer:
-      "Getting started is simple: sign up for a free trial, connect your communication tools, and start analyzing within minutes. We offer flexible pricing tiers: Starter (free for small teams), Professional ($29/user/month), and Enterprise (custom pricing with dedicated support). All plans include core features like sentiment analysis and real-time insights. Contact our sales team for volume discounts and custom enterprise solutions.",
+      "Our CoE establishes robust governance frameworks that include ethical AI guidelines, data privacy protocols, and rigorous security assessments for all AI models. We ensure that every AI implementation complies with industry regulations and organizational security policies, protecting both sensitive data and brand reputation.",
+  },
+  {
+    question: "How can I collaborate with the AI CoE on a new project?",
+    answer:
+      "Getting started is easy. You can submit a project proposal through our internal portal. Our team will then work with you to evaluate the feasibility, potential ROI, and resource requirements. Once approved, we provide the technical expertise and project management support needed to bring your AI vision to life.",
   },
 ]
 export const FAQSection = ({ title = "Frequently asked questions", faqs = defaultFAQs }: FAQSectionProps) => {
