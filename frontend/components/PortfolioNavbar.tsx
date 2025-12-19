@@ -66,10 +66,10 @@ export const PortfolioNavbar = () => {
                 className="mt-1"
                 style={{
                   fontFamily: "Plus Jakarta Sans",
-                  fontWeight: "800",
+                  fontWeight: "600",
                 }}
               >
-                CoE
+                AI Center of Excellence
               </span>
             </button>
           </div>

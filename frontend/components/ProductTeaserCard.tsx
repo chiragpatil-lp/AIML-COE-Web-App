@@ -25,9 +25,9 @@ export const ProductTeaserCard = (props: ProductTeaserCardProps) => {
     description = "Trusted by fast-growing teams and enterprises, CoE powers smarter communication across 1,000+ organizations — with enterprise-grade security, multilingual analysis, and instant emotional detection.",
     videoSrc = "https://cdn.sanity.io/files/1t8iva7t/production/a2cbbed7c998cf93e7ecb6dae75bab42b13139c2.mp4",
     posterSrc = "/images/design-mode/9ad78a5534a46e77bafe116ce1c38172c60dc21a-1069x1068.png",
-    primaryButtonText = "Start analyzing",
+    primaryButtonText = "Get Started",
     primaryButtonHref = "",
-    secondaryButtonText = "View API Docs",
+    secondaryButtonText = "View Docs",
     secondaryButtonHref = "",
   } = props
 
