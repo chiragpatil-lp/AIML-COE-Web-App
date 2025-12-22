@@ -48,7 +48,8 @@ jobs:
           prompt: ${{ github.event_name == 'pull_request' && '/review' || '' }}
           use_vertex: "true"
           show_full_output: "true"
-          claude_args: '--model claude-sonnet-4-5 --max-turns 10 --permission-mode auto-approve'
+          claude_args: '--model claude-sonnet-4-5 --max-turns 10'
+          settings: '{"permissionMode": "auto-approve"}'
         env:
           ANTHROPIC_VERTEX_PROJECT_ID: ${{ steps.auth.outputs.project_id }}
           CLOUD_ML_REGION: us-east5
