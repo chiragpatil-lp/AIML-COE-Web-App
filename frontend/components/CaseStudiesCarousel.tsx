@@ -698,6 +698,18 @@ export const CaseStudiesCarousel = () => {
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const autoPlayRef = useRef<NodeJS.Timeout | null>(null);
   const currentStudy = caseStudies[currentIndex];
+
+  const nextSlide = () => {
+    setDirection(1);
+    setCurrentIndex((prev) => (prev + 1) % caseStudies.length);
+  };
+  const prevSlide = () => {
+    setDirection(-1);
+    setCurrentIndex(
+      (prev) => (prev - 1 + caseStudies.length) % caseStudies.length,
+    );
+  };
+
   const startAutoPlay = () => {
     if (autoPlayRef.current) clearInterval(autoPlayRef.current);
     autoPlayRef.current = setInterval(() => {
@@ -718,16 +730,6 @@ export const CaseStudiesCarousel = () => {
     }
     return () => stopAutoPlay();
   }, [isAutoPlaying, currentIndex]);
-  const nextSlide = () => {
-    setDirection(1);
-    setCurrentIndex((prev) => (prev + 1) % caseStudies.length);
-  };
-  const prevSlide = () => {
-    setDirection(-1);
-    setCurrentIndex(
-      (prev) => (prev - 1 + caseStudies.length) % caseStudies.length,
-    );
-  };
   const goToSlide = (index: number) => {
     setDirection(index > currentIndex ? 1 : -1);
     setCurrentIndex(index);
@@ -844,7 +846,7 @@ export const CaseStudiesCarousel = () => {
                         "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
                     }}
                   >
-                    "{currentStudy.quote}"
+                    &ldquo;{currentStudy.quote}&rdquo;
                   </p>
                   <footer
                     className="text-sm text-muted-foreground"

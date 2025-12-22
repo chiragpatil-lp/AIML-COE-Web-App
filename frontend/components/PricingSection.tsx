@@ -82,7 +82,7 @@ export function PricingSection() {
             Choose Your Plan
           </h2>
           <p className="font-figtree text-lg text-muted-foreground max-w-2xl mx-auto">
-            Get started with CoE's communication intelligence platform. All
+            Get started with CoE&apos;s communication intelligence platform. All
             plans include API access and team collaboration.
           </p>
         </div>
