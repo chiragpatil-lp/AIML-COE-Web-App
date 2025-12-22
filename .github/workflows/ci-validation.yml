@@ -1,0 +1,29 @@
+name: CI Validation
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker Image (validation only)
+        run: |
+          cd frontend
+          docker build -t aiml-coe-web-app:pr-${{ github.event.pull_request.number }} .
+
+      - name: Validate build success
+        run: echo "✅ Docker image built successfully - PR is ready for review"
