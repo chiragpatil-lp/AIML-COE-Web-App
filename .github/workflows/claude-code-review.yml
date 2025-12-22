@@ -47,6 +47,7 @@ jobs:
           github_token: ${{ steps.app-token.outputs.token }}
           prompt: ${{ github.event_name == 'pull_request' && '/review' || '' }}
           use_vertex: "true"
+          show_full_output: "true"
           claude_args: '--model claude-sonnet-4@20250514 --max-turns 10'
         env:
           ANTHROPIC_VERTEX_PROJECT_ID: ${{ steps.auth.outputs.project_id }}
