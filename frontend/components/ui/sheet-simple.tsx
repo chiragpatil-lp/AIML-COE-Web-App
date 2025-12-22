@@ -1,31 +1,34 @@
-'use client'
+"use client";
 
-import * as React from 'react'
-import { XIcon } from 'lucide-react'
+import * as React from "react";
+import { XIcon } from "lucide-react";
 
-import { cn } from '@/lib/utils'
+import { cn } from "@/lib/utils";
 
 const SheetContext = React.createContext<{
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  side: 'top' | 'right' | 'bottom' | 'left'
-} | null>(null)
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  side: "top" | "right" | "bottom" | "left";
+} | null>(null);
 
 function Sheet({
   open,
   onOpenChange,
   children,
 }: {
-  open?: boolean
-  onOpenChange?: (open: boolean) => void
-  children: React.ReactNode
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  children: React.ReactNode;
 }) {
-  const [uncontrolledOpen, setUncontrolledOpen] = React.useState(false)
-  const isOpen = open !== undefined ? open : uncontrolledOpen
-  const setOpen = onOpenChange !== undefined ? onOpenChange : setUncontrolledOpen
+  const [uncontrolledOpen, setUncontrolledOpen] = React.useState(false);
+  const isOpen = open !== undefined ? open : uncontrolledOpen;
+  const setOpen =
+    onOpenChange !== undefined ? onOpenChange : setUncontrolledOpen;
 
   return (
-    <SheetContext.Provider value={{ open: isOpen, onOpenChange: setOpen, side: 'right' }}>
+    <SheetContext.Provider
+      value={{ open: isOpen, onOpenChange: setOpen, side: "right" }}
+    >
       <div className="drawer drawer-end">
         <input
           type="checkbox"
@@ -36,32 +39,32 @@ function Sheet({
         {children}
       </div>
     </SheetContext.Provider>
-  )
+  );
 }
 
 function SheetTrigger({
   className,
   children,
   ...props
-}: React.ComponentProps<'label'>) {
+}: React.ComponentProps<"label">) {
   return (
     <label
       htmlFor="my-drawer"
       data-slot="sheet-trigger"
-      className={cn('drawer-button', className)}
+      className={cn("drawer-button", className)}
       {...props}
     >
       {children}
     </label>
-  )
+  );
 }
 
 function SheetClose({
   className,
   children,
   ...props
-}: React.ComponentProps<'button'>) {
-  const context = React.useContext(SheetContext)
+}: React.ComponentProps<"button">) {
+  const context = React.useContext(SheetContext);
 
   return (
     <button
@@ -73,26 +76,26 @@ function SheetClose({
     >
       {children}
     </button>
-  )
+  );
 }
 
 function SheetPortal({ children }: { children: React.ReactNode }) {
-  return <>{children}</>
+  return <>{children}</>;
 }
 
-function SheetOverlay({ className, ...props }: React.ComponentProps<'div'>) {
-  return <div data-slot="sheet-overlay" className={className} {...props} />
+function SheetOverlay({ className, ...props }: React.ComponentProps<"div">) {
+  return <div data-slot="sheet-overlay" className={className} {...props} />;
 }
 
 function SheetContent({
   className,
   children,
-  side = 'right',
+  side = "right",
   ...props
-}: React.ComponentProps<'div'> & {
-  side?: 'top' | 'right' | 'bottom' | 'left'
+}: React.ComponentProps<"div"> & {
+  side?: "top" | "right" | "bottom" | "left";
 }) {
-  const context = React.useContext(SheetContext)
+  const context = React.useContext(SheetContext);
 
   return (
     <div className="drawer-side">
@@ -103,7 +106,7 @@ function SheetContent({
       />
       <div
         data-slot="sheet-content"
-        className={cn('menu bg-base-100 min-h-full w-80 p-4', className)}
+        className={cn("menu bg-base-100 min-h-full w-80 p-4", className)}
         {...props}
       >
         {children}
@@ -117,47 +120,47 @@ function SheetContent({
         </button>
       </div>
     </div>
-  )
+  );
 }
 
-function SheetHeader({ className, ...props }: React.ComponentProps<'div'>) {
+function SheetHeader({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="sheet-header"
-      className={cn('flex flex-col gap-2 mb-4', className)}
+      className={cn("flex flex-col gap-2 mb-4", className)}
       {...props}
     />
-  )
+  );
 }
 
-function SheetFooter({ className, ...props }: React.ComponentProps<'div'>) {
+function SheetFooter({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="sheet-footer"
-      className={cn('flex flex-col gap-2 mt-auto', className)}
+      className={cn("flex flex-col gap-2 mt-auto", className)}
       {...props}
     />
-  )
+  );
 }
 
-function SheetTitle({ className, ...props }: React.ComponentProps<'h2'>) {
+function SheetTitle({ className, ...props }: React.ComponentProps<"h2">) {
   return (
     <h2
       data-slot="sheet-title"
-      className={cn('text-lg font-bold', className)}
+      className={cn("text-lg font-bold", className)}
       {...props}
     />
-  )
+  );
 }
 
-function SheetDescription({ className, ...props }: React.ComponentProps<'p'>) {
+function SheetDescription({ className, ...props }: React.ComponentProps<"p">) {
   return (
     <p
       data-slot="sheet-description"
-      className={cn('text-sm opacity-70', className)}
+      className={cn("text-sm opacity-70", className)}
       {...props}
     />
-  )
+  );
 }
 
 export {
@@ -171,4 +174,4 @@ export {
   SheetPortal,
   SheetTitle,
   SheetTrigger,
-}
+};

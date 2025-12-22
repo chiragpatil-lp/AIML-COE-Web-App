@@ -5,6 +5,7 @@ This directory contains Terraform configuration to set up Google Cloud Platform 
 ## ✅ Status: INFRASTRUCTURE DEPLOYED
 
 All infrastructure has been successfully created and is operational:
+
 - **Service Account**: `github-ci-cd@search-ahmed.iam.gserviceaccount.com`
 - **Workload Identity Pool**: `github-pool`
 - **Workload Identity Provider**: `github-provider`
@@ -18,15 +19,19 @@ The documentation below is for reference and future modifications.
 This Terraform configuration automatically creates:
 
 1. **Service Account** (`github-ci-cd@search-ahmed.iam.gserviceaccount.com`)
+
    - With roles: Cloud Run Admin, Cloud Build Builder, Service Account User, Storage Admin
 
 2. **Workload Identity Pool** (`github-pool`)
+
    - For GitHub Actions OIDC authentication
 
 3. **Workload Identity Provider** (`github-provider`)
+
    - Connected to GitHub's OIDC issuer
 
 4. **IAM Bindings**
+
    - Allows your GitHub repository to impersonate the service account
    - Scoped to: `chiragpatil-lp/AIML-COE-Web-App`
 
@@ -41,11 +46,13 @@ This Terraform configuration automatically creates:
 Before running Terraform, ensure you have:
 
 1. **Terraform installed** (>= 1.0)
+
    ```bash
    terraform version
    ```
 
 2. **Google Cloud SDK (gcloud) installed and authenticated**
+
    ```bash
    gcloud auth application-default login
    ```
@@ -79,6 +86,7 @@ terraform plan
 ```
 
 Review the output carefully. You should see:
+
 - 1 service account to be created
 - 1 workload identity pool to be created
 - 1 workload identity provider to be created
@@ -129,12 +137,12 @@ GitHub secrets have been configured:
 
 2. **Configured Secrets**:
 
-| Secret Name | Value | Status |
-|------------|-------|--------|
-| `GCP_WORKLOAD_IDENTITY_PROVIDER` | `projects/36231825761/locations/global/workloadIdentityPools/github-pool/providers/github-provider` | ✅ |
-| `GCP_SERVICE_ACCOUNT` | `github-ci-cd@search-ahmed.iam.gserviceaccount.com` | ✅ |
-| `GCP_PROJECT_ID` | `search-ahmed` | ✅ |
-| `DOCKER_IMAGE_NAME` | `aiml-coe-web-app` | ✅ |
+| Secret Name                      | Value                                                                                               | Status |
+| -------------------------------- | --------------------------------------------------------------------------------------------------- | ------ |
+| `GCP_WORKLOAD_IDENTITY_PROVIDER` | `projects/36231825761/locations/global/workloadIdentityPools/github-pool/providers/github-provider` | ✅     |
+| `GCP_SERVICE_ACCOUNT`            | `github-ci-cd@search-ahmed.iam.gserviceaccount.com`                                                 | ✅     |
+| `GCP_PROJECT_ID`                 | `search-ahmed`                                                                                      | ✅     |
+| `DOCKER_IMAGE_NAME`              | `aiml-coe-web-app`                                                                                  | ✅     |
 
 ## Customization
 
@@ -224,6 +232,7 @@ Then run `terraform apply` again.
 ### Error: "Permission denied"
 
 You need IAM admin permissions. Ask your GCP admin to:
+
 1. Grant you the required roles (listed in Prerequisites)
 2. Or run Terraform for you
 
@@ -254,6 +263,7 @@ Type `yes` when prompted.
 The Terraform state file (`terraform.tfstate`) contains sensitive information.
 
 **Important**:
+
 - ✅ The `.tfstate` file is already in `.gitignore`
 - ❌ **NEVER** commit `terraform.tfstate` to Git
 - ✅ Consider using [remote state](https://developer.hashicorp.com/terraform/language/state/remote) for team collaboration
@@ -290,6 +300,7 @@ Full list of resources:
 ## Support
 
 For issues or questions:
+
 - Review the [main GCP setup documentation](../docs/GCP-SETUP.md)
 - Check Terraform logs for detailed error messages
 - Consult [Google Cloud Workload Identity Federation docs](https://cloud.google.com/iam/docs/workload-identity-federation)

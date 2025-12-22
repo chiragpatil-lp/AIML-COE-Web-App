@@ -79,10 +79,14 @@
 
 @theme inline {
   /* Updated font variables - body text now uses Plus Jakarta Sans */
-  --font-sans: var(--font-plus-jakarta-sans), "Plus Jakarta Sans", system-ui, sans-serif;
-  --font-plus-jakarta-sans: var(--font-plus-jakarta-sans), "Plus Jakarta Sans", system-ui, sans-serif;
+  --font-sans:
+    var(--font-plus-jakarta-sans), "Plus Jakarta Sans", system-ui, sans-serif;
+  --font-plus-jakarta-sans:
+    var(--font-plus-jakarta-sans), "Plus Jakarta Sans", system-ui, sans-serif;
   /* Update font-mono to use Geist Mono variable */
-  --font-mono: var(--font-geist-mono), "Geist Mono", "Geist Mono Fallback", ui-monospace, monospace;
+  --font-mono:
+    var(--font-geist-mono), "Geist Mono", "Geist Mono Fallback", ui-monospace,
+    monospace;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -152,7 +156,8 @@
   body {
     /* Set body text to Plus Jakarta Sans 18px */
     @apply bg-background text-foreground text-lg;
-    font-family: var(--font-plus-jakarta-sans), "Plus Jakarta Sans", system-ui, sans-serif;
+    font-family:
+      var(--font-plus-jakarta-sans), "Plus Jakarta Sans", system-ui, sans-serif;
     font-optical-sizing: auto;
   }
 }

@@ -1,23 +1,16 @@
-import * as React from 'react'
+import * as React from "react";
 
-import { cn } from '@/lib/utils'
+import { cn } from "@/lib/utils";
 
-function Checkbox({
-  className,
-  ...props
-}: React.ComponentProps<'input'>) {
+function Checkbox({ className, ...props }: React.ComponentProps<"input">) {
   return (
     <input
       type="checkbox"
       data-slot="checkbox"
-      className={cn(
-        'checkbox',
-        'aria-invalid:checkbox-error',
-        className,
-      )}
+      className={cn("checkbox", "aria-invalid:checkbox-error", className)}
       {...props}
     />
-  )
+  );
 }
 
-export { Checkbox }
+export { Checkbox };

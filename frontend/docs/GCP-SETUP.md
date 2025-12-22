@@ -67,6 +67,7 @@ The automated CI/CD pipeline is fully configured and operational. This guide doc
 ### For Reference Only
 
 The sections below document the setup process that has already been completed. You can use them:
+
 - To understand how the infrastructure was set up
 - To recreate the setup in a different environment
 - For troubleshooting or auditing purposes
@@ -80,6 +81,7 @@ The sections below document the setup process that has already been completed. Y
 Before running Terraform, ensure you have:
 
 1. **Terraform installed** (version >= 1.0)
+
    ```bash
    terraform version
    ```
@@ -87,6 +89,7 @@ Before running Terraform, ensure you have:
    If not installed, [download here](https://developer.hashicorp.com/terraform/downloads)
 
 2. **Google Cloud SDK authenticated**
+
    ```bash
    gcloud auth application-default login
    ```
@@ -109,6 +112,7 @@ All Terraform configuration files are in the `terraform/` directory.
 ### Step 2: Review the Configuration
 
 The Terraform configuration will create:
+
 - ✅ Service Account: `github-ci-cd@search-ahmed.iam.gserviceaccount.com`
 - ✅ Workload Identity Pool: `github-pool`
 - ✅ Workload Identity Provider: `github-provider`
@@ -116,6 +120,7 @@ The Terraform configuration will create:
 - ✅ API Enablements (IAM Credentials, Cloud Run, Cloud Build, Container Registry)
 
 **Review the files:**
+
 - `variables.tf` - Input variables (project ID, GitHub repo, etc.)
 - `main.tf` - Main infrastructure configuration
 - `outputs.tf` - Outputs for GitHub Secrets
@@ -145,6 +150,7 @@ terraform apply
 Type `yes` when prompted.
 
 This takes 2-3 minutes. Terraform will:
+
 1. Enable required GCP APIs
 2. Create the service account with proper roles
 3. Set up Workload Identity Federation
@@ -168,6 +174,7 @@ github_secrets_summary = {
 **Save these values** - you'll need them for GitHub Secrets in the next step.
 
 You can retrieve outputs anytime:
+
 ```bash
 terraform output
 terraform output -json
@@ -178,6 +185,7 @@ terraform output -json
 GitHub secrets have been configured with the following values:
 
 1. GitHub repository secrets location:
+
    ```
    https://github.com/chiragpatil-lp/AIML-COE-Web-App/settings/secrets/actions
    ```
@@ -185,15 +193,19 @@ GitHub secrets have been configured with the following values:
 2. **Configured Secrets**:
 
    **Secret 1: GCP_WORKLOAD_IDENTITY_PROVIDER** ✅
+
    - Value: `projects/36231825761/locations/global/workloadIdentityPools/github-pool/providers/github-provider`
 
    **Secret 2: GCP_SERVICE_ACCOUNT** ✅
+
    - Value: `github-ci-cd@search-ahmed.iam.gserviceaccount.com`
 
    **Secret 3: GCP_PROJECT_ID** ✅
+
    - Value: `search-ahmed`
 
    **Secret 4: DOCKER_IMAGE_NAME** ✅
+
    - Value: `aiml-coe-web-app`
 
 All secrets are properly configured and working.
@@ -203,6 +215,7 @@ All secrets are properly configured and working.
 The setup has been tested and verified working:
 
 **Test Results**:
+
 - ✅ GitHub Actions workflow triggered successfully
 - ✅ Docker image built with Node.js 20
 - ✅ Image pushed to Google Container Registry
@@ -216,16 +229,19 @@ View workflow runs: https://github.com/chiragpatil-lp/AIML-COE-Web-App/actions
 ### Terraform Management
 
 **View current state:**
+
 ```bash
 terraform show
 ```
 
 **Destroy all resources** (if needed):
+
 ```bash
 terraform destroy
 ```
 
 **Update configuration:**
+
 1. Edit `.tf` files
 2. Run `terraform plan` to preview
 3. Run `terraform apply` to update
@@ -266,15 +282,16 @@ A Service Account allows GitHub Actions to authenticate with Google Cloud and de
 
    Click **"Select a role"** and add ALL of the following roles:
 
-   | Role Name | What it does |
-   |-----------|-------------|
-   | **Cloud Run Admin** | Deploy and manage Cloud Run services |
-   | **Cloud Build Service Account** | Build Docker images |
-   | **Cloud Run Service Agent** | Manage Cloud Run resources |
-   | **Service Account User** | Act as service accounts |
-   | **Storage Object Admin** | Push Docker images to Container Registry |
+   | Role Name                       | What it does                             |
+   | ------------------------------- | ---------------------------------------- |
+   | **Cloud Run Admin**             | Deploy and manage Cloud Run services     |
+   | **Cloud Build Service Account** | Build Docker images                      |
+   | **Cloud Run Service Agent**     | Manage Cloud Run resources               |
+   | **Service Account User**        | Act as service accounts                  |
+   | **Storage Object Admin**        | Push Docker images to Container Registry |
 
    **How to add multiple roles:**
+
    - Click "+ ADD ANOTHER ROLE" after adding each role
    - Search for the role name in the dropdown
    - Select it and repeat for all 5 roles
@@ -301,6 +318,7 @@ Workload Identity Federation (WIF) allows GitHub Actions to authenticate with GC
 2. Click **"ENABLE"** if not already enabled
 
 **Direct command** (if you have gcloud CLI access):
+
 ```bash
 gcloud services enable iamcredentials.googleapis.com --project=search-ahmed
 ```
@@ -314,16 +332,19 @@ gcloud services enable iamcredentials.googleapis.com --project=search-ahmed
 2. Click **"CREATE POOL"**
 
 3. **Pool details**:
+
    - **Name**: `github-pool`
    - **Pool ID**: `github-pool` (auto-filled)
    - **Description**: `Identity pool for GitHub Actions`
    - Click **"CONTINUE"**
 
 4. **Add a provider to pool**:
+
    - **Select provider**: Choose **"OpenID Connect (OIDC)"**
    - Click **"CONTINUE"**
 
 5. **Configure provider**:
+
    - **Provider name**: `github-provider`
    - **Provider ID**: `github-provider` (auto-filled)
    - **Issuer (URL)**: `https://token.actions.githubusercontent.com`
@@ -331,13 +352,14 @@ gcloud services enable iamcredentials.googleapis.com --project=search-ahmed
    - Click **"CONTINUE"**
 
 6. **Configure provider attributes**:
+
    - **Attribute mapping**: Add these mappings:
 
-   | Google attribute | OIDC token attribute |
-   |-----------------|---------------------|
-   | `google.subject` | `assertion.sub` |
-   | `attribute.actor` | `assertion.actor` |
-   | `attribute.repository` | `assertion.repository` |
+   | Google attribute             | OIDC token attribute         |
+   | ---------------------------- | ---------------------------- |
+   | `google.subject`             | `assertion.sub`              |
+   | `attribute.actor`            | `assertion.actor`            |
+   | `attribute.repository`       | `assertion.repository`       |
    | `attribute.repository_owner` | `assertion.repository_owner` |
 
    - Click **"SAVE"**
@@ -357,6 +379,7 @@ Now you need to allow GitHub Actions to use the service account via the Workload
 4. Click **"GRANT ACCESS"**
 
 5. **Add principals**:
+
    - **New principals**: Enter the following (replace `YOUR-GITHUB-USERNAME` and `YOUR-REPO-NAME`):
 
    ```
@@ -364,6 +387,7 @@ Now you need to allow GitHub Actions to use the service account via the Workload
    ```
 
    **How to find PROJECT-NUMBER**:
+
    - Go to [GCP Dashboard](https://console.cloud.google.com/home/dashboard?project=search-ahmed)
    - Look for "Project number" under the project name
    - Or run: `gcloud projects describe search-ahmed --format="value(projectNumber)"`
@@ -377,16 +401,19 @@ Now you need to allow GitHub Actions to use the service account via the Workload
 You'll need this for GitHub Secrets in the next step.
 
 **Format**:
+
 ```
 projects/PROJECT-NUMBER/locations/global/workloadIdentityPools/github-pool/providers/github-provider
 ```
 
 **Example**:
+
 ```
 projects/123456789012/locations/global/workloadIdentityPools/github-pool/providers/github-provider
 ```
 
 **How to get it**:
+
 1. Go to [Workload Identity Pools](https://console.cloud.google.com/iam-admin/workload-identity-pools?project=search-ahmed)
 2. Click on `github-pool`
 3. Click on `github-provider`
@@ -394,6 +421,7 @@ projects/123456789012/locations/global/workloadIdentityPools/github-pool/provide
 5. Copy the full resource path
 
 **Or use this command** (if you have gcloud access):
+
 ```bash
 gcloud iam workload-identity-pools providers describe github-provider \
   --location=global \
@@ -429,6 +457,7 @@ You need to create **4 secrets**. For each one:
 #### Secret 1: GCP_WORKLOAD_IDENTITY_PROVIDER
 
 **Name:**
+
 ```
 GCP_WORKLOAD_IDENTITY_PROVIDER
 ```
@@ -444,6 +473,7 @@ projects/PROJECT-NUMBER/locations/global/workloadIdentityPools/github-pool/provi
 ⚠️ **Important**: Replace `PROJECT-NUMBER` with your actual GCP project number
 
 **Example**:
+
 ```
 projects/123456789012/locations/global/workloadIdentityPools/github-pool/providers/github-provider
 ```
@@ -453,11 +483,13 @@ projects/123456789012/locations/global/workloadIdentityPools/github-pool/provide
 #### Secret 2: GCP_SERVICE_ACCOUNT
 
 **Name:**
+
 ```
 GCP_SERVICE_ACCOUNT
 ```
 
 **Secret Value:**
+
 ```
 github-ci-cd@search-ahmed.iam.gserviceaccount.com
 ```
@@ -467,11 +499,13 @@ github-ci-cd@search-ahmed.iam.gserviceaccount.com
 #### Secret 3: GCP_PROJECT_ID
 
 **Name:**
+
 ```
 GCP_PROJECT_ID
 ```
 
 **Secret Value:**
+
 ```
 search-ahmed
 ```
@@ -481,11 +515,13 @@ search-ahmed
 #### Secret 4: DOCKER_IMAGE_NAME
 
 **Name:**
+
 ```
 DOCKER_IMAGE_NAME
 ```
 
 **Secret Value:**
+
 ```
 aiml-coe-web-app
 ```
@@ -539,11 +575,13 @@ If everything is set up correctly:
 ### 4.4 Access Your Application
 
 **Option 1: From GitHub Actions logs**
+
 - In the workflow run, expand the "Deploy to Cloud Run" step
 - Look for a URL like: `https://aiml-coe-web-app-xxxxx-uc.a.run.app`
 - The actual project ID might be masked as `***` - replace with `search-ahmed`
 
 **Option 2: From Cloud Console**
+
 1. Go to [Cloud Run Console](https://console.cloud.google.com/run?project=search-ahmed)
 2. Click on the `aiml-coe-web-app` service
 3. The URL will be displayed at the top
@@ -557,6 +595,7 @@ If everything is set up correctly:
 **Cause**: Service Account doesn't have proper roles
 
 **Solution**:
+
 1. Go to Service Accounts
 2. Click on `github-ci-cd`
 3. Click "PERMISSIONS" tab
@@ -568,6 +607,7 @@ If everything is set up correctly:
 **Cause**: Workload Identity configuration is incorrect
 
 **Solution**:
+
 1. Verify `GCP_WORKLOAD_IDENTITY_PROVIDER` secret matches the provider resource name
 2. Verify `GCP_SERVICE_ACCOUNT` secret is `github-ci-cd@search-ahmed.iam.gserviceaccount.com`
 3. Ensure the Workload Identity binding includes the correct repository path
@@ -578,6 +618,7 @@ If everything is set up correctly:
 **Cause**: Workflow file not in correct location
 
 **Solution**:
+
 1. Verify file exists at: `.github/workflows/cloud-run-deploy.yml`
 2. Check the file is on the `main` branch
 3. Ensure GitHub Actions are enabled for your repository
@@ -587,6 +628,7 @@ If everything is set up correctly:
 **Cause**: First deployment - service doesn't exist yet
 
 **Solution**:
+
 - This is expected on first deployment
 - The workflow will create the service automatically
 - Subsequent deployments will update the existing service
@@ -621,6 +663,7 @@ After completing this setup:
 3. ✅ You can focus on development
 
 **See also:**
+
 - [Development Guide](./DEVELOPMENT.md) - Local development workflow
 - [Deployment Guide](./DEPLOYMENT.md) - CI/CD pipeline details
 
@@ -629,11 +672,13 @@ After completing this setup:
 ## Quick Reference
 
 ### Service Account Details
+
 - **Email**: `github-ci-cd@search-ahmed.iam.gserviceaccount.com`
 - **Project**: `search-ahmed`
 - **Purpose**: GitHub Actions CI/CD
 
 ### Required Roles
+
 1. Cloud Run Admin
 2. Cloud Build Service Account
 3. Cloud Run Service Agent
@@ -641,12 +686,14 @@ After completing this setup:
 5. Storage Object Admin
 
 ### GitHub Secrets
+
 1. `GCP_WORKLOAD_IDENTITY_PROVIDER` - Workload Identity Provider resource name
 2. `GCP_SERVICE_ACCOUNT` - `github-ci-cd@search-ahmed.iam.gserviceaccount.com`
 3. `GCP_PROJECT_ID` - `search-ahmed`
 4. `DOCKER_IMAGE_NAME` - `aiml-coe-web-app`
 
 ### Cloud Run Details
+
 - **Service Name**: `aiml-coe-web-app`
 - **Region**: `us-central1`
 - **Platform**: Managed
