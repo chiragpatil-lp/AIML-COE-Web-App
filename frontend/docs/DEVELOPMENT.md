@@ -16,10 +16,12 @@ This guide covers local development setup, workflows, and best practices for the
 
 ### Required Software
 
-1. **Node.js** - Version 18.17.0 or higher
+1. **Node.js** - Version 20.9.0 or higher (required for Next.js 16)
    ```bash
-   node --version  # Should be >= 18.17.0
+   node --version  # Should be >= 20.9.0
    ```
+
+   **Important**: Next.js 16 requires Node.js >= 20.9.0. Using an older version will result in build failures.
 
 2. **pnpm** - Package manager
    ```bash
@@ -329,9 +331,17 @@ pnpm install
 
 If build fails:
 
-1. Check TypeScript errors: `pnpm lint`
-2. Clear Next.js cache: `rm -rf .next`
-3. Rebuild: `pnpm build`
+1. **Check Node.js version**
+   ```bash
+   node --version  # Must be >= 20.9.0
+   ```
+   If using older version, upgrade Node.js:
+   - Use [nvm](https://github.com/nvm-sh/nvm): `nvm install 20 && nvm use 20`
+   - Or download from [nodejs.org](https://nodejs.org/)
+
+2. Check TypeScript errors: `pnpm lint`
+3. Clear Next.js cache: `rm -rf .next`
+4. Rebuild: `pnpm build`
 
 ### Hot Reload Not Working
 
@@ -346,12 +356,22 @@ If build fails:
 - Use React.memo for expensive components
 - Implement proper code splitting
 
+## Production Deployment
+
+This project automatically deploys to Google Cloud Run on every push to `main`.
+
+- **Live URL**: https://aiml-coe-web-app-36231825761.us-central1.run.app
+- **Deployment Guide**: See [DEPLOYMENT.md](./DEPLOYMENT.md)
+- **GCP Setup**: See [GCP-SETUP.md](./GCP-SETUP.md)
+
 ## Additional Resources
 
 - [Next.js Documentation](https://nextjs.org/docs)
 - [React Documentation](https://react.dev)
 - [Tailwind CSS Documentation](https://tailwindcss.com/docs)
 - [TypeScript Documentation](https://www.typescriptlang.org/docs)
+- [Deployment Guide](./DEPLOYMENT.md)
+- [GCP Setup Guide](./GCP-SETUP.md)
 
 ## Need Help?
 

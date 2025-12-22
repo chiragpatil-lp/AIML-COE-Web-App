@@ -26,22 +26,26 @@ The application uses a fully automated CI/CD pipeline that:
 - **Platform**: Google Cloud Run (serverless container platform)
 - **Region**: us-central1
 - **Container Registry**: Google Container Registry (gcr.io)
-- **CI/CD**: GitHub Actions
+- **CI/CD**: GitHub Actions with Workload Identity Federation
+- **Node.js**: v20 (Alpine Linux)
+- **Authentication**: Workload Identity Federation (no service account keys)
 
 ## Prerequisites
 
 Before deployment works, you must complete the GCP setup. See [GCP Setup Guide](./GCP-SETUP.md) for detailed instructions.
 
-### Required Setup Checklist
+### ✅ Setup Status - COMPLETED
 
-- [ ] GCP Project created (`search-ahmed`)
-- [ ] Required APIs enabled (Cloud Run, Cloud Build, Container Registry)
-- [ ] Service Account created with proper permissions
-- [ ] Service Account JSON key downloaded
-- [ ] GitHub Secrets configured:
-  - [ ] `GCP_SA_KEY`
-  - [ ] `GCP_PROJECT_ID`
-  - [ ] `DOCKER_IMAGE_NAME`
+- [x] GCP Project created (`search-ahmed`)
+- [x] Required APIs enabled (Cloud Run, Cloud Build, Container Registry, IAM Credentials)
+- [x] Service Account created with proper permissions (`github-ci-cd@search-ahmed.iam.gserviceaccount.com`)
+- [x] Workload Identity Federation configured (GitHub OIDC)
+- [x] GitHub Secrets configured:
+  - [x] `GCP_WORKLOAD_IDENTITY_PROVIDER`
+  - [x] `GCP_SERVICE_ACCOUNT`
+  - [x] `GCP_PROJECT_ID`
+  - [x] `DOCKER_IMAGE_NAME`
+- [x] **Application LIVE**: https://aiml-coe-web-app-36231825761.us-central1.run.app
 
 ## CI/CD Pipeline
 
@@ -91,7 +95,7 @@ Before deployment works, you must complete the GCP setup. See [GCP Setup Guide](
 
 ### Workflow File
 
-Location: `.github/workflows/cloud-run-deploy.yml`
+Location: `.github/workflows/cloud-run-deploy.yml` (repository root, not frontend/.github)
 
 Key configuration:
 
@@ -110,15 +114,17 @@ on:
 
 ### Docker Configuration
 
-Location: `Dockerfile`
+Location: `frontend/Dockerfile`
 
 The Dockerfile is optimized for pnpm and includes:
 
-- Node.js 18.17.0 Alpine base image
+- **Node.js 20 Alpine base image** (required for Next.js 16)
 - pnpm package manager
 - Multi-stage build for efficiency
 - Port 8080 configuration (Cloud Run default)
 - Production-optimized build
+
+**Important**: The workflow runs `cd frontend` before building the Docker image since the Dockerfile is in the frontend directory.
 
 ## Deployment Process
 
@@ -139,8 +145,8 @@ Every push to `main` automatically triggers deployment:
    - Watch the "Deploy to Cloud Run" workflow
 
 3. **Access Application**
-   - Once workflow completes successfully
-   - Find the Cloud Run URL in the logs
+   - Once workflow completes successfully (~3-4 minutes)
+   - **Live URL**: https://aiml-coe-web-app-36231825761.us-central1.run.app
    - Or visit: [Google Cloud Console → Cloud Run](https://console.cloud.google.com/run?project=search-ahmed)
 
 ### Manual Deployment (if needed)
@@ -151,6 +157,9 @@ If you need to deploy manually:
 # Authenticate with GCP
 gcloud auth login
 gcloud config set project search-ahmed
+
+# Navigate to frontend directory
+cd frontend
 
 # Build Docker image
 docker build -t gcr.io/search-ahmed/aiml-coe-web-app:latest .
@@ -296,11 +305,21 @@ gcloud run services update aiml-coe-web-app \
 
 **Error**: Docker build fails
 
-**Solution**:
-1. Test build locally: `docker build -t test .`
-2. Check Dockerfile syntax
-3. Verify all dependencies in package.json
-4. Check for TypeScript errors: `pnpm lint`
+**Common Causes**:
+
+1. **Node.js version mismatch**
+   - Error: `You are using Node.js X.X.X. For Next.js, Node.js version ">=20.9.0" is required.`
+   - Solution: Update Dockerfile to use `FROM node:20-alpine`
+
+2. **Dockerfile in wrong location**
+   - Ensure Dockerfile is in `frontend/` directory
+   - Workflow should run `cd frontend` before `docker build`
+
+3. **Other build issues**
+   - Test build locally: `cd frontend && docker build -t test .`
+   - Check Dockerfile syntax
+   - Verify all dependencies in package.json
+   - Check for TypeScript errors: `pnpm lint`
 
 ### Deployment Succeeds but App Doesn't Work
 
@@ -313,10 +332,10 @@ gcloud run services update aiml-coe-web-app \
 ### Workflow Doesn't Trigger
 
 **Solutions**:
-1. Check if workflow file is in `.github/workflows/` directory
+1. **Check workflow location**: Must be in repository root `.github/workflows/`, NOT `frontend/.github/workflows/`
 2. Verify YAML syntax is correct
 3. Ensure push is to `main` branch
-4. Check repository Actions are enabled
+4. Check repository Actions are enabled in Settings → Actions
 
 ### Image Push Fails
 

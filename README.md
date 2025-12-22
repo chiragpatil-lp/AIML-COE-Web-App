@@ -20,7 +20,7 @@ This is the frontend application for the AIML COE platform, featuring a responsi
 
 ### Prerequisites
 
-- Node.js 18.17.0 or higher
+- Node.js 20.9.0 or higher (required for Next.js 16)
 - pnpm (install globally: `npm install -g pnpm`)
 - Git
 
@@ -54,28 +54,43 @@ pnpm format:check # Check code formatting
 ## Project Structure
 
 ```
-frontend/
+AIML-COE-Web-App/
 ├── .github/
-│   └── workflows/        # GitHub Actions CI/CD
-├── components/           # React components
-├── docs/                # Project documentation
-├── public/              # Static assets
-├── app/                 # Next.js app directory
-├── Dockerfile           # Docker configuration for Cloud Run
-└── package.json         # Project dependencies
+│   └── workflows/        # GitHub Actions CI/CD (repository root)
+├── frontend/
+│   ├── app/             # Next.js app directory
+│   ├── components/      # React components
+│   ├── docs/           # Detailed documentation
+│   ├── public/         # Static assets
+│   ├── terraform/      # Infrastructure as Code
+│   ├── Dockerfile      # Docker configuration for Cloud Run
+│   └── package.json    # Project dependencies
+└── README.md           # This file
 ```
 
 ## Documentation
 
-- [Development Guide](./docs/DEVELOPMENT.md) - Local development setup and workflow
-- [Deployment Guide](./docs/DEPLOYMENT.md) - CI/CD pipeline and deployment process
-- [GCP Setup Guide](./docs/GCP-SETUP.md) - Google Cloud Platform configuration steps
+- [Development Guide](./frontend/docs/DEVELOPMENT.md) - Local development setup and workflow
+- [Deployment Guide](./frontend/docs/DEPLOYMENT.md) - CI/CD pipeline and deployment process
+- [GCP Setup Guide](./frontend/docs/GCP-SETUP.md) - Google Cloud Platform configuration steps
+- [Terraform README](./frontend/terraform/README.md) - Infrastructure provisioning guide
 
 ## CI/CD Pipeline
 
 This project uses GitHub Actions to automatically deploy to Google Cloud Run on every push to the `main` branch.
 
-**Status**: ⚠️ Requires GCP Service Account setup (see [GCP Setup Guide](./docs/GCP-SETUP.md))
+**Status**: ✅ **LIVE AND DEPLOYED**
+
+- **Production URL**: https://aiml-coe-web-app-36231825761.us-central1.run.app
+- **GCP Project**: search-ahmed
+- **Region**: us-central1
+- **Service**: aiml-coe-web-app
+
+Every push to `main` automatically triggers:
+1. Docker image build with Node.js 20
+2. Push to Google Container Registry
+3. Deploy to Cloud Run
+4. Live in ~3-4 minutes
 
 ## Contributing
 
