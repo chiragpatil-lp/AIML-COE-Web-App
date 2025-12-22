@@ -27,6 +27,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Generate GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
       - name: Authenticate to Google Cloud
         id: auth
         uses: google-github-actions/auth@v2
@@ -37,6 +44,7 @@ jobs:
       - name: Claude Code Review
         uses: anthropics/claude-code-action@v1
         with:
+          github_token: ${{ steps.app-token.outputs.token }}
           prompt: ${{ github.event_name == 'pull_request' && '/review' || '' }}
           use_vertex: "true"
           claude_args: '--model claude-sonnet-4@20250514 --max-turns 10'
