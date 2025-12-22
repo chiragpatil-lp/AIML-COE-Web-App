@@ -9,10 +9,6 @@ const navigationLinks = [
     href: "#features",
   },
   {
-    name: "Pricing",
-    href: "#pricing",
-  },
-  {
     name: "Solutions",
     href: "#solutions",
   },
