@@ -1,14 +1,14 @@
-'use client'
+"use client";
 
-import * as React from 'react'
-import { XIcon } from 'lucide-react'
+import * as React from "react";
+import { XIcon } from "lucide-react";
 
-import { cn } from '@/lib/utils'
+import { cn } from "@/lib/utils";
 
 const DialogContext = React.createContext<{
-  open: boolean
-  onOpenChange: (open: boolean) => void
-} | null>(null)
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+} | null>(null);
 
 function Dialog({
   open,
@@ -16,28 +16,29 @@ function Dialog({
   children,
   ...props
 }: {
-  open?: boolean
-  onOpenChange?: (open: boolean) => void
-  children: React.ReactNode
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  children: React.ReactNode;
 }) {
-  const [uncontrolledOpen, setUncontrolledOpen] = React.useState(false)
-  const isOpen = open !== undefined ? open : uncontrolledOpen
-  const setOpen = onOpenChange !== undefined ? onOpenChange : setUncontrolledOpen
+  const [uncontrolledOpen, setUncontrolledOpen] = React.useState(false);
+  const isOpen = open !== undefined ? open : uncontrolledOpen;
+  const setOpen =
+    onOpenChange !== undefined ? onOpenChange : setUncontrolledOpen;
 
   return (
     <DialogContext.Provider value={{ open: isOpen, onOpenChange: setOpen }}>
       {children}
     </DialogContext.Provider>
-  )
+  );
 }
 
 function DialogTrigger({
   className,
   children,
   ...props
-}: React.ComponentProps<'button'>) {
-  const context = React.useContext(DialogContext)
-  if (!context) throw new Error('DialogTrigger must be used within Dialog')
+}: React.ComponentProps<"button">) {
+  const context = React.useContext(DialogContext);
+  if (!context) throw new Error("DialogTrigger must be used within Dialog");
 
   return (
     <button
@@ -49,20 +50,20 @@ function DialogTrigger({
     >
       {children}
     </button>
-  )
+  );
 }
 
 function DialogPortal({ children }: { children: React.ReactNode }) {
-  return <>{children}</>
+  return <>{children}</>;
 }
 
 function DialogClose({
   className,
   children,
   ...props
-}: React.ComponentProps<'button'>) {
-  const context = React.useContext(DialogContext)
-  if (!context) throw new Error('DialogClose must be used within Dialog')
+}: React.ComponentProps<"button">) {
+  const context = React.useContext(DialogContext);
+  if (!context) throw new Error("DialogClose must be used within Dialog");
 
   return (
     <button
@@ -74,17 +75,17 @@ function DialogClose({
     >
       {children}
     </button>
-  )
+  );
 }
 
-function DialogOverlay({ className, ...props }: React.ComponentProps<'div'>) {
+function DialogOverlay({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="dialog-overlay"
-      className={cn('modal-backdrop', className)}
+      className={cn("modal-backdrop", className)}
       {...props}
     />
-  )
+  );
 }
 
 function DialogContent({
@@ -92,38 +93,38 @@ function DialogContent({
   children,
   showCloseButton = true,
   ...props
-}: React.ComponentProps<'div'> & {
-  showCloseButton?: boolean
+}: React.ComponentProps<"div"> & {
+  showCloseButton?: boolean;
 }) {
-  const context = React.useContext(DialogContext)
-  if (!context) throw new Error('DialogContent must be used within Dialog')
+  const context = React.useContext(DialogContext);
+  if (!context) throw new Error("DialogContent must be used within Dialog");
 
-  const dialogRef = React.useRef<HTMLDialogElement>(null)
+  const dialogRef = React.useRef<HTMLDialogElement>(null);
 
   React.useEffect(() => {
-    const dialog = dialogRef.current
-    if (!dialog) return
+    const dialog = dialogRef.current;
+    if (!dialog) return;
 
     if (context.open) {
-      dialog.showModal()
+      dialog.showModal();
     } else {
-      dialog.close()
+      dialog.close();
     }
-  }, [context.open])
+  }, [context.open]);
 
   React.useEffect(() => {
-    const dialog = dialogRef.current
-    if (!dialog) return
+    const dialog = dialogRef.current;
+    if (!dialog) return;
 
     const handleClose = () => {
-      context.onOpenChange(false)
-    }
+      context.onOpenChange(false);
+    };
 
-    dialog.addEventListener('close', handleClose)
-    return () => dialog.removeEventListener('close', handleClose)
-  }, [context])
+    dialog.addEventListener("close", handleClose);
+    return () => dialog.removeEventListener("close", handleClose);
+  }, [context]);
 
-  if (!context.open) return null
+  if (!context.open) return null;
 
   return (
     <dialog
@@ -133,11 +134,11 @@ function DialogContent({
       onClick={(e) => {
         // Close on backdrop click
         if (e.target === e.currentTarget) {
-          context.onOpenChange(false)
+          context.onOpenChange(false);
         }
       }}
     >
-      <div className={cn('modal-box relative', className)} {...props}>
+      <div className={cn("modal-box relative", className)} {...props}>
         {children}
         {showCloseButton && (
           <button
@@ -155,47 +156,47 @@ function DialogContent({
         <button type="submit">close</button>
       </form>
     </dialog>
-  )
+  );
 }
 
-function DialogHeader({ className, ...props }: React.ComponentProps<'div'>) {
+function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="dialog-header"
-      className={cn('flex flex-col gap-2', className)}
+      className={cn("flex flex-col gap-2", className)}
       {...props}
     />
-  )
+  );
 }
 
-function DialogFooter({ className, ...props }: React.ComponentProps<'div'>) {
+function DialogFooter({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="dialog-footer"
-      className={cn('modal-action', className)}
+      className={cn("modal-action", className)}
       {...props}
     />
-  )
+  );
 }
 
-function DialogTitle({ className, ...props }: React.ComponentProps<'h2'>) {
+function DialogTitle({ className, ...props }: React.ComponentProps<"h2">) {
   return (
     <h2
       data-slot="dialog-title"
-      className={cn('text-lg font-bold', className)}
+      className={cn("text-lg font-bold", className)}
       {...props}
     />
-  )
+  );
 }
 
-function DialogDescription({ className, ...props }: React.ComponentProps<'p'>) {
+function DialogDescription({ className, ...props }: React.ComponentProps<"p">) {
   return (
     <p
       data-slot="dialog-description"
-      className={cn('text-sm opacity-70', className)}
+      className={cn("text-sm opacity-70", className)}
       {...props}
     />
-  )
+  );
 }
 
 export {
@@ -209,4 +210,4 @@ export {
   DialogPortal,
   DialogTitle,
   DialogTrigger,
-}
+};

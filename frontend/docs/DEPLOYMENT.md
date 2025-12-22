@@ -23,6 +23,7 @@ The application uses a fully automated CI/CD pipeline that:
 5. Makes the app publicly accessible
 
 **Infrastructure:**
+
 - **Platform**: Google Cloud Run (serverless container platform)
 - **Region**: us-central1
 - **Container Registry**: Google Container Registry (gcr.io)
@@ -133,6 +134,7 @@ The Dockerfile is optimized for pnpm and includes:
 Every push to `main` automatically triggers deployment:
 
 1. **Commit and Push**
+
    ```bash
    git add .
    git commit -m "feat: new feature"
@@ -140,6 +142,7 @@ Every push to `main` automatically triggers deployment:
    ```
 
 2. **Monitor Deployment**
+
    - Go to GitHub repository
    - Click "Actions" tab
    - Watch the "Deploy to Cloud Run" workflow
@@ -184,22 +187,26 @@ gcloud run deploy aiml-coe-web-app \
 ### View Deployment Logs
 
 **GitHub Actions:**
+
 - Repository → Actions → Select workflow run
 - Click on job steps to see detailed logs
 
 **Google Cloud Console:**
+
 - [Cloud Run Services](https://console.cloud.google.com/run?project=search-ahmed)
 - Click on service → Logs tab
 
 ### Application Logs
 
 View runtime logs in Cloud Console:
+
 - Cloud Run → Select service → Logs
 - Filter by severity, time range, etc.
 
 ### Metrics & Performance
 
 Monitor in Cloud Console:
+
 - Cloud Run → Select service → Metrics tab
 - View request count, latency, memory usage, etc.
 
@@ -210,6 +217,7 @@ Monitor in Cloud Console:
 If a deployment causes issues:
 
 **Option 1: Via Cloud Console**
+
 1. Go to Cloud Run → Select service
 2. Click "Revisions" tab
 3. Select previous stable revision
@@ -217,6 +225,7 @@ If a deployment causes issues:
 5. Route 100% traffic to that revision
 
 **Option 2: Via CLI**
+
 ```bash
 # List revisions
 gcloud run revisions list --service=aiml-coe-web-app --region=us-central1
@@ -228,6 +237,7 @@ gcloud run services update-traffic aiml-coe-web-app \
 ```
 
 **Option 3: Git Revert**
+
 ```bash
 # Revert the problematic commit
 git revert <commit-hash>
@@ -243,12 +253,14 @@ git push origin main
 To add environment variables to Cloud Run:
 
 **Via Cloud Console:**
+
 1. Cloud Run → Select service → Edit & Deploy New Revision
 2. Variables & Secrets tab
 3. Add environment variables
 4. Deploy
 
 **Via CLI:**
+
 ```bash
 gcloud run services update aiml-coe-web-app \
   --update-env-vars KEY1=value1,KEY2=value2 \
@@ -257,6 +269,7 @@ gcloud run services update aiml-coe-web-app \
 
 **Via Workflow:**
 Add to `.github/workflows/cloud-run-deploy.yml`:
+
 ```yaml
 - name: Deploy to Cloud Run
   run: |
@@ -297,6 +310,7 @@ gcloud run services update aiml-coe-web-app \
 **Error**: `Permission denied` or `Invalid credentials`
 
 **Solution**:
+
 1. Verify GitHub Secrets are set correctly
 2. Check Service Account has required roles
 3. Ensure JSON key is valid and complete
@@ -308,10 +322,12 @@ gcloud run services update aiml-coe-web-app \
 **Common Causes**:
 
 1. **Node.js version mismatch**
+
    - Error: `You are using Node.js X.X.X. For Next.js, Node.js version ">=20.9.0" is required.`
    - Solution: Update Dockerfile to use `FROM node:20-alpine`
 
 2. **Dockerfile in wrong location**
+
    - Ensure Dockerfile is in `frontend/` directory
    - Workflow should run `cd frontend` before `docker build`
 
@@ -324,6 +340,7 @@ gcloud run services update aiml-coe-web-app \
 ### Deployment Succeeds but App Doesn't Work
 
 **Solutions**:
+
 1. Check Cloud Run logs for runtime errors
 2. Verify PORT environment variable (should be 8080)
 3. Check that `pnpm start` works locally after `pnpm build`
@@ -332,6 +349,7 @@ gcloud run services update aiml-coe-web-app \
 ### Workflow Doesn't Trigger
 
 **Solutions**:
+
 1. **Check workflow location**: Must be in repository root `.github/workflows/`, NOT `frontend/.github/workflows/`
 2. Verify YAML syntax is correct
 3. Ensure push is to `main` branch
@@ -342,6 +360,7 @@ gcloud run services update aiml-coe-web-app \
 **Error**: `Permission denied` when pushing to GCR
 
 **Solution**:
+
 1. Verify Service Account has Storage Object Admin role
 2. Check Container Registry API is enabled
 3. Authenticate Docker: `gcloud auth configure-docker`
@@ -349,6 +368,7 @@ gcloud run services update aiml-coe-web-app \
 ### Service URL Returns 404
 
 **Solutions**:
+
 1. Wait a few minutes for deployment to complete
 2. Check revision is receiving traffic
 3. Verify app is listening on PORT 8080
@@ -359,12 +379,14 @@ gcloud run services update aiml-coe-web-app \
 ### Before Pushing to Main
 
 1. **Test locally**
+
    ```bash
    pnpm build
    pnpm start
    ```
 
 2. **Run linting**
+
    ```bash
    pnpm lint
    pnpm format:check
@@ -389,11 +411,13 @@ gcloud run services update aiml-coe-web-app \
 ## Cost Optimization
 
 Cloud Run charges based on:
+
 - Request count
 - Compute time
 - Memory allocation
 
 **Tips to reduce costs**:
+
 1. Set appropriate resource limits
 2. Configure `--min-instances=0` for dev environments
 3. Use `--cpu-throttling` for non-latency-sensitive apps

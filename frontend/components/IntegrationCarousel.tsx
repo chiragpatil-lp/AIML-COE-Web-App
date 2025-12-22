@@ -1,19 +1,19 @@
-"use client"
+"use client";
 
-import { useEffect, useRef } from "react"
-import { motion } from "framer-motion"
+import { useEffect, useRef } from "react";
+import { motion } from "framer-motion";
 type IntegrationApp = {
-  name: string
-  logo: string
-}
+  name: string;
+  logo: string;
+};
 type IntegrationCarouselProps = {
-  buttonText?: string
-  buttonHref?: string
-  title?: string
-  subtitle?: string
-  topRowApps?: IntegrationApp[]
-  bottomRowApps?: IntegrationApp[]
-}
+  buttonText?: string;
+  buttonHref?: string;
+  title?: string;
+  subtitle?: string;
+  topRowApps?: IntegrationApp[];
+  bottomRowApps?: IntegrationApp[];
+};
 const defaultTopRowApps: IntegrationApp[] = [
   {
     name: "Vertex AI",
@@ -63,7 +63,7 @@ const defaultTopRowApps: IntegrationApp[] = [
     name: "BigQuery",
     logo: "/Product-Icons/Unique Icons/BigQuery/SVG/BigQuery-512-color.svg",
   },
-]
+];
 const defaultBottomRowApps: IntegrationApp[] = [
   {
     name: "Anthos",
@@ -113,7 +113,7 @@ const defaultBottomRowApps: IntegrationApp[] = [
     name: "Google Agent Development Kit",
     logo: "https://google.github.io/adk-docs/assets/agent-development-kit.png",
   },
-]
+];
 
 // @component: IntegrationCarousel
 export const IntegrationCarousel = ({
@@ -124,40 +124,40 @@ export const IntegrationCarousel = ({
   topRowApps = defaultTopRowApps,
   bottomRowApps = defaultBottomRowApps,
 }: IntegrationCarouselProps) => {
-  const topRowRef = useRef<HTMLDivElement>(null)
-  const bottomRowRef = useRef<HTMLDivElement>(null)
+  const topRowRef = useRef<HTMLDivElement>(null);
+  const bottomRowRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    let topAnimationId: number
-    let bottomAnimationId: number
-    let topPosition = 0
-    let bottomPosition = 0
+    let topAnimationId: number;
+    let bottomAnimationId: number;
+    let topPosition = 0;
+    let bottomPosition = 0;
     const animateTopRow = () => {
       if (topRowRef.current) {
-        topPosition -= 0.5
+        topPosition -= 0.5;
         if (Math.abs(topPosition) >= topRowRef.current.scrollWidth / 2) {
-          topPosition = 0
+          topPosition = 0;
         }
-        topRowRef.current.style.transform = `translateX(${topPosition}px)`
+        topRowRef.current.style.transform = `translateX(${topPosition}px)`;
       }
-      topAnimationId = requestAnimationFrame(animateTopRow)
-    }
+      topAnimationId = requestAnimationFrame(animateTopRow);
+    };
     const animateBottomRow = () => {
       if (bottomRowRef.current) {
-        bottomPosition -= 0.65
+        bottomPosition -= 0.65;
         if (Math.abs(bottomPosition) >= bottomRowRef.current.scrollWidth / 2) {
-          bottomPosition = 0
+          bottomPosition = 0;
         }
-        bottomRowRef.current.style.transform = `translateX(${bottomPosition}px)`
+        bottomRowRef.current.style.transform = `translateX(${bottomPosition}px)`;
       }
-      bottomAnimationId = requestAnimationFrame(animateBottomRow)
-    }
-    topAnimationId = requestAnimationFrame(animateTopRow)
-    bottomAnimationId = requestAnimationFrame(animateBottomRow)
+      bottomAnimationId = requestAnimationFrame(animateBottomRow);
+    };
+    topAnimationId = requestAnimationFrame(animateTopRow);
+    bottomAnimationId = requestAnimationFrame(animateBottomRow);
     return () => {
-      cancelAnimationFrame(topAnimationId)
-      cancelAnimationFrame(bottomAnimationId)
-    }
-  }, [])
+      cancelAnimationFrame(topAnimationId);
+      cancelAnimationFrame(bottomAnimationId);
+    };
+  }, []);
 
   // @return
   return (
@@ -203,7 +203,8 @@ export const IntegrationCarousel = ({
               style={{
                 boxShadow:
                   "0 -1px 0 0 rgb(181, 181, 181) inset, -1px 0 0 0 rgb(227, 227, 227) inset, 1px 0 0 0 rgb(227, 227, 227) inset, 0 1px 0 0 rgb(227, 227, 227) inset",
-                backgroundImage: "linear-gradient(rgba(255, 255, 255, 0.06) 80%, rgba(255, 255, 255, 0.12))",
+                backgroundImage:
+                  "linear-gradient(rgba(255, 255, 255, 0.06) 80%, rgba(255, 255, 255, 0.12))",
               }}
             >
               {buttonText}
@@ -225,12 +226,17 @@ export const IntegrationCarousel = ({
               key={`top-${index}`}
               className="flex items-center justify-center w-24 h-24 rounded-3xl flex-shrink-0"
               style={{
-                backgroundImage: "linear-gradient(rgb(255, 255, 255), rgb(252, 252, 252))",
+                backgroundImage:
+                  "linear-gradient(rgb(255, 255, 255), rgb(252, 252, 252))",
                 boxShadow:
                   "rgba(0, 0, 0, 0.04) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 1px 1px 0px, rgba(0, 0, 0, 0.04) 0px 3px 3px -1.4px, rgba(0, 0, 0, 0.04) 0px 6px 6px -3px, rgba(0, 0, 0, 0.04) 0px 12px 12px -6px, rgba(0, 0, 0, 0.04) 0px 12px 12px -12px",
               }}
             >
-              <img src={app.logo || "/placeholder.svg"} alt={app.name} className="w-9 h-9 block object-contain" />
+              <img
+                src={app.logo || "/placeholder.svg"}
+                alt={app.name}
+                className="w-9 h-9 block object-contain"
+              />
             </div>
           ))}
         </div>
@@ -238,14 +244,16 @@ export const IntegrationCarousel = ({
         <div
           className="absolute top-0 right-0 bottom-0 w-60 h-[268px] z-10 pointer-events-none"
           style={{
-            backgroundImage: "linear-gradient(90deg, rgba(0, 0, 0, 0), rgb(255, 255, 255))",
+            backgroundImage:
+              "linear-gradient(90deg, rgba(0, 0, 0, 0), rgb(255, 255, 255))",
           }}
         />
 
         <div
           className="absolute top-0 left-0 bottom-0 w-60 h-[268px] z-10 pointer-events-none"
           style={{
-            backgroundImage: "linear-gradient(90deg, rgb(255, 255, 255), rgba(0, 0, 0, 0))",
+            backgroundImage:
+              "linear-gradient(90deg, rgb(255, 255, 255), rgba(0, 0, 0, 0))",
           }}
         />
 
@@ -261,16 +269,21 @@ export const IntegrationCarousel = ({
               key={`bottom-${index}`}
               className="flex items-center justify-center w-24 h-24 rounded-3xl flex-shrink-0"
               style={{
-                backgroundImage: "linear-gradient(rgb(255, 255, 255), rgb(252, 252, 252))",
+                backgroundImage:
+                  "linear-gradient(rgb(255, 255, 255), rgb(252, 252, 252))",
                 boxShadow:
                   "rgba(0, 0, 0, 0.04) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 1px 1px 0px, rgba(0, 0, 0, 0.04) 0px 3px 3px -1.4px, rgba(0, 0, 0, 0.04) 0px 6px 6px -3px, rgba(0, 0, 0, 0.04) 0px 12px 12px -6px, rgba(0, 0, 0, 0.04) 0px 12px 12px -12px",
               }}
             >
-              <img src={app.logo || "/placeholder.svg"} alt={app.name} className="w-9 h-9 block object-contain" />
+              <img
+                src={app.logo || "/placeholder.svg"}
+                alt={app.name}
+                className="w-9 h-9 block object-contain"
+              />
             </div>
           ))}
         </div>
       </div>
     </div>
-  )
-}
+  );
+};

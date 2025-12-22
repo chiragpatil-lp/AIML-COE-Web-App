@@ -17,6 +17,7 @@ This guide covers local development setup, workflows, and best practices for the
 ### Required Software
 
 1. **Node.js** - Version 20.9.0 or higher (required for Next.js 16)
+
    ```bash
    node --version  # Should be >= 20.9.0
    ```
@@ -24,6 +25,7 @@ This guide covers local development setup, workflows, and best practices for the
    **Important**: Next.js 16 requires Node.js >= 20.9.0. Using an older version will result in build failures.
 
 2. **pnpm** - Package manager
+
    ```bash
    npm install -g pnpm
    pnpm --version
@@ -88,28 +90,33 @@ The application will be available at [http://localhost:3000](http://localhost:30
 ### Typical Workflow
 
 1. **Create a new branch**
+
    ```bash
    git checkout -b feature/your-feature-name
    ```
 
 2. **Make changes and test locally**
+
    ```bash
    pnpm dev
    ```
 
 3. **Run linting and formatting**
+
    ```bash
    pnpm lint
    pnpm format
    ```
 
 4. **Build and test production build**
+
    ```bash
    pnpm build
    pnpm start
    ```
 
 5. **Commit changes**
+
    ```bash
    git add .
    git commit -m "feat: add new feature"
@@ -133,6 +140,7 @@ Follow conventional commits format:
 ```
 
 Types:
+
 - `feat` - New feature
 - `fix` - Bug fix
 - `docs` - Documentation changes
@@ -142,6 +150,7 @@ Types:
 - `chore` - Maintenance tasks
 
 Example:
+
 ```bash
 git commit -m "feat(auth): add user authentication flow"
 git commit -m "fix(ui): resolve button alignment issue on mobile"
@@ -332,10 +341,13 @@ pnpm install
 If build fails:
 
 1. **Check Node.js version**
+
    ```bash
    node --version  # Must be >= 20.9.0
    ```
+
    If using older version, upgrade Node.js:
+
    - Use [nvm](https://github.com/nvm-sh/nvm): `nvm install 20 && nvm use 20`
    - Or download from [nodejs.org](https://nodejs.org/)
 

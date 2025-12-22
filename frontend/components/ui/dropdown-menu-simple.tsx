@@ -1,89 +1,95 @@
-'use client'
+"use client";
 
-import * as React from 'react'
-import { CheckIcon } from 'lucide-react'
+import * as React from "react";
+import { CheckIcon } from "lucide-react";
 
-import { cn } from '@/lib/utils'
+import { cn } from "@/lib/utils";
 
 function DropdownMenu({ children }: { children: React.ReactNode }) {
-  return <div className="dropdown">{children}</div>
+  return <div className="dropdown">{children}</div>;
 }
 
 function DropdownMenuTrigger({
   className,
   children,
   ...props
-}: React.ComponentProps<'button'>) {
+}: React.ComponentProps<"button">) {
   return (
     <button
       tabIndex={0}
       role="button"
       data-slot="dropdown-menu-trigger"
-      className={cn('btn', className)}
+      className={cn("btn", className)}
       {...props}
     >
       {children}
     </button>
-  )
+  );
 }
 
 function DropdownMenuContent({
   className,
   children,
   ...props
-}: React.ComponentProps<'ul'>) {
+}: React.ComponentProps<"ul">) {
   return (
     <ul
       tabIndex={0}
       data-slot="dropdown-menu-content"
-      className={cn('dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow', className)}
+      className={cn(
+        "dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow",
+        className,
+      )}
       {...props}
     >
       {children}
     </ul>
-  )
+  );
 }
 
 function DropdownMenuItem({
   className,
   children,
   ...props
-}: React.ComponentProps<'li'>) {
+}: React.ComponentProps<"li">) {
   return (
     <li data-slot="dropdown-menu-item" {...props}>
       <a className={className}>{children}</a>
     </li>
-  )
+  );
 }
 
-function DropdownMenuSeparator({ className, ...props }: React.ComponentProps<'hr'>) {
+function DropdownMenuSeparator({
+  className,
+  ...props
+}: React.ComponentProps<"hr">) {
   return (
     <hr
       data-slot="dropdown-menu-separator"
-      className={cn('my-1', className)}
+      className={cn("my-1", className)}
       {...props}
     />
-  )
+  );
 }
 
 function DropdownMenuLabel({
   className,
   children,
   ...props
-}: React.ComponentProps<'li'>) {
+}: React.ComponentProps<"li">) {
   return (
     <li data-slot="dropdown-menu-label" {...props}>
-      <span className={cn('menu-title', className)}>{children}</span>
+      <span className={cn("menu-title", className)}>{children}</span>
     </li>
-  )
+  );
 }
 
 function DropdownMenuGroup({ children }: { children: React.ReactNode }) {
-  return <>{children}</>
+  return <>{children}</>;
 }
 
 function DropdownMenuPortal({ children }: { children: React.ReactNode }) {
-  return <>{children}</>
+  return <>{children}</>;
 }
 
 function DropdownMenuCheckboxItem({
@@ -91,15 +97,15 @@ function DropdownMenuCheckboxItem({
   children,
   checked,
   ...props
-}: React.ComponentProps<'li'> & { checked?: boolean }) {
+}: React.ComponentProps<"li"> & { checked?: boolean }) {
   return (
     <li data-slot="dropdown-menu-checkbox-item" {...props}>
-      <a className={cn('flex items-center gap-2', className)}>
+      <a className={cn("flex items-center gap-2", className)}>
         {checked && <CheckIcon className="size-4" />}
         {children}
       </a>
     </li>
-  )
+  );
 }
 
 export {
@@ -112,4 +118,4 @@ export {
   DropdownMenuGroup,
   DropdownMenuPortal,
   DropdownMenuCheckboxItem,
-}
+};

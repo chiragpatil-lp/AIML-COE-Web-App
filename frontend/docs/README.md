@@ -205,6 +205,7 @@ frontend/
 ### Reporting Issues
 
 When reporting issues, include:
+
 - What you were trying to do
 - What happened instead
 - Error messages (full text)
@@ -233,6 +234,7 @@ When reporting issues, include:
 ### Documentation Updates
 
 When updating these docs:
+
 - Keep information current and accurate
 - Update "Last Updated" dates
 - Add examples where helpful
@@ -248,4 +250,4 @@ When updating these docs:
 
 ---
 
-*Last Updated: 2025-12-18*
+_Last Updated: 2025-12-18_

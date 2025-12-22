@@ -1,16 +1,16 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import { Plus } from "lucide-react"
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Plus } from "lucide-react";
 type FAQItem = {
-  question: string
-  answer: string
-}
+  question: string;
+  answer: string;
+};
 type FAQSectionProps = {
-  title?: string
-  faqs?: FAQItem[]
-}
+  title?: string;
+  faqs?: FAQItem[];
+};
 const defaultFAQs: FAQItem[] = [
   {
     question: "What is an AI Center of Excellence (CoE)?",
@@ -18,12 +18,14 @@ const defaultFAQs: FAQItem[] = [
       "An AI Center of Excellence (CoE) is a specialized team within an organization dedicated to the strategic implementation and governance of Artificial Intelligence. It serves as a central hub for sharing best practices, driving innovation, and ensuring that AI initiatives align with broader business goals while maintaining security and compliance standards.",
   },
   {
-    question: "How does the CoE support AI adoption across different departments?",
+    question:
+      "How does the CoE support AI adoption across different departments?",
     answer:
       "The CoE acts as a bridge between technical teams and business units. We provide standardized tools, shared infrastructure, and expert guidance to help departments—from HR to Finance—identify high-impact AI use cases, develop prototypes, and scale successful solutions responsibly across the enterprise.",
   },
   {
-    question: "What governance and security measures does the AI CoE implement?",
+    question:
+      "What governance and security measures does the AI CoE implement?",
     answer:
       "Our CoE establishes robust governance frameworks that include ethical AI guidelines, data privacy protocols, and rigorous security assessments for all AI models. We ensure that every AI implementation complies with industry regulations and organizational security policies, protecting both sensitive data and brand reputation.",
   },
@@ -32,12 +34,15 @@ const defaultFAQs: FAQItem[] = [
     answer:
       "Getting started is easy. You can submit a project proposal through our internal portal. Our team will then work with you to evaluate the feasibility, potential ROI, and resource requirements. Once approved, we provide the technical expertise and project management support needed to bring your AI vision to life.",
   },
-]
-export const FAQSection = ({ title = "Frequently asked questions", faqs = defaultFAQs }: FAQSectionProps) => {
-  const [openIndex, setOpenIndex] = useState<number | null>(null)
+];
+export const FAQSection = ({
+  title = "Frequently asked questions",
+  faqs = defaultFAQs,
+}: FAQSectionProps) => {
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
   const toggleFAQ = (index: number) => {
-    setOpenIndex(openIndex === index ? null : index)
-  }
+    setOpenIndex(openIndex === index ? null : index);
+  };
   return (
     <section className="w-full py-24 px-8 bg-white">
       <div className="max-w-7xl mx-auto">
@@ -60,7 +65,10 @@ export const FAQSection = ({ title = "Frequently asked questions", faqs = defaul
           <div className="lg:col-span-8">
             <div className="space-y-0">
               {faqs.map((faq, index) => (
-                <div key={index} className="border-b border-[#e5e5e5] last:border-b-0">
+                <div
+                  key={index}
+                  className="border-b border-[#e5e5e5] last:border-b-0"
+                >
                   <button
                     onClick={() => toggleFAQ(index)}
                     className="w-full flex items-center justify-between py-6 text-left group hover:opacity-70 transition-opacity duration-150"
@@ -69,7 +77,8 @@ export const FAQSection = ({ title = "Frequently asked questions", faqs = defaul
                     <span
                       className="text-lg leading-7 text-[#202020] pr-8"
                       style={{
-                        fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
+                        fontFamily:
+                          "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
                         fontWeight: "400",
                       }}
                     >
@@ -85,7 +94,10 @@ export const FAQSection = ({ title = "Frequently asked questions", faqs = defaul
                       }}
                       className="flex-shrink-0"
                     >
-                      <Plus className="w-6 h-6 text-[#202020]" strokeWidth={1.5} />
+                      <Plus
+                        className="w-6 h-6 text-[#202020]"
+                        strokeWidth={1.5}
+                      />
                     </motion.div>
                   </button>
 
@@ -114,7 +126,8 @@ export const FAQSection = ({ title = "Frequently asked questions", faqs = defaul
                           <p
                             className="text-lg leading-6 text-[#666666]"
                             style={{
-                              fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
+                              fontFamily:
+                                "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
                             }}
                           >
                             {faq.answer}
@@ -130,5 +143,5 @@ export const FAQSection = ({ title = "Frequently asked questions", faqs = defaul
         </div>
       </div>
     </section>
-  )
-}
+  );
+};

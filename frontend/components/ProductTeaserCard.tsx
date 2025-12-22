@@ -1,19 +1,19 @@
-"use client"
-import { motion } from "framer-motion"
-import { ArrowUpRight } from "lucide-react"
+"use client";
+import { motion } from "framer-motion";
+import { ArrowUpRight } from "lucide-react";
 type ProductTeaserCardProps = {
-  dailyVolume?: string
-  dailyVolumeLabel?: string
-  headline?: string
-  subheadline?: string
-  description?: string
-  videoSrc?: string
-  posterSrc?: string
-  primaryButtonText?: string
-  primaryButtonHref?: string
-  secondaryButtonText?: string
-  secondaryButtonHref?: string
-}
+  dailyVolume?: string;
+  dailyVolumeLabel?: string;
+  headline?: string;
+  subheadline?: string;
+  description?: string;
+  videoSrc?: string;
+  posterSrc?: string;
+  primaryButtonText?: string;
+  primaryButtonHref?: string;
+  secondaryButtonText?: string;
+  secondaryButtonHref?: string;
+};
 
 // @component: ProductTeaserCard
 export const ProductTeaserCard = (props: ProductTeaserCardProps) => {
@@ -29,7 +29,7 @@ export const ProductTeaserCard = (props: ProductTeaserCardProps) => {
     primaryButtonHref = "",
     secondaryButtonText = "View Docs",
     secondaryButtonHref = "",
-  } = props
+  } = props;
 
   // @return
   return (
@@ -70,7 +70,8 @@ export const ProductTeaserCard = (props: ProductTeaserCardProps) => {
                 }}
                 className="text-sm uppercase tracking-tight font-mono flex items-center gap-1"
                 style={{
-                  fontFamily: "var(--font-geist-mono), 'Geist Mono', ui-monospace, monospace",
+                  fontFamily:
+                    "var(--font-geist-mono), 'Geist Mono', ui-monospace, monospace",
                 }}
               >
                 {dailyVolumeLabel}
@@ -189,5 +190,5 @@ export const ProductTeaserCard = (props: ProductTeaserCardProps) => {
         </div>
       </div>
     </section>
-  )
-}
+  );
+};

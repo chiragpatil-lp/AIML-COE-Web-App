@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import { Menu, X } from "lucide-react"
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Menu, X } from "lucide-react";
 const navigationLinks = [
   {
     name: "Features",
@@ -16,34 +16,34 @@ const navigationLinks = [
     name: "Resources",
     href: "#resources",
   },
-] as any[]
+] as any[];
 
 // @component: PortfolioNavbar
 export const PortfolioNavbar = () => {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [isScrolled, setIsScrolled] = useState(false)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20)
-    }
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
   const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen)
-  }
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
   const closeMobileMenu = () => {
-    setIsMobileMenuOpen(false)
-  }
+    setIsMobileMenuOpen(false);
+  };
   const handleLinkClick = (href: string) => {
-    closeMobileMenu()
-    const element = document.querySelector(href)
+    closeMobileMenu();
+    const element = document.querySelector(href);
     if (element) {
       element.scrollIntoView({
         behavior: "smooth",
-      })
+      });
     }
-  }
+  };
 
   // @return
   return (
@@ -171,5 +171,5 @@ export const PortfolioNavbar = () => {
         )}
       </AnimatePresence>
     </nav>
-  )
-}
+  );
+};

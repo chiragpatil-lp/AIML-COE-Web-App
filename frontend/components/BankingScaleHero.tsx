@@ -1,21 +1,21 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { motion } from "framer-motion"
-import { ArrowRight } from "lucide-react"
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { ArrowRight } from "lucide-react";
 type StatItem = {
-  value: string
-  description: string
-  delay: number
-}
+  value: string;
+  description: string;
+  delay: number;
+};
 type DataPoint = {
-  id: number
-  left: number
-  top: number
-  height: number
-  direction: "up" | "down"
-  delay: number
-}
+  id: number;
+  left: number;
+  top: number;
+  height: number;
+  direction: "up" | "down";
+  delay: number;
+};
 const stats: StatItem[] = [
   {
     value: "250+",
@@ -37,15 +37,18 @@ const stats: StatItem[] = [
     description: "Risk Mitigation\nProjects corrected",
     delay: 0.6,
   },
-]
+];
 const generateDataPoints = (): DataPoint[] => {
-  const points: DataPoint[] = []
-  const baseLeft = 1
-  const spacing = 32
+  const points: DataPoint[] = [];
+  const baseLeft = 1;
+  const spacing = 32;
   for (let i = 0; i < 50; i++) {
-    const direction = i % 2 === 0 ? "down" : "up"
-    const height = Math.floor(Math.random() * 120) + 88
-    const top = direction === "down" ? Math.random() * 150 + 250 : Math.random() * 100 - 80
+    const direction = i % 2 === 0 ? "down" : "up";
+    const height = Math.floor(Math.random() * 120) + 88;
+    const top =
+      direction === "down"
+        ? Math.random() * 150 + 250
+        : Math.random() * 100 - 80;
     points.push({
       id: i,
       left: baseLeft + i * spacing,
@@ -53,22 +56,20 @@ const generateDataPoints = (): DataPoint[] => {
       height,
       direction,
       delay: i * 0.035,
-    })
+    });
   }
-  return points
-}
+  return points;
+};
 
 // @component: BankingScaleHero
 export const BankingScaleHero = () => {
-  const [isVisible, setIsVisible] = useState(false)
-  const [dataPoints, setDataPoints] = useState<DataPoint[]>([])
-  const [typingComplete, setTypingComplete] = useState(false)
+  const [isVisible] = useState(true);
+  const [dataPoints] = useState<DataPoint[]>(() => generateDataPoints());
+  const [typingComplete, setTypingComplete] = useState(false);
   useEffect(() => {
-    setDataPoints(generateDataPoints())
-    setIsVisible(true)
-    const timer = setTimeout(() => setTypingComplete(true), 1000)
-    return () => clearTimeout(timer)
-  }, [])
+    const timer = setTimeout(() => setTypingComplete(true), 1000);
+    return () => clearTimeout(timer);
+  }, []);
 
   // @return
   return (
@@ -79,7 +80,8 @@ export const BankingScaleHero = () => {
             <div
               className="relative h-6 inline-flex items-center font-mono uppercase text-xs text-[#167E6C] mb-12 px-2"
               style={{
-                fontFamily: "var(--font-geist-mono), 'Geist Mono', ui-monospace, monospace",
+                fontFamily:
+                  "var(--font-geist-mono), 'Geist Mono', ui-monospace, monospace",
               }}
             >
               <div className="flex items-center gap-0.5 overflow-hidden">
@@ -147,8 +149,10 @@ export const BankingScaleHero = () => {
                 fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
               }}
             >
-              Our Center of Excellence empowers internal teams with reusable assets and standardized governance, 
-              ensuring every AI initiative delivers consistent quality and a competitive edge for our clients.
+              Our Center of Excellence empowers internal teams with reusable
+              assets and standardized governance, ensuring every AI initiative
+              delivers consistent quality and a competitive edge for our
+              clients.
             </p>
 
             <button className="relative inline-flex justify-center items-center leading-4 text-center cursor-pointer whitespace-nowrap outline-none font-medium h-9 text-[#232730] bg-white/50 backdrop-blur-sm shadow-[0_1px_1px_0_rgba(255,255,255,0),0_0_0_1px_rgba(87,90,100,0.12)] transition-all duration-200 ease-in-out rounded-lg px-4 mt-5 text-sm group hover:shadow-[0_1px_2px_0_rgba(0,0,0,0.05),0_0_0_1px_rgba(87,90,100,0.18)]">
@@ -211,7 +215,10 @@ export const BankingScaleHero = () => {
                         }}
                         className="absolute -left-[1px] w-2 h-2 bg-[#167E6C] rounded-full"
                         style={{
-                          top: point.direction === "down" ? "0px" : `${point.height - 8}px`,
+                          top:
+                            point.direction === "down"
+                              ? "0px"
+                              : `${point.height - 8}px`,
                         }}
                       />
                     </motion.div>
@@ -268,5 +275,5 @@ export const BankingScaleHero = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
