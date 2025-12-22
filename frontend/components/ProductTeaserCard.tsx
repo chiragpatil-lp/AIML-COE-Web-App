@@ -160,8 +160,7 @@ export const ProductTeaserCard = (props: ProductTeaserCardProps) => {
             }}
             className="col-span-12 lg:col-span-6 bg-white rounded-[40px] flex justify-center items-center aspect-square overflow-hidden"
             style={{
-              backgroundImage:
-                "url(/hero.jpg)",
+              backgroundImage: "url(/hero.jpg)",
               backgroundSize: "cover",
               backgroundPosition: "center",
               backgroundRepeat: "no-repeat",
@@ -177,8 +176,7 @@ export const ProductTeaserCard = (props: ProductTeaserCardProps) => {
               poster={posterSrc}
               className="block w-full h-full object-cover"
               style={{
-                backgroundImage:
-                  "url(/hero.jpg)",
+                backgroundImage: "url(/hero.jpg)",
                 backgroundSize: "cover",
                 backgroundPosition: "center",
                 backgroundRepeat: "no-repeat",
