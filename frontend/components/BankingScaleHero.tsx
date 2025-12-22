@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 type StatItem = {
@@ -64,8 +64,19 @@ const generateDataPoints = (): DataPoint[] => {
 // @component: BankingScaleHero
 export const BankingScaleHero = () => {
   const [isVisible] = useState(true);
-  const [dataPoints] = useState<DataPoint[]>(() => generateDataPoints());
+  const [isMounted, setIsMounted] = useState(false);
   const [typingComplete, setTypingComplete] = useState(false);
+
+  // Generate data points only on client side to avoid hydration mismatch
+  const dataPoints = useMemo(() => {
+    return isMounted ? generateDataPoints() : [];
+  }, [isMounted]);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Required for client-side only initialization to prevent hydration mismatch
+    setIsMounted(true);
+  }, []);
+
   useEffect(() => {
     const timer = setTimeout(() => setTypingComplete(true), 1000);
     return () => clearTimeout(timer);
