@@ -24,7 +24,7 @@ export const ProductTeaserCard = (props: ProductTeaserCardProps) => {
     subheadline = "To drive industrialized AI adoption that rewires business processes for measurable economic value, moving from ad-hoc experimentation to scalable, secure, and strategic outcomes.",
     description = "Trusted by fast-growing teams and enterprises, CoE powers smarter communication across 1,000+ organizations — with enterprise-grade security, multilingual analysis, and instant emotional detection.",
     videoSrc = "https://cdn.sanity.io/files/1t8iva7t/production/a2cbbed7c998cf93e7ecb6dae75bab42b13139c2.mp4",
-    posterSrc = "/images/design-mode/9ad78a5534a46e77bafe116ce1c38172c60dc21a-1069x1068.png",
+    posterSrc = "/hero.jpg",
     primaryButtonText = "Get Started",
     primaryButtonHref = "",
     secondaryButtonText = "View Docs",
@@ -160,8 +160,7 @@ export const ProductTeaserCard = (props: ProductTeaserCardProps) => {
             }}
             className="col-span-12 lg:col-span-6 bg-white rounded-[40px] flex justify-center items-center aspect-square overflow-hidden"
             style={{
-              backgroundImage:
-                "url(https://storage.googleapis.com/storage.magicpath.ai/user/282171029206482944/assets/882ef3dd-3459-4fd8-a939-52ceada51d5c.png)",
+              backgroundImage: "url(/hero.jpg)",
               backgroundSize: "cover",
               backgroundPosition: "center",
               backgroundRepeat: "no-repeat",
@@ -177,8 +176,7 @@ export const ProductTeaserCard = (props: ProductTeaserCardProps) => {
               poster={posterSrc}
               className="block w-full h-full object-cover"
               style={{
-                backgroundImage:
-                  "url(https://storage.googleapis.com/storage.magicpath.ai/user/282171029206482944/assets/38855cdf-b40a-445b-a17c-c2bbb35c884e.png)",
+                backgroundImage: "url(/hero.jpg)",
                 backgroundSize: "cover",
                 backgroundPosition: "center",
                 backgroundRepeat: "no-repeat",

@@ -3,6 +3,7 @@
 import type React from "react";
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 type CaseStudy = {
   id: string;
   company: string;
@@ -12,6 +13,7 @@ type CaseStudy = {
   quote: string;
   attribution: string;
   accentColor: string;
+  image: string;
   cards: {
     type: "slack" | "meeting" | "sentiment" | "notion" | "stripe" | "figma";
     delay: number;
@@ -41,6 +43,7 @@ const caseStudies: CaseStudy[] = [
       "Clear visibility into AI investments enables data-driven decision making and demonstrates tangible business value.",
     attribution: "Strategic Pillar 1",
     accentColor: "#f2545b",
+    image: "/pillars-landing/strategy-value.jpg",
     cards: [
       {
         type: "notion",
@@ -78,6 +81,7 @@ const caseStudies: CaseStudy[] = [
       "Building a robust IP portfolio of AI assets accelerates innovation and reduces time-to-value across projects.",
     attribution: "Strategic Pillar 2",
     accentColor: "#2c3e50",
+    image: "/pillars-landing/innovation-ip.jpg",
     cards: [
       {
         type: "stripe",
@@ -115,6 +119,7 @@ const caseStudies: CaseStudy[] = [
       "Standardized platforms and engineering practices ensure quality, reliability, and scalability of AI solutions.",
     attribution: "Strategic Pillar 3",
     accentColor: "#f2545b",
+    image: "/pillars-landing/platform-engieering.jpg",
     cards: [
       {
         type: "meeting",
@@ -156,6 +161,7 @@ const caseStudies: CaseStudy[] = [
       "Investing in people and capability development ensures long-term AI success and organizational transformation.",
     attribution: "Strategic Pillar 4",
     accentColor: "#2c3e50",
+    image: "/pillars-landing/people.jpg",
     cards: [
       {
         type: "figma",
@@ -197,6 +203,7 @@ const caseStudies: CaseStudy[] = [
       "Operational excellence through standardized processes and continuous improvement drives consistent AI delivery.",
     attribution: "Strategic Pillar 5",
     accentColor: "#f2545b",
+    image: "/pillars-landing/operational-excellence.jpg",
     cards: [
       {
         type: "notion",
@@ -235,6 +242,7 @@ const caseStudies: CaseStudy[] = [
       "Strategic communication and market intelligence keep the COE aligned with industry trends and showcase our impact.",
     attribution: "Strategic Pillar 6",
     accentColor: "#2c3e50",
+    image: "/pillars-landing/communication-intelligence.jpg",
     cards: [
       {
         type: "stripe",
@@ -385,313 +393,6 @@ const FeatureBadge = ({ name }: { name: string }) => {
     </div>
   );
 };
-const SlackCallCard = ({
-  accentColor,
-  delay,
-  zIndex,
-}: {
-  accentColor: string;
-  delay: number;
-  zIndex: number;
-}) => {
-  return null;
-};
-const MeetingTranscriptCard = ({
-  accentColor,
-  delay,
-  zIndex,
-}: {
-  accentColor: string;
-  delay: number;
-  zIndex: number;
-}) => {
-  return null;
-};
-const SentimentReportCard = ({
-  accentColor,
-  delay,
-  zIndex,
-}: {
-  accentColor: string;
-  delay: number;
-  zIndex: number;
-}) => {
-  return null;
-};
-const NotionCollaborationCard = ({
-  accentColor,
-  delay,
-  zIndex,
-}: {
-  accentColor: string;
-  delay: number;
-  zIndex: number;
-}) => {
-  return (
-    <motion.div
-      initial={{
-        opacity: 0,
-        y: 20,
-        scale: 0.95,
-      }}
-      animate={{
-        opacity: 1,
-        y: 0,
-        scale: 1,
-      }}
-      transition={{
-        duration: 0.6,
-        ease: [0.76, 0, 0.24, 1],
-        delay,
-      }}
-      className="absolute w-[380px] rounded-xl p-6 backdrop-blur-xl"
-      style={{
-        backgroundColor: "rgba(255, 255, 255, 0.85)",
-        boxShadow:
-          "inset 0 0 0 1px rgba(255, 255, 255, 0.8), 0 8px 32px 0 rgba(0, 0, 0, 0.12)",
-        filter: "drop-shadow(0 4px 6px rgba(30, 30, 44, 0.15))",
-        transform: "translate(-200px, -80px)",
-        zIndex,
-      }}
-    >
-      <div className="flex flex-col space-y-5">
-        <div className="flex items-center justify-between">
-          <h4 className="text-sm font-semibold text-foreground">
-            Team Alignment
-          </h4>
-          <span className="text-xs text-muted-foreground">Real-time</span>
-        </div>
-
-        <div className="space-y-4">
-          <div className="flex items-center justify-between p-3 bg-muted/30 rounded-lg">
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-green-500" />
-              <span className="text-sm text-foreground">Design Team</span>
-            </div>
-            <span className="text-sm font-semibold text-green-600">96%</span>
-          </div>
-
-          <div className="flex items-center justify-between p-3 bg-muted/30 rounded-lg">
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-blue-500" />
-              <span className="text-sm text-foreground">Engineering</span>
-            </div>
-            <span className="text-sm font-semibold text-blue-600">94%</span>
-          </div>
-
-          <div className="flex items-center justify-between p-3 bg-muted/30 rounded-lg">
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-purple-500" />
-              <span className="text-sm text-foreground">Product</span>
-            </div>
-            <span className="text-sm font-semibold text-purple-600">92%</span>
-          </div>
-        </div>
-
-        <div className="pt-3 border-t border-border/50">
-          <div className="text-xs text-muted-foreground">
-            <span className="font-semibold text-foreground">12</span> active
-            conversations
-          </div>
-        </div>
-      </div>
-    </motion.div>
-  );
-};
-
-const StripeGlobalCard = ({
-  accentColor,
-  delay,
-  zIndex,
-}: {
-  accentColor: string;
-  delay: number;
-  zIndex: number;
-}) => {
-  return (
-    <motion.div
-      initial={{
-        opacity: 0,
-        y: 20,
-        scale: 0.95,
-      }}
-      animate={{
-        opacity: 1,
-        y: 0,
-        scale: 1,
-      }}
-      transition={{
-        duration: 0.6,
-        ease: [0.76, 0, 0.24, 1],
-        delay,
-      }}
-      className="absolute w-[400px] rounded-xl p-6 backdrop-blur-xl"
-      style={{
-        backgroundColor: "rgba(255, 255, 255, 0.85)",
-        boxShadow:
-          "inset 0 0 0 1px rgba(255, 255, 255, 0.8), 0 8px 32px 0 rgba(0, 0, 0, 0.12)",
-        filter: "drop-shadow(0 4px 6px rgba(30, 30, 44, 0.15))",
-        transform: "translate(-180px, -60px)",
-        zIndex,
-      }}
-    >
-      <div className="flex flex-col space-y-5">
-        <div className="flex items-center justify-between">
-          <h4 className="text-sm font-semibold text-foreground">
-            Global Team Dynamics
-          </h4>
-          <span className="text-xs text-muted-foreground">Last 24h</span>
-        </div>
-
-        <div className="grid grid-cols-3 gap-3">
-          <div className="text-center p-3 bg-muted/20 rounded-lg">
-            <div className="text-2xl font-bold text-foreground">SF</div>
-            <div className="text-xs text-muted-foreground mt-1">
-              San Francisco
-            </div>
-            <div className="text-xs font-semibold text-green-600 mt-2">
-              High
-            </div>
-          </div>
-          <div className="text-center p-3 bg-muted/20 rounded-lg">
-            <div className="text-2xl font-bold text-foreground">DUB</div>
-            <div className="text-xs text-muted-foreground mt-1">Dublin</div>
-            <div className="text-xs font-semibold text-blue-600 mt-2">
-              Active
-            </div>
-          </div>
-          <div className="text-center p-3 bg-muted/20 rounded-lg">
-            <div className="text-2xl font-bold text-foreground">SG</div>
-            <div className="text-xs text-muted-foreground mt-1">Singapore</div>
-            <div className="text-xs font-semibold text-purple-600 mt-2">
-              Peak
-            </div>
-          </div>
-        </div>
-
-        <div className="space-y-2">
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-muted-foreground">Cross-office velocity</span>
-            <span className="font-semibold text-foreground">+28%</span>
-          </div>
-          <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
-            <div
-              className="h-full rounded-full"
-              style={{ width: "87%", backgroundColor: accentColor }}
-            />
-          </div>
-        </div>
-      </div>
-    </motion.div>
-  );
-};
-
-const FigmaSprintCard = ({
-  accentColor,
-  delay,
-  zIndex,
-}: {
-  accentColor: string;
-  delay: number;
-  zIndex: number;
-}) => {
-  return (
-    <motion.div
-      initial={{
-        opacity: 0,
-        y: 20,
-        scale: 0.95,
-      }}
-      animate={{
-        opacity: 1,
-        y: 0,
-        scale: 1,
-      }}
-      transition={{
-        duration: 0.6,
-        ease: [0.76, 0, 0.24, 1],
-        delay,
-      }}
-      className="absolute w-[380px] rounded-xl p-6 backdrop-blur-xl"
-      style={{
-        backgroundColor: "rgba(255, 255, 255, 0.85)",
-        boxShadow:
-          "inset 0 0 0 1px rgba(255, 255, 255, 0.8), 0 8px 32px 0 rgba(0, 0, 0, 0.12)",
-        filter: "drop-shadow(0 4px 6px rgba(30, 30, 44, 0.15))",
-        transform: "translate(-190px, -70px)",
-        zIndex,
-      }}
-    >
-      <div className="flex flex-col space-y-5">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div
-              className="w-8 h-8 rounded-lg flex items-center justify-center text-white"
-              style={{ backgroundColor: accentColor }}
-            >
-              <svg viewBox="0 0 16 16" fill="none" className="w-4 h-4">
-                <rect
-                  x="3"
-                  y="3"
-                  width="10"
-                  height="10"
-                  rx="2"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                />
-              </svg>
-            </div>
-            <div>
-              <h4 className="text-sm font-semibold text-foreground">
-                Sprint Planning
-              </h4>
-              <p className="text-xs text-muted-foreground">Week 3 • Day 2</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="space-y-3">
-          <div className="flex items-center justify-between p-3 bg-muted/20 rounded-lg">
-            <span className="text-sm text-foreground">
-              Design handoff clarity
-            </span>
-            <div className="flex items-center gap-2">
-              <div className="w-16 h-1.5 bg-muted rounded-full overflow-hidden">
-                <div className="h-full bg-green-500" style={{ width: "94%" }} />
-              </div>
-              <span className="text-xs font-semibold text-foreground">94%</span>
-            </div>
-          </div>
-
-          <div className="flex items-center justify-between p-3 bg-muted/20 rounded-lg">
-            <span className="text-sm text-foreground">Team sentiment</span>
-            <div className="flex items-center gap-2">
-              <div className="w-16 h-1.5 bg-muted rounded-full overflow-hidden">
-                <div className="h-full bg-blue-500" style={{ width: "89%" }} />
-              </div>
-              <span className="text-xs font-semibold text-foreground">89%</span>
-            </div>
-          </div>
-
-          <div className="flex items-center justify-between p-3 bg-muted/20 rounded-lg">
-            <span className="text-sm text-foreground">Friction detection</span>
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-semibold text-green-600">Low</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="pt-3 border-t border-border/50">
-          <div className="flex items-center justify-between text-xs">
-            <span className="text-muted-foreground">Blockers identified</span>
-            <span className="font-semibold text-foreground">2</span>
-          </div>
-        </div>
-      </div>
-    </motion.div>
-  );
-};
-
 export const CaseStudiesCarousel = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(0);
@@ -909,109 +610,40 @@ export const CaseStudiesCarousel = () => {
             </div>
           </div>
 
-          {/* Right Content - Card Visualization */}
-          <div className="relative h-[500px] flex items-center justify-center">
+          {/* Right Content - Pillar Image */}
+          <div className="relative h-[400px] flex items-center justify-center">
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentStudy.id}
                 initial={{
                   opacity: 0,
+                  scale: 0.95,
                 }}
                 animate={{
                   opacity: 1,
+                  scale: 1,
                 }}
                 exit={{
                   opacity: 0,
+                  scale: 0.95,
                 }}
                 transition={{
-                  duration: 0.3,
+                  duration: 0.5,
+                  ease: [0.76, 0, 0.24, 1],
                 }}
-                className="relative w-full h-full flex items-center justify-center"
+                className="relative w-[500px] h-[350px] flex items-center justify-center"
               >
-                {currentStudy.id === "notion" && (
-                  <>
-                    <NotionCollaborationCard
-                      accentColor={currentStudy.accentColor}
-                      delay={0}
-                      zIndex={1}
-                    />
-                    <SlackCallCard
-                      accentColor={currentStudy.accentColor}
-                      delay={0.1}
-                      zIndex={2}
-                    />
-                  </>
-                )}
-                {currentStudy.id === "cloudwatch" && (
-                  <>
-                    <StripeGlobalCard
-                      accentColor={currentStudy.accentColor}
-                      delay={0}
-                      zIndex={1}
-                    />
-                    <SlackCallCard
-                      accentColor={currentStudy.accentColor}
-                      delay={0.1}
-                      zIndex={2}
-                    />
-                  </>
-                )}
-                {currentStudy.id === "eightball" && (
-                  <>
-                    <MeetingTranscriptCard
-                      accentColor={currentStudy.accentColor}
-                      delay={0}
-                      zIndex={1}
-                    />
-                    <SlackCallCard
-                      accentColor={currentStudy.accentColor}
-                      delay={0.1}
-                      zIndex={2}
-                    />
-                  </>
-                )}
-                {currentStudy.id === "coreos" && (
-                  <>
-                    <FigmaSprintCard
-                      accentColor={currentStudy.accentColor}
-                      delay={0}
-                      zIndex={1}
-                    />
-                    <MeetingTranscriptCard
-                      accentColor={currentStudy.accentColor}
-                      delay={0.1}
-                      zIndex={2}
-                    />
-                  </>
-                )}
-                {currentStudy.id === "notion-2" && (
-                  <>
-                    <NotionCollaborationCard
-                      accentColor={currentStudy.accentColor}
-                      delay={0}
-                      zIndex={1}
-                    />
-                    <SlackCallCard
-                      accentColor={currentStudy.accentColor}
-                      delay={0.1}
-                      zIndex={2}
-                    />
-                  </>
-                )}
-                {currentStudy.id === "cloudwatch-2" && (
-                  <>
-                    <StripeGlobalCard
-                      accentColor={currentStudy.accentColor}
-                      delay={0}
-                      zIndex={1}
-                    />
-                    <SlackCallCard
-                      accentColor={currentStudy.accentColor}
-                      delay={0.1}
-                      zIndex={2}
-                    />
-                  </>
-                )}
+                <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-2xl">
+                  <Image
+                    src={currentStudy.image}
+                    alt={currentStudy.company}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, 500px"
+                    priority
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+                </div>
               </motion.div>
             </AnimatePresence>
           </div>
