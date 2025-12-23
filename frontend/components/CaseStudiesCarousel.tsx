@@ -135,7 +135,7 @@ const caseStudies: CaseStudy[] = [
   },
   {
     id: "coreos",
-    company: "People & Capability",
+    company: "People & Capability enablement",
     logo: (
       <svg
         fill="none"
@@ -177,7 +177,7 @@ const caseStudies: CaseStudy[] = [
   },
   {
     id: "notion-2",
-    company: "Operational Excellence",
+    company: "COE Delivery Goverance",
     logo: (
       <svg
         fill="none"
@@ -219,7 +219,7 @@ const caseStudies: CaseStudy[] = [
   },
   {
     id: "cloudwatch-2",
-    company: "Communication & Intelligence",
+    company: "Communication and Market Intelligence",
     logo: (
       <svg
         fill="none"
