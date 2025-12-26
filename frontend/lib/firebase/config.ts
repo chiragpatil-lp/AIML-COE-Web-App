@@ -23,7 +23,7 @@ let db: Firestore | undefined;
 if (typeof window !== 'undefined' && isConfigValid) {
   app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
   auth = getAuth(app);
-  db = getFirestore(app);
+  db = getFirestore(app, 'aiml-coe-web-app');
 }
 
 export { app, auth, db };
