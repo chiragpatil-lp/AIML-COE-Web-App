@@ -72,30 +72,18 @@ interface PillarGridProps {
 }
 
 export function PillarGrid(_props: PillarGridProps = {}) {
-  const { hasAccessToPillar, permissions, user } = useAuth();
+  const { hasAccessToPillar, permissions } = useAuth();
 
-  const handlePillarClick = async (pillar: PillarInfo, hasAccess: boolean) => {
+  const handlePillarClick = (pillar: PillarInfo, hasAccess: boolean) => {
     if (!hasAccess || pillar.url === "#") {
       return;
     }
 
-    try {
-      // Get the user's ID token for server-side verification
-      const token = await user?.getIdToken();
+    // Token is sent automatically via cookie set by AuthContext
+    const apiUrl = `/api/pillar/${pillar.number}`;
 
-      if (!token) {
-        console.error("Failed to get authentication token");
-        return;
-      }
-
-      // Use the secure API endpoint instead of direct URL access
-      const apiUrl = `/api/pillar/${pillar.number}`;
-
-      // Open in new tab with the API endpoint that will verify and redirect
-      window.open(apiUrl, "_blank", "noopener,noreferrer");
-    } catch (error) {
-      console.error("Error accessing pillar:", error);
-    }
+    // Open in new tab with the API endpoint that will verify and redirect
+    window.open(apiUrl, "_blank", "noopener,noreferrer");
   };
 
   return (
@@ -139,22 +127,10 @@ export function PillarGrid(_props: PillarGridProps = {}) {
             <div className="card-body">
               <div className="flex items-start justify-between">
                 <div className="flex-1">
-                  <h2
-                    className="card-title text-lg mb-2 text-[#202020]"
-                    style={{
-                      fontFamily:
-                        "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
-                    }}
-                  >
+                  <h2 className="card-title text-lg mb-2 text-[#202020] font-jakarta">
                     {pillar.name}
                   </h2>
-                  <p
-                    className="text-sm text-[#404040]"
-                    style={{
-                      fontFamily:
-                        "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
-                    }}
-                  >
+                  <p className="text-sm text-[#404040] font-jakarta">
                     {pillar.description}
                   </p>
                 </div>
@@ -180,36 +156,24 @@ export function PillarGrid(_props: PillarGridProps = {}) {
               <div className="card-actions justify-start mt-2">
                 {!hasAccess && (
                   <div
-                    className="badge badge-ghost badge-sm"
+                    className="badge badge-ghost badge-sm font-jakarta"
                     aria-label="Access status: not granted"
-                    style={{
-                      fontFamily:
-                        "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
-                    }}
                   >
                     Access not granted
                   </div>
                 )}
                 {permissions?.isAdmin && (
                   <div
-                    className="badge badge-success badge-sm"
+                    className="badge badge-success badge-sm font-jakarta"
                     aria-label="Access level: admin"
-                    style={{
-                      fontFamily:
-                        "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
-                    }}
                   >
                     Admin Access
                   </div>
                 )}
                 {hasAccess && !permissions?.isAdmin && (
                   <div
-                    className="badge badge-primary badge-sm"
+                    className="badge badge-primary badge-sm font-jakarta"
                     aria-label="Access status: authorized"
-                    style={{
-                      fontFamily:
-                        "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
-                    }}
                   >
                     Authorized
                   </div>

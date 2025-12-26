@@ -1,6 +1,7 @@
 import { initializeApp, getApps, cert, type App } from "firebase-admin/app";
 import { getAuth, type Auth } from "firebase-admin/auth";
 import { getFirestore, type Firestore } from "firebase-admin/firestore";
+import { isValidUserPermissions, fromFirestore } from "./permissions";
 
 let adminApp: App | undefined;
 let adminAuth: Auth | undefined;
@@ -69,7 +70,7 @@ export function getAdminAuth(): Auth {
 export function getAdminFirestore(): Firestore {
   if (!adminDb) {
     const app = initializeAdminApp();
-    adminDb = getFirestore(app);
+    adminDb = getFirestore(app, "aiml-coe-web-app");
   }
   return adminDb;
 }
@@ -88,6 +89,7 @@ export async function verifyIdToken(token: string) {
  * Get user permissions from Firestore using Admin SDK
  * @param userId - Firebase user ID
  * @returns User permissions or null if not found
+ * @throws Error if permissions data is malformed
  */
 export async function getUserPermissions(userId: string) {
   const db = getAdminFirestore();
@@ -98,5 +100,12 @@ export async function getUserPermissions(userId: string) {
     return null;
   }
 
-  return permissionsSnap.data();
+  const data = permissionsSnap.data();
+
+  // Validate permissions structure before returning
+  if (!isValidUserPermissions(data)) {
+    throw new Error(`Invalid permissions structure for user ${userId}`);
+  }
+
+  return fromFirestore(data);
 }

@@ -8,10 +8,11 @@ import {
   signOut as firebaseSignOut,
   onAuthStateChanged,
 } from "firebase/auth";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from "@/lib/firebase/config";
 import type { AuthContextType, UserPermissions } from "@/lib/types/auth.types";
 import { toast } from "sonner";
+import { isValidUserPermissions, toDate } from "@/lib/firebase/permissions";
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
@@ -25,68 +26,6 @@ const AuthContext = createContext<AuthContextType>({
 
 interface AuthProviderProps {
   children: React.ReactNode;
-}
-
-interface FirestoreUserPermissions {
-  userId: string;
-  email: string;
-  isAdmin: boolean;
-  pillars: {
-    pillar1: boolean;
-    pillar2: boolean;
-    pillar3: boolean;
-    pillar4: boolean;
-    pillar5: boolean;
-    pillar6: boolean;
-  };
-  createdAt?: { toDate(): Date } | Date;
-  updatedAt?: { toDate(): Date } | Date;
-}
-
-/**
- * Type guard to validate Firestore user permissions data structure
- * @param data - Unknown data from Firestore
- * @returns True if data matches UserPermissions structure
- */
-function isValidUserPermissions(
-  data: unknown,
-): data is FirestoreUserPermissions {
-  if (!data || typeof data !== "object") return false;
-  const d = data as Record<string, unknown>;
-
-  return (
-    typeof d.userId === "string" &&
-    typeof d.email === "string" &&
-    typeof d.isAdmin === "boolean" &&
-    typeof d.pillars === "object" &&
-    d.pillars !== null &&
-    typeof (d.pillars as Record<string, unknown>).pillar1 === "boolean" &&
-    typeof (d.pillars as Record<string, unknown>).pillar2 === "boolean" &&
-    typeof (d.pillars as Record<string, unknown>).pillar3 === "boolean" &&
-    typeof (d.pillars as Record<string, unknown>).pillar4 === "boolean" &&
-    typeof (d.pillars as Record<string, unknown>).pillar5 === "boolean" &&
-    typeof (d.pillars as Record<string, unknown>).pillar6 === "boolean"
-  );
-}
-
-/**
- * Safely converts Firestore Timestamp to Date
- * @param value - Firestore Timestamp or Date
- * @returns JavaScript Date object
- */
-function toDate(value: unknown): Date {
-  if (
-    value &&
-    typeof value === "object" &&
-    "toDate" in value &&
-    typeof value.toDate === "function"
-  ) {
-    return (value as { toDate(): Date }).toDate();
-  }
-  if (value instanceof Date) {
-    return value;
-  }
-  return new Date();
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
@@ -103,7 +42,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   /**
    * Fetches user permissions from Firestore
-   * Creates default permissions if user is new
+   * Waits for Cloud Function to create permissions for new users
    * @param userId - Firebase Auth user ID
    * @param userEmail - User's email address
    * @returns Promise that resolves when permissions are fetched
@@ -121,71 +60,70 @@ export function AuthProvider({ children }: AuthProviderProps) {
       return;
     }
 
-    try {
-      const permissionsRef = doc(db, "userPermissions", userId);
-      const permissionsSnap = await getDoc(permissionsRef);
+    // Retry configuration for waiting on Cloud Function
+    const MAX_RETRIES = 5;
+    const RETRY_DELAY_MS = 2000; // 2 seconds
 
-      if (permissionsSnap.exists()) {
-        const data = permissionsSnap.data();
+    for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+      try {
+        const permissionsRef = doc(db, "userPermissions", userId);
+        const permissionsSnap = await getDoc(permissionsRef);
 
-        // Validate data structure before using it
-        if (!isValidUserPermissions(data)) {
-          const errorMsg = "Invalid permissions data structure in Firestore";
-          console.error(errorMsg, data);
-          setError(errorMsg);
-          toast.error("Invalid user permissions. Please contact support.");
-          return;
+        if (permissionsSnap.exists()) {
+          const data = permissionsSnap.data();
+
+          // Validate data structure before using it
+          if (!isValidUserPermissions(data)) {
+            const errorMsg = "Invalid permissions data structure in Firestore";
+            console.error(errorMsg, data);
+            setError(errorMsg);
+            toast.error("Invalid user permissions. Please contact support.");
+            return;
+          }
+
+          // Convert Firestore timestamps to Date objects
+          setPermissions({
+            ...data,
+            createdAt: toDate(data.createdAt),
+            updatedAt: toDate(data.updatedAt),
+          });
+
+          // Show success toast after permissions are loaded
+          toast.success("Signed in successfully!");
+          setError(null);
+          return; // Success - exit retry loop
         }
 
-        // Convert Firestore timestamps to Date objects
-        setPermissions({
-          ...data,
-          createdAt: toDate(data.createdAt),
-          updatedAt: toDate(data.updatedAt),
+        // Permissions don't exist yet - wait for Cloud Function
+        if (attempt < MAX_RETRIES) {
+          console.log(
+            `Waiting for user permissions (attempt ${attempt + 1}/${MAX_RETRIES})...`,
+          );
+          await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS));
+        } else {
+          const errorMsg = "User permissions not found after retries.";
+          console.error(errorMsg, { userId, userEmail });
+          setError(errorMsg);
+          toast.error(
+            "Failed to load permissions. Please try signing out and in again.",
+          );
+        }
+      } catch (error) {
+        const errorMsg =
+          error instanceof Error
+            ? error.message
+            : "Failed to fetch permissions";
+        console.error("Error fetching permissions:", {
+          message: errorMsg,
+          userId,
+          attempt,
         });
 
-        // Show success toast after permissions are loaded
-        toast.success("Signed in successfully!");
-      } else {
-        // Create default permissions for new user
-        // NOTE: This is a temporary solution. In production, user creation
-        // should be handled by a Cloud Function to prevent privilege escalation
-        const defaultPermissions: UserPermissions = {
-          userId,
-          email: userEmail,
-          isAdmin: false,
-          pillars: {
-            pillar1: false,
-            pillar2: false,
-            pillar3: false,
-            pillar4: false,
-            pillar5: false,
-            pillar6: false,
-          },
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        };
-        await setDoc(permissionsRef, defaultPermissions);
-        setPermissions(defaultPermissions);
-
-        // Show success toast for new users
-        toast.success("Welcome! Your account has been created.");
+        if (attempt === MAX_RETRIES) {
+          setError(errorMsg);
+          toast.error("Failed to load permissions. Please refresh the page.");
+        }
       }
-
-      // Clear any previous errors
-      setError(null);
-    } catch (error) {
-      const errorMsg =
-        error instanceof Error ? error.message : "Failed to fetch permissions";
-      console.error("Error fetching permissions:", {
-        message: errorMsg,
-        stack: error instanceof Error ? error.stack : undefined,
-        userId,
-      });
-      setError(errorMsg);
-      toast.error(
-        "Failed to load user permissions. Please try refreshing the page.",
-      );
     }
   };
 
@@ -219,16 +157,42 @@ export function AuthProvider({ children }: AuthProviderProps) {
           return;
         }
 
+        // Set authentication cookie for server-side verification
+        try {
+          const token = await user.getIdToken();
+          document.cookie = `firebase-token=${token}; path=/; max-age=3600; secure; samesite=lax`;
+        } catch (error) {
+          console.error("Failed to set auth cookie:", error);
+        }
+
         await fetchPermissions(user.uid, user.email);
       } else {
         setPermissions(null);
         setError(null);
+        // Clear cookie on sign out
+        document.cookie = "firebase-token=; path=/; max-age=0";
       }
       if (mounted) setLoading(false);
     });
 
+    // Refresh token every 50 minutes (Firebase tokens expire in 1 hour)
+    const refreshTokenInterval = setInterval(
+      async () => {
+        if (auth.currentUser) {
+          try {
+            const token = await auth.currentUser.getIdToken(true); // Force refresh
+            document.cookie = `firebase-token=${token}; path=/; max-age=3600; secure; samesite=lax`;
+          } catch (error) {
+            console.error("Failed to refresh auth token:", error);
+          }
+        }
+      },
+      50 * 60 * 1000,
+    ); // 50 minutes
+
     return () => {
       mounted = false;
+      clearInterval(refreshTokenInterval);
       unsubscribe();
     };
   }, []);
@@ -272,6 +236,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
     try {
       await firebaseSignOut(auth);
+      // Clear authentication cookie
+      document.cookie = "firebase-token=; path=/; max-age=0";
       toast.success("Signed out successfully");
     } catch (error) {
       const errorMsg =
