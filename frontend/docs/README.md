@@ -14,29 +14,20 @@ Welcome to the documentation for the AIML COE Web Application. This directory co
 
 ### 🔐 Authentication (NEW)
 
-2. **[Firebase Auth Complete Setup](./FIREBASE-AUTH-COMPLETE-SETUP.md)** - **START HERE FOR AUTH**
-   - ✅ **Complete implementation guide** (Dec 26, 2024)
-   - Actual configuration (search-ahmed project, aiml-coe-web-app database)
-   - Step-by-step Firebase Console setup
-   - Firestore security rules (updated with user self-registration)
-   - Testing procedures & troubleshooting
-   - Making your first admin user
-   - Production deployment guide
+2. **[Firebase Authentication](./firebase/)** - **START HERE FOR AUTH**
+   - ✅ **Complete implementation** (Dec 26, 2024)
+   - Google OAuth sign-in with Firestore permissions
+   - 6 strategic pillar access control
    - **Status**: ✅ **IMPLEMENTED AND TESTED**
 
-3. **[Firebase Implementation Reference](./FIREBASE-AUTH-IMPLEMENTATION.md)**
-   - Original implementation guide (template/reference)
-   - Code structure and technical details
-   - Use for understanding architecture
-
-4. **[Firebase Setup Next Steps](./FIREBASE_SETUP_NEXT_STEPS.md)**
-   - Quick reference for deployment
-   - Testing checklist
-   - Architecture overview
+   **Key Documents**:
+   - [Complete Setup Guide](./firebase/FIREBASE-AUTH-COMPLETE-SETUP.md) ⭐ Main reference
+   - [Implementation Details](./firebase/FIREBASE-AUTH-IMPLEMENTATION.md)
+   - [Firebase Folder README](./firebase/README.md)
 
 ### 💻 Development
 
-5. **[Development Guide](./DEVELOPMENT.md)**
+3. **[Development Guide](./DEVELOPMENT.md)**
    - Local development setup
    - Development workflow
    - Code conventions and best practices
@@ -44,7 +35,7 @@ Welcome to the documentation for the AIML COE Web Application. This directory co
 
 ### 🔄 Deployment
 
-6. **[Deployment Guide](./DEPLOYMENT.md)**
+4. **[Deployment Guide](./DEPLOYMENT.md)**
    - CI/CD pipeline architecture
    - Automated deployment process
    - Monitoring and logging
@@ -56,23 +47,23 @@ Welcome to the documentation for the AIML COE Web Application. This directory co
 ### For Developers
 
 - Setting up local environment → [DEVELOPMENT.md](./DEVELOPMENT.md#initial-setup)
-- **Firebase Authentication setup** → [FIREBASE-AUTH-COMPLETE-SETUP.md](./FIREBASE-AUTH-COMPLETE-SETUP.md)
+- **Firebase Authentication setup** → [firebase/FIREBASE-AUTH-COMPLETE-SETUP.md](./firebase/FIREBASE-AUTH-COMPLETE-SETUP.md)
 - Code style guidelines → [DEVELOPMENT.md](./DEVELOPMENT.md#code-style--conventions)
 - Adding new features → [DEVELOPMENT.md](./DEVELOPMENT.md#common-tasks)
 - Troubleshooting dev issues → [DEVELOPMENT.md](./DEVELOPMENT.md#troubleshooting)
-- **Firebase troubleshooting** → [FIREBASE-AUTH-COMPLETE-SETUP.md](./FIREBASE-AUTH-COMPLETE-SETUP.md#troubleshooting)
+- **Firebase troubleshooting** → [firebase/FIREBASE-AUTH-COMPLETE-SETUP.md](./firebase/FIREBASE-AUTH-COMPLETE-SETUP.md#troubleshooting)
 
 ### For Authentication & Permissions
 
-- **Understanding Firebase Auth** → [FIREBASE-AUTH-COMPLETE-SETUP.md](./FIREBASE-AUTH-COMPLETE-SETUP.md#architecture--technical-details)
-- Testing sign-in flow → [FIREBASE-AUTH-COMPLETE-SETUP.md](./FIREBASE-AUTH-COMPLETE-SETUP.md#testing-the-implementation)
-- **Granting user permissions** → [FIREBASE-AUTH-COMPLETE-SETUP.md](./FIREBASE-AUTH-COMPLETE-SETUP.md#making-your-first-admin-user)
-- Permission system explained → [FIREBASE-AUTH-COMPLETE-SETUP.md](./FIREBASE-AUTH-COMPLETE-SETUP.md#permission-system)
+- **Understanding Firebase Auth** → [firebase/FIREBASE-AUTH-COMPLETE-SETUP.md](./firebase/FIREBASE-AUTH-COMPLETE-SETUP.md#architecture--technical-details)
+- Testing sign-in flow → [firebase/FIREBASE-AUTH-COMPLETE-SETUP.md](./firebase/FIREBASE-AUTH-COMPLETE-SETUP.md#testing-the-implementation)
+- **Granting user permissions** → [firebase/FIREBASE-AUTH-COMPLETE-SETUP.md](./firebase/FIREBASE-AUTH-COMPLETE-SETUP.md#making-your-first-admin-user)
+- Permission system explained → [firebase/FIREBASE-AUTH-COMPLETE-SETUP.md](./firebase/FIREBASE-AUTH-COMPLETE-SETUP.md#permission-system)
 
 ### For DevOps/Deployment
 
 - ⚠️ **Complete GCP setup first** → [GCP-SETUP.md](./GCP-SETUP.md)
-- **Firebase production deployment** → [FIREBASE-AUTH-COMPLETE-SETUP.md](./FIREBASE-AUTH-COMPLETE-SETUP.md#deployment-to-production)
+- **Firebase production deployment** → [firebase/FIREBASE-AUTH-COMPLETE-SETUP.md](./firebase/FIREBASE-AUTH-COMPLETE-SETUP.md#deployment-to-production)
 - Understanding CI/CD pipeline → [DEPLOYMENT.md](./DEPLOYMENT.md#cicd-pipeline)
 - Deployment process → [DEPLOYMENT.md](./DEPLOYMENT.md#deployment-process)
 - Monitoring deployments → [DEPLOYMENT.md](./DEPLOYMENT.md#monitoring)
@@ -173,6 +164,10 @@ frontend/
 │       └── cloud-run-deploy.yml    # CI/CD workflow
 ├── docs/
 │   ├── README.md                   # This file
+│   ├── firebase/                   # 🔐 Firebase Auth docs
+│   │   ├── README.md              # Firebase docs index
+│   │   ├── FIREBASE-AUTH-COMPLETE-SETUP.md  # ⭐ Main guide
+│   │   └── FIREBASE-AUTH-IMPLEMENTATION.md  # Reference
 │   ├── GCP-SETUP.md               # ⚠️ Required setup
 │   ├── DEVELOPMENT.md             # Dev guide
 │   └── DEPLOYMENT.md              # Deployment guide
