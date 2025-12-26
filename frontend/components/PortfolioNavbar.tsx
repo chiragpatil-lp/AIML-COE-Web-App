@@ -102,7 +102,7 @@ export const PortfolioNavbar = () => {
           <div className="hidden md:block">
             <Link
               href={user ? "/dashboard" : "/auth/signin"}
-              className="block bg-[#f35959ff] text-white px-[18px] rounded-full text-base font-semibold hover:bg-[#f35959ff]/90 transition-all duration-200 hover:rounded-2xl shadow-sm hover:shadow-md whitespace-nowrap leading-4 py-[15px]"
+              className="block bg-[#f35959ff] text-white px-[18px] rounded-full text-base font-semibold hover:bg-[#f35959ff]/90 transition-all duration-200 shadow-sm hover:shadow-md whitespace-nowrap leading-4 py-[15px] cursor-pointer"
               style={{
                 fontFamily: "Plus Jakarta Sans, sans-serif",
               }}
@@ -169,7 +169,7 @@ export const PortfolioNavbar = () => {
                 <Link
                   href={user ? "/dashboard" : "/auth/signin"}
                   onClick={closeMobileMenu}
-                  className="block w-full bg-[#f35959ff] text-white px-[18px] py-[15px] rounded-full text-base font-semibold hover:bg-[#f35959ff]/90 transition-all duration-200 text-center"
+                  className="block w-full bg-[#f35959ff] text-white px-[18px] py-[15px] rounded-full text-base font-semibold hover:bg-[#f35959ff]/90 transition-colors duration-200 text-center cursor-pointer"
                   style={{
                     fontFamily: "Plus Jakarta Sans, sans-serif",
                   }}

@@ -26,7 +26,7 @@ export function SignInButton() {
     <button
       onClick={handleSignIn}
       disabled={loading}
-      className="flex items-center justify-center gap-3 w-full bg-[#f35959ff] text-white px-[18px] py-[15px] rounded-full text-base leading-4 font-semibold transition-all duration-150 ease-[cubic-bezier(0.455,0.03,0.515,0.955)] hover:rounded-2xl hover:bg-[#f35959ff]/90 disabled:opacity-50 disabled:cursor-not-allowed"
+      className="flex items-center justify-center gap-3 w-full bg-[#f35959ff] text-white px-[18px] py-[15px] rounded-full text-base leading-4 font-semibold transition-all duration-150 ease-[cubic-bezier(0.455,0.03,0.515,0.955)] hover:bg-[#f35959ff]/90 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
       style={{
         fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
       }}
