@@ -48,7 +48,8 @@ export default function DashboardPage() {
               <h1
                 className="text-3xl font-bold text-[#202020]"
                 style={{
-                  fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
+                  fontFamily:
+                    "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
                 }}
               >
                 Welcome, {user?.displayName || "User"}
@@ -56,7 +57,8 @@ export default function DashboardPage() {
               <p
                 className="text-[#404040] mt-1"
                 style={{
-                  fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
+                  fontFamily:
+                    "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
                 }}
               >
                 {permissions?.isAdmin ? (

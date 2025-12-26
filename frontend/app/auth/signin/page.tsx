@@ -46,7 +46,11 @@ export default function SignInPage() {
         </div>
 
         <div className="text-center mt-6 text-sm text-[#404040]">
-          <p style={{ fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans" }}>
+          <p
+            style={{
+              fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
+            }}
+          >
             By signing in, you agree to our terms of service
           </p>
         </div>
