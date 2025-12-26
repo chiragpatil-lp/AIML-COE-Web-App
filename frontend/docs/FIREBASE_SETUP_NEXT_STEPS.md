@@ -67,6 +67,24 @@ Since you're now a Firebase admin of the `search-ahmend` project, you need to:
    - Click the Web icon (`</>`) in project overview
    - Register app: `AIML COE Web App`
    - **IMPORTANT**: Copy the Firebase configuration object
+   // Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyC7vMIPV3hPikteOOJycZGGaTIjth0evHs",
+  authDomain: "search-ahmed.firebaseapp.com",
+  projectId: "search-ahmed",
+  storageBucket: "search-ahmed.firebasestorage.app",
+  messagingSenderId: "36231825761",
+  appId: "1:36231825761:web:b98d79df40740fa629dd20"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+
 
 5. **Enable Firestore**:
    - Click "Firestore Database"
