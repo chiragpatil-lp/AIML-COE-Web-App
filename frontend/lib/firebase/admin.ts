@@ -1,6 +1,6 @@
-import { initializeApp, getApps, cert, type App } from 'firebase-admin/app';
-import { getAuth, type Auth } from 'firebase-admin/auth';
-import { getFirestore, type Firestore } from 'firebase-admin/firestore';
+import { initializeApp, getApps, cert, type App } from "firebase-admin/app";
+import { getAuth, type Auth } from "firebase-admin/auth";
+import { getFirestore, type Firestore } from "firebase-admin/firestore";
 
 let adminApp: App | undefined;
 let adminAuth: Auth | undefined;
@@ -38,7 +38,7 @@ function initializeAdminApp(): App {
     const projectId = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
     if (!projectId) {
       throw new Error(
-        'Firebase Admin: Missing FIREBASE_SERVICE_ACCOUNT_KEY or NEXT_PUBLIC_FIREBASE_PROJECT_ID'
+        "Firebase Admin: Missing FIREBASE_SERVICE_ACCOUNT_KEY or NEXT_PUBLIC_FIREBASE_PROJECT_ID",
       );
     }
 
@@ -91,7 +91,7 @@ export async function verifyIdToken(token: string) {
  */
 export async function getUserPermissions(userId: string) {
   const db = getAdminFirestore();
-  const permissionsRef = db.collection('userPermissions').doc(userId);
+  const permissionsRef = db.collection("userPermissions").doc(userId);
   const permissionsSnap = await permissionsRef.get();
 
   if (!permissionsSnap.exists) {

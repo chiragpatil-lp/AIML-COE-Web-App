@@ -1,5 +1,5 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
 /**
  * Next.js Middleware for route protection and authentication
@@ -17,10 +17,12 @@ export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Public routes that don't require authentication
-  const publicRoutes = ['/auth/signin', '/', '/api'];
+  const publicRoutes = ["/auth/signin", "/", "/api"];
 
   // Check if current path is public
-  const isPublicRoute = publicRoutes.some((route) => pathname.startsWith(route));
+  const isPublicRoute = publicRoutes.some((route) =>
+    pathname.startsWith(route),
+  );
 
   if (isPublicRoute) {
     return NextResponse.next();
@@ -28,14 +30,14 @@ export function middleware(request: NextRequest) {
 
   // For protected routes, check for authentication token
   // Get token from cookie or Authorization header
-  const token = request.cookies.get('firebase-token')?.value;
-  const authHeader = request.headers.get('Authorization');
-  const hasAuthToken = token || authHeader?.startsWith('Bearer ');
+  const token = request.cookies.get("firebase-token")?.value;
+  const authHeader = request.headers.get("Authorization");
+  const hasAuthToken = token || authHeader?.startsWith("Bearer ");
 
   if (!hasAuthToken) {
     // No token found, redirect to sign-in
-    const signInUrl = new URL('/auth/signin', request.url);
-    signInUrl.searchParams.set('returnUrl', pathname);
+    const signInUrl = new URL("/auth/signin", request.url);
+    signInUrl.searchParams.set("returnUrl", pathname);
     return NextResponse.redirect(signInUrl);
   }
 
@@ -56,6 +58,6 @@ export const config = {
      * - favicon.ico (favicon file)
      * - public folder files
      */
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 };

@@ -1,15 +1,15 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { verifyIdToken, getUserPermissions } from '@/lib/firebase/admin';
-import { cookies } from 'next/headers';
+import { NextRequest, NextResponse } from "next/server";
+import { verifyIdToken, getUserPermissions } from "@/lib/firebase/admin";
+import { cookies } from "next/headers";
 
 // Pillar URL mapping - should match environment variables
 const PILLAR_URLS: Record<string, string> = {
-  '1': process.env.NEXT_PUBLIC_PILLAR_1_URL || '',
-  '2': process.env.NEXT_PUBLIC_PILLAR_2_URL || '',
-  '3': process.env.NEXT_PUBLIC_PILLAR_3_URL || '',
-  '4': process.env.NEXT_PUBLIC_PILLAR_4_URL || '',
-  '5': process.env.NEXT_PUBLIC_PILLAR_5_URL || '',
-  '6': process.env.NEXT_PUBLIC_PILLAR_6_URL || '',
+  "1": process.env.NEXT_PUBLIC_PILLAR_1_URL || "",
+  "2": process.env.NEXT_PUBLIC_PILLAR_2_URL || "",
+  "3": process.env.NEXT_PUBLIC_PILLAR_3_URL || "",
+  "4": process.env.NEXT_PUBLIC_PILLAR_4_URL || "",
+  "5": process.env.NEXT_PUBLIC_PILLAR_5_URL || "",
+  "6": process.env.NEXT_PUBLIC_PILLAR_6_URL || "",
 };
 
 interface RouteParams {
@@ -26,7 +26,10 @@ interface RouteParams {
  * @param params - Route parameters containing pillar ID
  * @returns Redirect to pillar URL or error response
  */
-export async function GET(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
+export async function GET(
+  request: NextRequest,
+  { params }: RouteParams,
+): Promise<NextResponse> {
   try {
     const { id } = params;
     const pillarNumber = parseInt(id, 10);
@@ -34,22 +37,22 @@ export async function GET(request: NextRequest, { params }: RouteParams): Promis
     // Validate pillar number
     if (isNaN(pillarNumber) || pillarNumber < 1 || pillarNumber > 6) {
       return NextResponse.json(
-        { error: 'Invalid pillar ID. Must be between 1 and 6.' },
-        { status: 400 }
+        { error: "Invalid pillar ID. Must be between 1 and 6." },
+        { status: 400 },
       );
     }
 
     // Get ID token from Authorization header or cookie
-    const authHeader = request.headers.get('Authorization');
+    const authHeader = request.headers.get("Authorization");
     const cookieStore = cookies();
-    const tokenFromCookie = cookieStore.get('firebase-token')?.value;
+    const tokenFromCookie = cookieStore.get("firebase-token")?.value;
 
-    const token = authHeader?.replace('Bearer ', '') || tokenFromCookie;
+    const token = authHeader?.replace("Bearer ", "") || tokenFromCookie;
 
     if (!token) {
       return NextResponse.json(
-        { error: 'Unauthorized. Please sign in.' },
-        { status: 401 }
+        { error: "Unauthorized. Please sign in." },
+        { status: 401 },
       );
     }
 
@@ -58,11 +61,11 @@ export async function GET(request: NextRequest, { params }: RouteParams): Promis
     try {
       decodedToken = await verifyIdToken(token);
     } catch (error) {
-      const errorMsg = error instanceof Error ? error.message : 'Invalid token';
-      console.error('Token verification failed:', errorMsg);
+      const errorMsg = error instanceof Error ? error.message : "Invalid token";
+      console.error("Token verification failed:", errorMsg);
       return NextResponse.json(
-        { error: 'Invalid authentication token. Please sign in again.' },
-        { status: 401 }
+        { error: "Invalid authentication token. Please sign in again." },
+        { status: 401 },
       );
     }
 
@@ -71,8 +74,8 @@ export async function GET(request: NextRequest, { params }: RouteParams): Promis
 
     if (!permissions) {
       return NextResponse.json(
-        { error: 'User permissions not found. Please contact support.' },
-        { status: 403 }
+        { error: "User permissions not found. Please contact support." },
+        { status: 403 },
       );
     }
 
@@ -82,7 +85,7 @@ export async function GET(request: NextRequest, { params }: RouteParams): Promis
     const hasAccess = isAdmin || permissions.pillars?.[pillarKey] === true;
 
     if (!hasAccess) {
-      console.warn('Access denied:', {
+      console.warn("Access denied:", {
         userId: decodedToken.uid,
         pillarNumber,
         isAdmin,
@@ -90,23 +93,25 @@ export async function GET(request: NextRequest, { params }: RouteParams): Promis
       });
 
       return NextResponse.json(
-        { error: `Access denied. You don't have permission to access Pillar ${pillarNumber}.` },
-        { status: 403 }
+        {
+          error: `Access denied. You don't have permission to access Pillar ${pillarNumber}.`,
+        },
+        { status: 403 },
       );
     }
 
     // Get the pillar URL
     const pillarUrl = PILLAR_URLS[id];
 
-    if (!pillarUrl || pillarUrl === '#') {
+    if (!pillarUrl || pillarUrl === "#") {
       return NextResponse.json(
-        { error: 'Pillar URL not configured. Please contact support.' },
-        { status: 500 }
+        { error: "Pillar URL not configured. Please contact support." },
+        { status: 500 },
       );
     }
 
     // Log successful access (for audit purposes)
-    console.info('Pillar access granted:', {
+    console.info("Pillar access granted:", {
       userId: decodedToken.uid,
       email: decodedToken.email,
       pillarNumber,
@@ -117,15 +122,16 @@ export async function GET(request: NextRequest, { params }: RouteParams): Promis
     // Redirect to the pillar URL
     return NextResponse.redirect(pillarUrl, { status: 302 });
   } catch (error) {
-    const errorMsg = error instanceof Error ? error.message : 'Internal server error';
-    console.error('Error in pillar access endpoint:', {
+    const errorMsg =
+      error instanceof Error ? error.message : "Internal server error";
+    console.error("Error in pillar access endpoint:", {
       error: errorMsg,
       stack: error instanceof Error ? error.stack : undefined,
     });
 
     return NextResponse.json(
-      { error: 'An error occurred while processing your request.' },
-      { status: 500 }
+      { error: "An error occurred while processing your request." },
+      { status: 500 },
     );
   }
 }

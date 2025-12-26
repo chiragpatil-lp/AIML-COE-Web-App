@@ -123,6 +123,7 @@ You need Firebase Admin permissions on the `search-ahmed` GCP project.
 5. Copy the Firebase configuration object
 
 **Example Configuration** (replace with your actual values):
+
 ```javascript
 const firebaseConfig = {
   apiKey: "YOUR_API_KEY_HERE",
@@ -130,7 +131,7 @@ const firebaseConfig = {
   projectId: "your-project-id",
   storageBucket: "your-project.firebasestorage.app",
   messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  appId: "YOUR_APP_ID",
 };
 ```
 
@@ -151,6 +152,7 @@ const firebaseConfig = {
 ✅ **Result**: Firestore database `aiml-coe-web-app` created in Standard edition
 
 **Why Named Database?**
+
 - The `search-ahmed` project is shared across multiple applications
 - Using `aiml-coe-web-app` instead of `(default)` prevents conflicts
 - Each app can have its own isolated database
@@ -202,6 +204,7 @@ service cloud.firestore {
 ✅ **Result**: Security rules enforce permission-based access
 
 **Security Rules Explanation**:
+
 - **`read`**: Users can read their own permissions document
 - **`create`**: New users can create their document with all permissions set to `false`
 - **`update/delete`**: Only admins (via custom claims) can modify permissions
@@ -285,6 +288,7 @@ Server will start at: http://localhost:3000
 
 1. **Navigate manually to**: http://localhost:3000/dashboard
 2. **Verify you see**:
+
    - Welcome message with your name
    - Your email address
    - "Sign Out" button (top right)
@@ -348,6 +352,7 @@ New users have no pillar access by default. To grant yourself admin access:
 ### Step 4: Verify Admin Access
 
 **You should now see**:
+
 - **Green "Administrator" badge** next to your email
 - All 6 pillars showing **"Admin Access" badge** (green)
 - All pillars are clickable (if URLs are configured)
@@ -355,6 +360,7 @@ New users have no pillar access by default. To grant yourself admin access:
 ✅ **You now have full admin access to all strategic pillars!**
 
 **Admin Access Logic**:
+
 - When `isAdmin: true`, user has access to ALL pillars automatically
 - Individual pillar permissions (`pillar1`, `pillar2`, etc.) are only checked for non-admin users
 - See `AuthContext.tsx:119-124` for the `hasAccessToPillar` function
@@ -386,21 +392,22 @@ New users have no pillar access by default. To grant yourself admin access:
 **Firestore Collection**: `userPermissions/{userId}`
 
 **Document Structure**:
+
 ```typescript
 interface UserPermissions {
-  userId: string;              // Firebase Auth UID
-  email: string;               // User's email from Google
-  isAdmin: boolean;            // Admin flag (grants all access)
+  userId: string; // Firebase Auth UID
+  email: string; // User's email from Google
+  isAdmin: boolean; // Admin flag (grants all access)
   pillars: {
-    pillar1: boolean;          // Strategy & Value Realization
-    pillar2: boolean;          // Innovation & IP Development
-    pillar3: boolean;          // Platforms & Engineering
-    pillar4: boolean;          // People & Capability Enablement
-    pillar5: boolean;          // COE Delivery Governance
-    pillar6: boolean;          // Communication & Market Intelligence
+    pillar1: boolean; // Strategy & Value Realization
+    pillar2: boolean; // Innovation & IP Development
+    pillar3: boolean; // Platforms & Engineering
+    pillar4: boolean; // People & Capability Enablement
+    pillar5: boolean; // COE Delivery Governance
+    pillar6: boolean; // Communication & Market Intelligence
   };
-  createdAt: Date;             // Document creation timestamp
-  updatedAt: Date;             // Last update timestamp
+  createdAt: Date; // Document creation timestamp
+  updatedAt: Date; // Last update timestamp
 }
 ```
 
@@ -409,12 +416,14 @@ interface UserPermissions {
 **Key Files and Their Responsibilities**:
 
 1. **`lib/firebase/config.ts`**:
+
    - Initializes Firebase app (singleton pattern)
    - Connects to `aiml-coe-web-app` Firestore database
    - Only initializes in browser (SSR-safe with `typeof window !== 'undefined'`)
    - Gracefully handles missing environment variables
 
 2. **`contexts/AuthContext.tsx`**:
+
    - Global authentication state (React Context)
    - Listens to `onAuthStateChanged` for auth state
    - Fetches/creates user permissions from Firestore
@@ -422,17 +431,20 @@ interface UserPermissions {
    - Exports `useAuth()` hook for components
 
 3. **`components/auth/SignInButton.tsx`**:
+
    - Renders Google OAuth button
    - Calls `signInWithGoogle()` from AuthContext
    - Shows toast notifications on success/error
 
 4. **`components/dashboard/PillarGrid.tsx`**:
+
    - Displays 6 strategic pillars in a grid
    - Checks `hasAccessToPillar(number)` for each pillar
    - Renders badges: "Access not granted", "Authorized", or "Admin Access"
    - Opens pillar URLs in new tab when clicked (if accessible and URL configured)
 
 5. **`app/dashboard/page.tsx`**:
+
    - Protected route (redirects to /auth/signin if not authenticated)
    - Shows loading spinner while auth state is being determined
    - Displays user info and PillarGrid component
@@ -472,6 +484,7 @@ See `lib/types/auth.types.ts` for all type definitions.
 **Cause**: Security rules don't allow the operation
 
 **Solution**:
+
 1. Verify you updated Firestore security rules (Step 5 above)
 2. Check the rules include the `allow create:` block for new users
 3. Click "Publish" in Firebase Console after updating rules
@@ -483,6 +496,7 @@ See `lib/types/auth.types.ts` for all type definitions.
 **Cause**: Auto-redirect not implemented yet
 
 **Solution**:
+
 - Manually navigate to http://localhost:3000/dashboard
 - This is expected behavior in current implementation
 - Auto-redirect will be added in a future update
@@ -494,6 +508,7 @@ See `lib/types/auth.types.ts` for all type definitions.
 **Cause**: Browser is blocking popups
 
 **Solution**:
+
 - Allow popups for `localhost:3000`
 - Check browser settings → Site settings → Popups
 - Alternative: Use redirect flow instead of popup (requires code change)
@@ -505,6 +520,7 @@ See `lib/types/auth.types.ts` for all type definitions.
 **Cause**: Domain not in authorized domains list
 
 **Solution**:
+
 1. Go to Firebase Console → Authentication → Settings → Authorized domains
 2. Add the domain where the error occurred
 3. For localhost: Should already be there by default
@@ -516,6 +532,7 @@ See `lib/types/auth.types.ts` for all type definitions.
 **Cause**: Firebase trying to initialize during SSR/build without env vars
 
 **Solution**:
+
 - The code is designed to handle this gracefully
 - Check `lib/firebase/config.ts` - should have `typeof window !== 'undefined'` check
 - Build should succeed even without Firebase config
@@ -528,6 +545,7 @@ See `lib/types/auth.types.ts` for all type definitions.
 **Cause**: Pillar URLs not configured in environment
 
 **Solution**:
+
 1. Open `frontend/.env.local`
 2. Set pillar URLs:
    ```bash
@@ -544,6 +562,7 @@ See `lib/types/auth.types.ts` for all type definitions.
 **Cause**: Security rules too restrictive
 
 **Solution**:
+
 1. Check Firestore rules include the `allow create:` block
 2. Verify user is authenticated (check browser console)
 3. Sign out and sign in again
@@ -628,6 +647,7 @@ git push origin main
 ### Planned Features
 
 #### 1. Admin Panel (`/app/admin/users/page.tsx`)
+
 - List all users from Firestore
 - Search and filter users
 - Toggle pillar access per user (toggle switches)
@@ -635,22 +655,26 @@ git push origin main
 - Audit log for permission changes
 
 #### 2. Auto-Redirect After Sign-In
+
 - Redirect to dashboard automatically after successful sign-in
 - Remember intended destination (redirect to originally requested page)
 
 #### 3. Cloud Functions for Custom Claims
+
 - Deploy Firebase Cloud Function
 - Set admin custom claims on user JWT
 - More secure than Firestore-only admin checks
 - Only callable by existing admins
 
 #### 4. Enhanced Permissions
+
 - Section-level permissions within pillars
 - Permission groups/roles (e.g., "Data Team" role)
 - Time-based access (temporary permissions with expiration)
 - Approval workflow (users request access, admins approve)
 
 #### 5. Email Notifications
+
 - Email when permissions are granted
 - Email when permissions are revoked
 - Weekly digest of permission changes (for admins)
@@ -695,6 +719,7 @@ git push origin main
 ✅ **Firebase Authentication is fully implemented and tested**
 
 **Current State**:
+
 - Branch: `feat/firebase-auth-implementation` (3 commits)
 - Firebase Project: `search-ahmed`
 - Firestore Database: `aiml-coe-web-app` (Standard, us-central1)
@@ -702,6 +727,7 @@ git push origin main
 - Status: Ready for production deployment
 
 **Key Achievements**:
+
 - Self-service user registration with safe defaults
 - Permission-based pillar access control
 - Admin role with full access
@@ -710,6 +736,7 @@ git push origin main
 - Full TypeScript type safety
 
 **Next Steps**:
+
 1. Merge to `main` branch (when ready)
 2. Deploy to Cloud Run production
 3. Add more admin users via Firestore Console

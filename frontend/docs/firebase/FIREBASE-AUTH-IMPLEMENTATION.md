@@ -1,6 +1,7 @@
 # Firebase Authentication Implementation Guide
 
 ## Overview
+
 This guide provides step-by-step instructions for implementing Firebase Authentication with Google OAuth for the AIML COE Web App. The main app will authenticate users and redirect them to 6 separate pillar applications based on their permissions.
 
 ---
@@ -12,11 +13,13 @@ This guide provides step-by-step instructions for implementing Firebase Authenti
 To set up Firebase Authentication, you need the following IAM roles on your GCP project:
 
 **Minimum Required Roles:**
+
 - `Firebase Admin` (roles/firebase.admin) - For creating and managing Firebase projects
 - `Service Usage Admin` (roles/serviceusage.admin) - For enabling Firebase APIs
 - `Cloud Resource Manager` (roles/resourcemanager.projectIamAdmin) - For managing project settings
 
 **Recommended Roles:**
+
 - `Owner` (roles/owner) - Simplest option, includes all necessary permissions
 - OR combine these specific roles:
   - `Firebase Admin` (roles/firebase.admin)
@@ -24,6 +27,7 @@ To set up Firebase Authentication, you need the following IAM roles on your GCP 
   - `Service Account Admin` (roles/iam.serviceAccountAdmin)
 
 **To Check Your Permissions:**
+
 ```bash
 # In GCP Console:
 # 1. Go to IAM & Admin > IAM
@@ -36,6 +40,7 @@ To set up Firebase Authentication, you need the following IAM roles on your GCP 
 ### 1.2 Firebase Project Setup Steps
 
 **Step 1: Create Firebase Project**
+
 1. Go to https://console.firebase.google.com/
 2. Click "Add project" or "Create a project"
 3. Enter project name: `aiml-coe-web-app` (or your preferred name)
@@ -44,6 +49,7 @@ To set up Firebase Authentication, you need the following IAM roles on your GCP 
 6. Click "Create project" and wait for completion
 
 **Step 2: Enable Authentication**
+
 1. In Firebase Console, click "Authentication" in left sidebar
 2. Click "Get started"
 3. Go to "Sign-in method" tab
@@ -53,12 +59,14 @@ To set up Firebase Authentication, you need the following IAM roles on your GCP 
 7. Click "Save"
 
 **Step 3: Register Web App**
+
 1. In Firebase Console overview, click the Web icon (`</>`)
 2. Register app with nickname: `AIML COE Web App`
 3. (Optional) Set up Firebase Hosting - Skip for now
 4. Copy the Firebase configuration object - YOU WILL NEED THIS!
 
 Example config (keep this secret):
+
 ```javascript
 const firebaseConfig = {
   apiKey: "AIzaSy...",
@@ -66,11 +74,12 @@ const firebaseConfig = {
   projectId: "your-project-id",
   storageBucket: "your-project.appspot.com",
   messagingSenderId: "123456789",
-  appId: "1:123456789:web:abcdef"
+  appId: "1:123456789:web:abcdef",
 };
 ```
 
 **Step 4: Configure Authorized Domains**
+
 1. In Firebase Console > Authentication > Settings
 2. Under "Authorized domains", add:
    - `localhost` (already added)
@@ -78,6 +87,7 @@ const firebaseConfig = {
    - Any custom domains you plan to use
 
 **Step 5: Enable Firestore Database**
+
 1. In Firebase Console, click "Firestore Database"
 2. Click "Create database"
 3. Choose production mode (we'll set rules later)
@@ -85,8 +95,10 @@ const firebaseConfig = {
 5. Click "Enable"
 
 **Step 6: Set Firestore Security Rules**
+
 1. Go to Firestore Database > Rules tab
 2. Replace default rules with:
+
 ```javascript
 rules_version = '2';
 service cloud.firestore {
@@ -108,6 +120,7 @@ service cloud.firestore {
   }
 }
 ```
+
 3. Click "Publish"
 
 ---
@@ -115,12 +128,14 @@ service cloud.firestore {
 ### 1.3 Package Installation
 
 **Install Firebase packages:**
+
 ```bash
 cd frontend
 pnpm add firebase
 ```
 
 **Verify installation:**
+
 - `firebase` (v11.x.x) - Full Firebase SDK including Auth and Firestore
 
 ---
@@ -128,6 +143,7 @@ pnpm add firebase
 ### 1.4 Environment Configuration
 
 **Create `.env.local` file** (frontend/.env.local):
+
 ```bash
 # Firebase Configuration
 NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key_here
@@ -147,12 +163,14 @@ NEXT_PUBLIC_PILLAR_6_URL=https://communication.your-domain.com
 ```
 
 **Update `.gitignore`** (if not already present):
+
 ```
 .env.local
 .env*.local
 ```
 
 **Create `.env.example`** (frontend/.env.example):
+
 ```bash
 # Firebase Configuration (get these from Firebase Console)
 NEXT_PUBLIC_FIREBASE_API_KEY=
@@ -176,6 +194,7 @@ NEXT_PUBLIC_PILLAR_6_URL=
 ### 1.5 File Structure
 
 **New files to create:**
+
 ```
 frontend/
 ├── lib/
@@ -214,10 +233,11 @@ frontend/
 #### Step 1: Firebase Configuration
 
 **Create `frontend/lib/firebase/config.ts`:**
+
 ```typescript
-import { initializeApp, getApps, getApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
+import { initializeApp, getApps, getApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -239,8 +259,9 @@ export { app, auth, db };
 #### Step 2: TypeScript Types
 
 **Create `frontend/lib/types/auth.types.ts`:**
+
 ```typescript
-import { User } from 'firebase/auth';
+import { User } from "firebase/auth";
 
 export interface UserPermissions {
   userId: string;
@@ -281,6 +302,7 @@ export interface PillarInfo {
 #### Step 3: Authentication Context
 
 **Create `frontend/contexts/AuthContext.tsx`:**
+
 ```typescript
 'use client';
 
@@ -410,6 +432,7 @@ export const useAuth = () => {
 #### Step 4: Sign-In Components
 
 **Create `frontend/components/auth/SignInButton.tsx`:**
+
 ```typescript
 'use client';
 
@@ -461,6 +484,7 @@ export function SignInButton() {
 ```
 
 **Create `frontend/components/auth/SignOutButton.tsx`:**
+
 ```typescript
 'use client';
 
@@ -495,6 +519,7 @@ export function SignOutButton() {
 #### Step 5: Dashboard with Pillar Grid
 
 **Create `frontend/components/dashboard/PillarGrid.tsx`:**
+
 ```typescript
 'use client';
 
@@ -620,6 +645,7 @@ export function PillarGrid() {
 #### Step 6: Create Pages
 
 **Create `frontend/app/auth/signin/page.tsx`:**
+
 ```typescript
 import { SignInButton } from '@/components/auth/SignInButton';
 
@@ -643,6 +669,7 @@ export default function SignInPage() {
 ```
 
 **Create `frontend/app/dashboard/page.tsx`:**
+
 ```typescript
 'use client';
 
@@ -697,9 +724,10 @@ export default function DashboardPage() {
 #### Step 7: Middleware for Route Protection
 
 **Create `frontend/middleware.ts`:**
+
 ```typescript
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
   // This is a client-side protected route pattern
@@ -709,8 +737,8 @@ export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Allow public routes
-  const publicRoutes = ['/auth/signin', '/', '/api'];
-  if (publicRoutes.some(route => pathname.startsWith(route))) {
+  const publicRoutes = ["/auth/signin", "/", "/api"];
+  if (publicRoutes.some((route) => pathname.startsWith(route))) {
     return NextResponse.next();
   }
 
@@ -720,7 +748,7 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 };
 ```
@@ -758,17 +786,20 @@ export default function RootLayout({
 ## Phase 2: Authorization & Admin Panel (Add Later)
 
 ### 2.1 Admin Panel for User Management
+
 - Create admin dashboard at `/app/admin/users/page.tsx`
 - List all users from Firestore
 - Toggle pillar access per user
 - Set admin status via Cloud Functions (custom claims)
 
 ### 2.2 Cloud Function for Custom Claims
+
 - Deploy Firebase Cloud Function to set admin custom claims
 - Only callable by existing admins
 - Updates user's JWT token with admin flag
 
 ### 2.3 Enhanced Permissions
+
 - Add section-level permissions within pillars
 - Create permission management UI
 - Implement permission inheritance
@@ -778,7 +809,9 @@ export default function RootLayout({
 ## Phase 3: Production Deployment
 
 ### 3.1 GitHub Secrets Configuration
+
 Add these secrets to your GitHub repository:
+
 ```
 FIREBASE_API_KEY
 FIREBASE_AUTH_DOMAIN
@@ -789,10 +822,13 @@ FIREBASE_APP_ID
 ```
 
 ### 3.2 Update GitHub Actions Workflow
+
 Modify `.github/workflows/main.yml` to inject Firebase env vars during build.
 
 ### 3.3 Cloud Run Environment Variables
+
 Set environment variables in Cloud Run:
+
 - All `NEXT_PUBLIC_*` Firebase variables
 - All `NEXT_PUBLIC_PILLAR_*_URL` variables
 
@@ -801,6 +837,7 @@ Set environment variables in Cloud Run:
 ## Testing Checklist
 
 ### Phase 1 Testing
+
 - [ ] Firebase config loads without errors
 - [ ] Google Sign-in button appears
 - [ ] Click Google Sign-in opens OAuth popup
@@ -812,6 +849,7 @@ Set environment variables in Cloud Run:
 - [ ] Redirected to sign-in page after sign out
 
 ### Manual Admin Setup (First Time)
+
 1. Sign in as yourself
 2. Go to Firebase Console > Firestore
 3. Find your user document in `userPermissions/{your-uid}`
@@ -835,11 +873,13 @@ Set environment variables in Cloud Run:
 ## Migration Path
 
 ### Phase 1 → Phase 2
+
 1. Deploy Cloud Function for custom claims
 2. Create admin panel UI
 3. Add user management features
 
 ### Phase 2 → Phase 3
+
 1. Add section-level permissions to Firestore schema
 2. Update AuthContext to handle granular permissions
 3. Create permission management UI
@@ -849,15 +889,19 @@ Set environment variables in Cloud Run:
 ## Troubleshooting
 
 ### Issue: "Firebase: Error (auth/popup-blocked)"
+
 **Solution:** Allow popups in browser settings, or use redirect flow instead
 
 ### Issue: "Firebase: Error (auth/unauthorized-domain)"
+
 **Solution:** Add domain to Firebase Console > Authentication > Settings > Authorized domains
 
 ### Issue: Firestore permission denied
+
 **Solution:** Check Firestore security rules and user authentication status
 
 ### Issue: User not redirected after sign-in
+
 **Solution:** Check that AuthContext is properly wrapped in layout.tsx
 
 ---
@@ -875,6 +919,7 @@ Set environment variables in Cloud Run:
 ## Files Summary
 
 ### New Files (15 total)
+
 1. `lib/firebase/config.ts` - Firebase initialization
 2. `lib/firebase/auth.ts` - Auth helpers (future)
 3. `lib/firebase/firestore.ts` - Firestore helpers (future)
@@ -891,8 +936,10 @@ Set environment variables in Cloud Run:
 14. `.env.example` - Environment template
 
 ### Modified Files (1 total)
+
 1. `app/layout.tsx` - Add AuthProvider wrapper
 
 ### Configuration Files
+
 1. Firestore security rules (set in Firebase Console)
 2. Firebase Authentication settings (Google OAuth enabled)

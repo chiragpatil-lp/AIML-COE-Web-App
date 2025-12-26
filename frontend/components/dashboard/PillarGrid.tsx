@@ -1,62 +1,69 @@
-'use client';
+"use client";
 
-import { useAuth } from '@/contexts/AuthContext';
-import type { PillarInfo } from '@/lib/types/auth.types';
+import { useAuth } from "@/contexts/AuthContext";
+import type { PillarInfo } from "@/lib/types/auth.types";
+import Image from "next/image";
 
 const PILLARS: PillarInfo[] = [
   {
-    id: 'strategy',
+    id: "strategy",
     number: 1,
-    name: 'Strategy & Value Realization',
-    description: 'ROI tracking, leadership dashboards, and impact metrics',
-    url: process.env.NEXT_PUBLIC_PILLAR_1_URL || '#',
-    accentColor: '#f2545b',
+    name: "Strategy & Value Realization",
+    description: "ROI tracking, leadership dashboards, and impact metrics",
+    url: process.env.NEXT_PUBLIC_PILLAR_1_URL || "#",
+    accentColor: "#f2545b",
     enabled: true,
+    image: "/pillars-landing/strategy-value.jpg",
   },
   {
-    id: 'innovation',
+    id: "innovation",
     number: 2,
-    name: 'Innovation & IP Development',
-    description: 'AI accelerators, frameworks, and enterprise assets',
-    url: process.env.NEXT_PUBLIC_PILLAR_2_URL || '#',
-    accentColor: '#2c3e50',
+    name: "Innovation & IP Development",
+    description: "AI accelerators, frameworks, and enterprise assets",
+    url: process.env.NEXT_PUBLIC_PILLAR_2_URL || "#",
+    accentColor: "#2c3e50",
     enabled: true,
+    image: "/pillars-landing/innovation-ip.jpg",
   },
   {
-    id: 'platforms',
+    id: "platforms",
     number: 3,
-    name: 'Platforms & Engineering',
-    description: 'Trusted tools, templates, and standards',
-    url: process.env.NEXT_PUBLIC_PILLAR_3_URL || '#',
-    accentColor: '#f2545b',
+    name: "Platforms & Engineering",
+    description: "Trusted tools, templates, and standards",
+    url: process.env.NEXT_PUBLIC_PILLAR_3_URL || "#",
+    accentColor: "#f2545b",
     enabled: true,
+    image: "/pillars-landing/platform-engieering.jpg",
   },
   {
-    id: 'people',
+    id: "people",
     number: 4,
-    name: 'People & Capability Enablement',
-    description: 'Skills development, training, and maturity assessment',
-    url: process.env.NEXT_PUBLIC_PILLAR_4_URL || '#',
-    accentColor: '#2c3e50',
+    name: "People & Capability Enablement",
+    description: "Skills development, training, and maturity assessment",
+    url: process.env.NEXT_PUBLIC_PILLAR_4_URL || "#",
+    accentColor: "#2c3e50",
     enabled: true,
+    image: "/pillars-landing/people.jpg",
   },
   {
-    id: 'governance',
+    id: "governance",
     number: 5,
-    name: 'COE Delivery Governance',
-    description: 'Quality assurance and continuous improvement',
-    url: process.env.NEXT_PUBLIC_PILLAR_5_URL || '#',
-    accentColor: '#f2545b',
+    name: "COE Delivery Governance",
+    description: "Quality assurance and continuous improvement",
+    url: process.env.NEXT_PUBLIC_PILLAR_5_URL || "#",
+    accentColor: "#f2545b",
     enabled: true,
+    image: "/pillars-landing/operational-excellence.jpg",
   },
   {
-    id: 'communication',
+    id: "communication",
     number: 6,
-    name: 'Communication & Market Intelligence',
-    description: 'Market insights, AI trends, and COE showcase',
-    url: process.env.NEXT_PUBLIC_PILLAR_6_URL || '#',
-    accentColor: '#2c3e50',
+    name: "Communication & Market Intelligence",
+    description: "Market insights, AI trends, and COE showcase",
+    url: process.env.NEXT_PUBLIC_PILLAR_6_URL || "#",
+    accentColor: "#2c3e50",
     enabled: true,
+    image: "/pillars-landing/communication-intelligence.jpg",
   },
 ];
 
@@ -68,7 +75,7 @@ export function PillarGrid(_props: PillarGridProps = {}) {
   const { hasAccessToPillar, permissions, user } = useAuth();
 
   const handlePillarClick = async (pillar: PillarInfo, hasAccess: boolean) => {
-    if (!hasAccess || pillar.url === '#') {
+    if (!hasAccess || pillar.url === "#") {
       return;
     }
 
@@ -77,7 +84,7 @@ export function PillarGrid(_props: PillarGridProps = {}) {
       const token = await user?.getIdToken();
 
       if (!token) {
-        console.error('Failed to get authentication token');
+        console.error("Failed to get authentication token");
         return;
       }
 
@@ -85,9 +92,9 @@ export function PillarGrid(_props: PillarGridProps = {}) {
       const apiUrl = `/api/pillar/${pillar.number}`;
 
       // Open in new tab with the API endpoint that will verify and redirect
-      window.open(apiUrl, '_blank', 'noopener,noreferrer');
+      window.open(apiUrl, "_blank", "noopener,noreferrer");
     } catch (error) {
-      console.error('Error accessing pillar:', error);
+      console.error("Error accessing pillar:", error);
     }
   };
 
@@ -99,31 +106,59 @@ export function PillarGrid(_props: PillarGridProps = {}) {
         return (
           <button
             key={pillar.id}
-            className={`card bg-base-100 shadow-xl relative overflow-hidden transition-all text-left ${
+            className={`card bg-white shadow-xl relative overflow-hidden transition-all text-left rounded-[40px] ${
               hasAccess
-                ? 'hover:shadow-2xl cursor-pointer focus:ring-2 focus:ring-primary focus:outline-none'
-                : 'opacity-50 cursor-not-allowed'
+                ? "hover:shadow-2xl cursor-pointer focus:ring-2 focus:ring-primary focus:outline-none"
+                : "opacity-50 cursor-not-allowed"
             }`}
             onClick={() => handlePillarClick(pillar, hasAccess)}
-            disabled={!hasAccess || pillar.url === '#'}
-            aria-label={`${pillar.name} - ${hasAccess ? 'Click to open' : 'Access not granted'}`}
+            disabled={!hasAccess || pillar.url === "#"}
+            aria-label={`${pillar.name} - ${hasAccess ? "Click to open" : "Access not granted"}`}
             aria-disabled={!hasAccess}
             type="button"
           >
-            {/* Accent border */}
-            <div
-              className="absolute top-0 left-0 w-1 h-full"
-              style={{ backgroundColor: pillar.accentColor }}
-              aria-hidden="true"
-            />
+            {/* Card Image */}
+            {pillar.image && (
+              <figure className="relative h-48 rounded-t-[40px] overflow-hidden">
+                <Image
+                  src={pillar.image}
+                  alt={pillar.name}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                />
+                {/* Accent overlay */}
+                <div
+                  className="absolute bottom-0 left-0 right-0 h-1"
+                  style={{ backgroundColor: pillar.accentColor }}
+                  aria-hidden="true"
+                />
+              </figure>
+            )}
 
-            <div className="card-body pl-6">
+            <div className="card-body">
               <div className="flex items-start justify-between">
                 <div className="flex-1">
-                  <h2 className="card-title text-lg mb-2">{pillar.name}</h2>
-                  <p className="text-sm text-base-content/70">{pillar.description}</p>
+                  <h2
+                    className="card-title text-lg mb-2 text-[#202020]"
+                    style={{
+                      fontFamily:
+                        "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
+                    }}
+                  >
+                    {pillar.name}
+                  </h2>
+                  <p
+                    className="text-sm text-[#404040]"
+                    style={{
+                      fontFamily:
+                        "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
+                    }}
+                  >
+                    {pillar.description}
+                  </p>
                 </div>
-                {hasAccess && pillar.url !== '#' && (
+                {hasAccess && pillar.url !== "#" && (
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-5 w-5 text-primary flex-shrink-0"
@@ -144,17 +179,38 @@ export function PillarGrid(_props: PillarGridProps = {}) {
 
               <div className="card-actions justify-start mt-2">
                 {!hasAccess && (
-                  <div className="badge badge-ghost badge-sm" aria-label="Access status: not granted">
+                  <div
+                    className="badge badge-ghost badge-sm"
+                    aria-label="Access status: not granted"
+                    style={{
+                      fontFamily:
+                        "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
+                    }}
+                  >
                     Access not granted
                   </div>
                 )}
                 {permissions?.isAdmin && (
-                  <div className="badge badge-success badge-sm" aria-label="Access level: admin">
+                  <div
+                    className="badge badge-success badge-sm"
+                    aria-label="Access level: admin"
+                    style={{
+                      fontFamily:
+                        "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
+                    }}
+                  >
                     Admin Access
                   </div>
                 )}
                 {hasAccess && !permissions?.isAdmin && (
-                  <div className="badge badge-primary badge-sm" aria-label="Access status: authorized">
+                  <div
+                    className="badge badge-primary badge-sm"
+                    aria-label="Access status: authorized"
+                    style={{
+                      fontFamily:
+                        "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
+                    }}
+                  >
                     Authorized
                   </div>
                 )}

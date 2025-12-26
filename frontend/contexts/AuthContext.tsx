@@ -1,17 +1,17 @@
-'use client';
+"use client";
 
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from "react";
 import {
   User,
   GoogleAuthProvider,
   signInWithPopup,
   signOut as firebaseSignOut,
   onAuthStateChanged,
-} from 'firebase/auth';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
-import { auth, db } from '@/lib/firebase/config';
-import type { AuthContextType, UserPermissions } from '@/lib/types/auth.types';
-import { toast } from 'sonner';
+} from "firebase/auth";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { auth, db } from "@/lib/firebase/config";
+import type { AuthContextType, UserPermissions } from "@/lib/types/auth.types";
+import { toast } from "sonner";
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
@@ -48,22 +48,24 @@ interface FirestoreUserPermissions {
  * @param data - Unknown data from Firestore
  * @returns True if data matches UserPermissions structure
  */
-function isValidUserPermissions(data: unknown): data is FirestoreUserPermissions {
-  if (!data || typeof data !== 'object') return false;
+function isValidUserPermissions(
+  data: unknown,
+): data is FirestoreUserPermissions {
+  if (!data || typeof data !== "object") return false;
   const d = data as Record<string, unknown>;
 
   return (
-    typeof d.userId === 'string' &&
-    typeof d.email === 'string' &&
-    typeof d.isAdmin === 'boolean' &&
-    typeof d.pillars === 'object' &&
+    typeof d.userId === "string" &&
+    typeof d.email === "string" &&
+    typeof d.isAdmin === "boolean" &&
+    typeof d.pillars === "object" &&
     d.pillars !== null &&
-    typeof (d.pillars as Record<string, unknown>).pillar1 === 'boolean' &&
-    typeof (d.pillars as Record<string, unknown>).pillar2 === 'boolean' &&
-    typeof (d.pillars as Record<string, unknown>).pillar3 === 'boolean' &&
-    typeof (d.pillars as Record<string, unknown>).pillar4 === 'boolean' &&
-    typeof (d.pillars as Record<string, unknown>).pillar5 === 'boolean' &&
-    typeof (d.pillars as Record<string, unknown>).pillar6 === 'boolean'
+    typeof (d.pillars as Record<string, unknown>).pillar1 === "boolean" &&
+    typeof (d.pillars as Record<string, unknown>).pillar2 === "boolean" &&
+    typeof (d.pillars as Record<string, unknown>).pillar3 === "boolean" &&
+    typeof (d.pillars as Record<string, unknown>).pillar4 === "boolean" &&
+    typeof (d.pillars as Record<string, unknown>).pillar5 === "boolean" &&
+    typeof (d.pillars as Record<string, unknown>).pillar6 === "boolean"
   );
 }
 
@@ -73,7 +75,12 @@ function isValidUserPermissions(data: unknown): data is FirestoreUserPermissions
  * @returns JavaScript Date object
  */
 function toDate(value: unknown): Date {
-  if (value && typeof value === 'object' && 'toDate' in value && typeof value.toDate === 'function') {
+  if (
+    value &&
+    typeof value === "object" &&
+    "toDate" in value &&
+    typeof value.toDate === "function"
+  ) {
     return (value as { toDate(): Date }).toDate();
   }
   if (value instanceof Date) {
@@ -85,8 +92,14 @@ function toDate(value: unknown): Date {
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null);
   const [permissions, setPermissions] = useState<UserPermissions | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  // Initialize loading state - if auth isn't initialized, we're not really loading
+  const [loading, setLoading] = useState(!!auth);
+  // Initialize error state based on auth initialization
+  const [error, setError] = useState<string | null>(
+    !auth
+      ? "Firebase Auth is not initialized. Please check your environment variables."
+      : null,
+  );
 
   /**
    * Fetches user permissions from Firestore
@@ -95,17 +108,21 @@ export function AuthProvider({ children }: AuthProviderProps) {
    * @param userEmail - User's email address
    * @returns Promise that resolves when permissions are fetched
    */
-  const fetchPermissions = async (userId: string, userEmail: string): Promise<void> => {
+  const fetchPermissions = async (
+    userId: string,
+    userEmail: string,
+  ): Promise<void> => {
     if (!db) {
-      const errorMsg = 'Firestore is not initialized. Please check your Firebase configuration.';
+      const errorMsg =
+        "Firestore is not initialized. Please check your Firebase configuration.";
       console.error(errorMsg);
       setError(errorMsg);
-      toast.error('Database connection failed. Please contact support.');
+      toast.error("Database connection failed. Please contact support.");
       return;
     }
 
     try {
-      const permissionsRef = doc(db, 'userPermissions', userId);
+      const permissionsRef = doc(db, "userPermissions", userId);
       const permissionsSnap = await getDoc(permissionsRef);
 
       if (permissionsSnap.exists()) {
@@ -113,10 +130,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
         // Validate data structure before using it
         if (!isValidUserPermissions(data)) {
-          const errorMsg = 'Invalid permissions data structure in Firestore';
+          const errorMsg = "Invalid permissions data structure in Firestore";
           console.error(errorMsg, data);
           setError(errorMsg);
-          toast.error('Invalid user permissions. Please contact support.');
+          toast.error("Invalid user permissions. Please contact support.");
           return;
         }
 
@@ -128,7 +145,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         });
 
         // Show success toast after permissions are loaded
-        toast.success('Signed in successfully!');
+        toast.success("Signed in successfully!");
       } else {
         // Create default permissions for new user
         // NOTE: This is a temporary solution. In production, user creation
@@ -152,31 +169,36 @@ export function AuthProvider({ children }: AuthProviderProps) {
         setPermissions(defaultPermissions);
 
         // Show success toast for new users
-        toast.success('Welcome! Your account has been created.');
+        toast.success("Welcome! Your account has been created.");
       }
 
       // Clear any previous errors
       setError(null);
     } catch (error) {
-      const errorMsg = error instanceof Error ? error.message : 'Failed to fetch permissions';
-      console.error('Error fetching permissions:', {
+      const errorMsg =
+        error instanceof Error ? error.message : "Failed to fetch permissions";
+      console.error("Error fetching permissions:", {
         message: errorMsg,
         stack: error instanceof Error ? error.stack : undefined,
         userId,
       });
       setError(errorMsg);
-      toast.error('Failed to load user permissions. Please try refreshing the page.');
+      toast.error(
+        "Failed to load user permissions. Please try refreshing the page.",
+      );
     }
   };
 
   // Listen to auth state changes
   useEffect(() => {
+    // Early check for auth initialization
     if (!auth) {
-      // If auth is not initialized, set loading to false and show error
-      const errorMsg = 'Firebase Auth is not initialized. Please check your environment variables.';
-      setError(errorMsg);
-      setLoading(false);
-      toast.error('Authentication service unavailable. Please contact support.');
+      console.error(
+        "Firebase Auth is not initialized. Please check your environment variables.",
+      );
+      toast.error(
+        "Authentication service unavailable. Please contact support.",
+      );
       return;
     }
 
@@ -189,10 +211,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
       if (user) {
         // Validate email exists (Google OAuth should always provide it)
         if (!user.email) {
-          const errorMsg = 'User authenticated but email is missing';
+          const errorMsg = "User authenticated but email is missing";
           console.error(errorMsg, { uid: user.uid });
           setError(errorMsg);
-          toast.error('Authentication error: Missing email. Please try again.');
+          toast.error("Authentication error: Missing email. Please try again.");
           if (mounted) setLoading(false);
           return;
         }
@@ -218,17 +240,20 @@ export function AuthProvider({ children }: AuthProviderProps) {
    */
   const signInWithGoogle = async (): Promise<void> => {
     if (!auth) {
-      throw new Error('Firebase Auth is not initialized. Please check your environment variables.');
+      throw new Error(
+        "Firebase Auth is not initialized. Please check your environment variables.",
+      );
     }
     try {
       const provider = new GoogleAuthProvider();
-      provider.addScope('profile');
-      provider.addScope('email');
+      provider.addScope("profile");
+      provider.addScope("email");
       await signInWithPopup(auth, provider);
       // Success toast will be shown after permissions are fetched in fetchPermissions()
     } catch (error) {
-      const errorMsg = error instanceof Error ? error.message : 'Failed to sign in';
-      console.error('Error signing in with Google:', {
+      const errorMsg =
+        error instanceof Error ? error.message : "Failed to sign in";
+      console.error("Error signing in with Google:", {
         message: errorMsg,
         stack: error instanceof Error ? error.stack : undefined,
       });
@@ -243,14 +268,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
    */
   const signOut = async (): Promise<void> => {
     if (!auth) {
-      throw new Error('Firebase Auth is not initialized');
+      throw new Error("Firebase Auth is not initialized");
     }
     try {
       await firebaseSignOut(auth);
-      toast.success('Signed out successfully');
+      toast.success("Signed out successfully");
     } catch (error) {
-      const errorMsg = error instanceof Error ? error.message : 'Failed to sign out';
-      console.error('Error signing out:', {
+      const errorMsg =
+        error instanceof Error ? error.message : "Failed to sign out";
+      console.error("Error signing out:", {
         message: errorMsg,
         stack: error instanceof Error ? error.stack : undefined,
       });
@@ -266,7 +292,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const hasAccessToPillar = (pillarNumber: number): boolean => {
     if (!permissions) return false;
     if (permissions.isAdmin) return true;
-    const pillarKey = `pillar${pillarNumber}` as keyof typeof permissions.pillars;
+    const pillarKey =
+      `pillar${pillarNumber}` as keyof typeof permissions.pillars;
     return permissions.pillars[pillarKey] || false;
   };
 
@@ -286,7 +313,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth must be used within AuthProvider');
+    throw new Error("useAuth must be used within AuthProvider");
   }
   return context;
 };

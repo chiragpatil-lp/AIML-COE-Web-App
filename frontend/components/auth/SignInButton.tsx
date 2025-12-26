@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useAuth } from '@/contexts/AuthContext';
-import { useRouter } from 'next/navigation';
-import { toast } from 'sonner';
+import { useAuth } from "@/contexts/AuthContext";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export function SignInButton() {
   const { signInWithGoogle, loading } = useAuth();
@@ -13,11 +13,12 @@ export function SignInButton() {
       await signInWithGoogle();
       // Success toast is shown in AuthContext after permissions load
       // Navigate to dashboard
-      router.push('/dashboard');
+      router.push("/dashboard");
     } catch (error) {
-      const errorMsg = error instanceof Error ? error.message : 'Failed to sign in';
-      console.error('Sign-in error:', errorMsg);
-      toast.error('Failed to sign in. Please try again.');
+      const errorMsg =
+        error instanceof Error ? error.message : "Failed to sign in";
+      console.error("Sign-in error:", errorMsg);
+      toast.error("Failed to sign in. Please try again.");
     }
   };
 
@@ -25,7 +26,10 @@ export function SignInButton() {
     <button
       onClick={handleSignIn}
       disabled={loading}
-      className="btn btn-primary flex items-center justify-center gap-3 w-full text-base"
+      className="flex items-center justify-center gap-3 w-full bg-[#f35959ff] text-white px-[18px] py-[15px] rounded-full text-base leading-4 font-semibold transition-all duration-150 ease-[cubic-bezier(0.455,0.03,0.515,0.955)] hover:rounded-2xl hover:bg-[#f35959ff]/90 disabled:opacity-50 disabled:cursor-not-allowed"
+      style={{
+        fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
+      }}
     >
       <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none">
         <path
@@ -45,7 +49,7 @@ export function SignInButton() {
           d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
         />
       </svg>
-      Sign in with Google
+      {loading ? "Signing in..." : "Sign in with Google"}
     </button>
   );
 }

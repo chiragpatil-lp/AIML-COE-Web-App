@@ -34,6 +34,7 @@ This is your primary reference for everything Firebase Authentication. It includ
 **Original implementation guide** (reference)
 
 This document contains:
+
 - Original step-by-step implementation instructions
 - Code examples and technical details
 - File structure and component architecture
@@ -49,11 +50,13 @@ This document contains:
 ### For New Developers
 
 1. **Read**: [FIREBASE-AUTH-COMPLETE-SETUP.md](./FIREBASE-AUTH-COMPLETE-SETUP.md)
+
    - Start with "What Has Been Implemented"
    - Review "Architecture & Technical Details"
    - Follow "Local Development Setup"
 
 2. **Test**: Sign in at http://localhost:3000/auth/signin
+
    - Use your Google account
    - Check the dashboard
 
@@ -142,12 +145,12 @@ pnpm dev
 
 ### Quick Fixes
 
-| Issue | Solution |
-|-------|----------|
-| "Missing or insufficient permissions" | Check Firestore security rules are published |
-| Sign-in works but no redirect | Manually go to `/dashboard` |
-| Popup blocked | Allow popups for localhost:3000 |
-| Build fails | Code is SSR-safe, should build without env vars |
+| Issue                                 | Solution                                        |
+| ------------------------------------- | ----------------------------------------------- |
+| "Missing or insufficient permissions" | Check Firestore security rules are published    |
+| Sign-in works but no redirect         | Manually go to `/dashboard`                     |
+| Popup blocked                         | Allow popups for localhost:3000                 |
+| Build fails                           | Code is SSR-safe, should build without env vars |
 
 **Full Troubleshooting Guide**: [FIREBASE-AUTH-COMPLETE-SETUP.md](./FIREBASE-AUTH-COMPLETE-SETUP.md#troubleshooting)
 
@@ -180,6 +183,7 @@ pnpm dev
 ### Reporting Issues
 
 Include:
+
 - What you were trying to do
 - What happened instead
 - Error messages (full text)
@@ -208,6 +212,7 @@ Include:
 ## 🔮 Future Enhancements (Phase 2)
 
 Planned features:
+
 - [ ] Admin panel for user management (`/app/admin/users`)
 - [ ] Auto-redirect after sign-in
 - [ ] Cloud Functions for admin custom claims

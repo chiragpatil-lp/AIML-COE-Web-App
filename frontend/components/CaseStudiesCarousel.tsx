@@ -1,7 +1,7 @@
 "use client";
 
 import type React from "react";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 type CaseStudy = {
@@ -411,18 +411,20 @@ export const CaseStudiesCarousel = () => {
     );
   };
 
-  const startAutoPlay = () => {
+  const startAutoPlay = useCallback(() => {
     if (autoPlayRef.current) clearInterval(autoPlayRef.current);
     autoPlayRef.current = setInterval(() => {
       nextSlide();
     }, 5000);
-  };
-  const stopAutoPlay = () => {
+  }, []);
+
+  const stopAutoPlay = useCallback(() => {
     if (autoPlayRef.current) {
       clearInterval(autoPlayRef.current);
       autoPlayRef.current = null;
     }
-  };
+  }, []);
+
   useEffect(() => {
     if (isAutoPlaying) {
       startAutoPlay();
@@ -430,7 +432,7 @@ export const CaseStudiesCarousel = () => {
       stopAutoPlay();
     }
     return () => stopAutoPlay();
-  }, [isAutoPlaying, currentIndex]);
+  }, [isAutoPlaying, currentIndex, startAutoPlay, stopAutoPlay]);
   const goToSlide = (index: number) => {
     setDirection(index > currentIndex ? 1 : -1);
     setCurrentIndex(index);

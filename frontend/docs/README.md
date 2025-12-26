@@ -15,12 +15,14 @@ Welcome to the documentation for the AIML COE Web Application. This directory co
 ### 🔐 Authentication (NEW)
 
 2. **[Firebase Authentication](./firebase/)** - **START HERE FOR AUTH**
+
    - ✅ **Complete implementation** (Dec 26, 2024)
    - Google OAuth sign-in with Firestore permissions
    - 6 strategic pillar access control
    - **Status**: ✅ **IMPLEMENTED AND TESTED**
 
    **Key Documents**:
+
    - [Complete Setup Guide](./firebase/FIREBASE-AUTH-COMPLETE-SETUP.md) ⭐ Main reference
    - [Implementation Details](./firebase/FIREBASE-AUTH-IMPLEMENTATION.md)
    - [Firebase Folder README](./firebase/README.md)

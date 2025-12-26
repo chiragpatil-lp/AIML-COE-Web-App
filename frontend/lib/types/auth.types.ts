@@ -1,4 +1,4 @@
-import { User } from 'firebase/auth';
+import { User } from "firebase/auth";
 
 export interface UserPermissions {
   userId: string;
@@ -34,4 +34,5 @@ export interface PillarInfo {
   url: string;
   accentColor: string;
   enabled: boolean;
+  image?: string;
 }

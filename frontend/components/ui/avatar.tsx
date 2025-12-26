@@ -1,4 +1,5 @@
 import * as React from "react";
+import Image from "next/image";
 
 import { cn } from "@/lib/utils";
 
@@ -8,11 +9,20 @@ function Avatar({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
-function AvatarImage({ className, ...props }: React.ComponentProps<"img">) {
+interface AvatarImageProps extends Omit<React.ComponentProps<"img">, "src"> {
+  src: string;
+  alt?: string;
+}
+
+function AvatarImage({ className, alt = "", src, ...props }: AvatarImageProps) {
   return (
-    <img
+    <Image
       data-slot="avatar-image"
       className={cn("rounded-full", className)}
+      alt={alt}
+      src={src}
+      width={40}
+      height={40}
       {...props}
     />
   );
