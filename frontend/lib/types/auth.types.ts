@@ -20,6 +20,7 @@ export interface AuthContextType {
   user: User | null;
   permissions: UserPermissions | null;
   loading: boolean;
+  error: string | null;
   signInWithGoogle: () => Promise<void>;
   signOut: () => Promise<void>;
   hasAccessToPillar: (pillarNumber: number) => boolean;

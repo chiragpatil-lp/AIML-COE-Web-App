@@ -122,15 +122,15 @@ You need Firebase Admin permissions on the `search-ahmed` GCP project.
 4. Register app with nickname: `AIML COE Web App`
 5. Copy the Firebase configuration object
 
-**Actual Configuration** (for `search-ahmed` project):
+**Example Configuration** (replace with your actual values):
 ```javascript
 const firebaseConfig = {
-  apiKey: "AIzaSyC7vMIPV3hPikteOOJycZGGaTIjth0evHs",
-  authDomain: "search-ahmed.firebaseapp.com",
-  projectId: "search-ahmed",
-  storageBucket: "search-ahmed.firebasestorage.app",
-  messagingSenderId: "36231825761",
-  appId: "1:36231825761:web:b98d79df40740fa629dd20"
+  apiKey: "YOUR_API_KEY_HERE",
+  authDomain: "your-project.firebaseapp.com",
+  projectId: "your-project-id",
+  storageBucket: "your-project.firebasestorage.app",
+  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+  appId: "YOUR_APP_ID"
 };
 ```
 
@@ -228,13 +228,13 @@ The `.env.local` file has already been created with the Firebase configuration:
 **Location**: `frontend/.env.local`
 
 ```bash
-# Firebase Configuration
-NEXT_PUBLIC_FIREBASE_API_KEY=AIzaSyC7vMIPV3hPikteOOJycZGGaTIjth0evHs
-NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=search-ahmed.firebaseapp.com
-NEXT_PUBLIC_FIREBASE_PROJECT_ID=search-ahmed
-NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=search-ahmed.firebasestorage.app
-NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=36231825761
-NEXT_PUBLIC_FIREBASE_APP_ID=1:36231825761:web:b98d79df40740fa629dd20
+# Firebase Configuration (replace with your actual values from Firebase Console)
+NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key_here
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your-project.firebaseapp.com
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=your-project-id
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your-project.firebasestorage.app
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_messaging_sender_id
+NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
 
 # Pillar Application URLs (configure when ready)
 NEXT_PUBLIC_PILLAR_1_URL=
@@ -562,12 +562,12 @@ Add these secrets to your GitHub repository:
 **Add these secrets** (click "New repository secret"):
 
 ```
-FIREBASE_API_KEY=AIzaSyC7vMIPV3hPikteOOJycZGGaTIjth0evHs
-FIREBASE_AUTH_DOMAIN=search-ahmed.firebaseapp.com
-FIREBASE_PROJECT_ID=search-ahmed
-FIREBASE_STORAGE_BUCKET=search-ahmed.firebasestorage.app
-FIREBASE_MESSAGING_SENDER_ID=36231825761
-FIREBASE_APP_ID=1:36231825761:web:b98d79df40740fa629dd20
+FIREBASE_API_KEY=your_api_key_here
+FIREBASE_AUTH_DOMAIN=your-project.firebaseapp.com
+FIREBASE_PROJECT_ID=your-project-id
+FIREBASE_STORAGE_BUCKET=your-project.firebasestorage.app
+FIREBASE_MESSAGING_SENDER_ID=your_messaging_sender_id
+FIREBASE_APP_ID=your_app_id
 ```
 
 ### Step 2: Update GitHub Actions Workflow

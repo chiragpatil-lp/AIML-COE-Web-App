@@ -17,19 +17,18 @@ export default function DashboardPage() {
     }
   }, [user, loading, router]);
 
-  if (loading) {
+  // Show loading state while checking auth or redirecting
+  if (loading || !user) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
           <span className="loading loading-spinner loading-lg text-primary"></span>
-          <p className="text-base-content/70">Loading your dashboard...</p>
+          <p className="text-base-content/70">
+            {loading ? 'Loading your dashboard...' : 'Redirecting to sign in...'}
+          </p>
         </div>
       </div>
     );
-  }
-
-  if (!user) {
-    return null; // Will redirect
   }
 
   return (

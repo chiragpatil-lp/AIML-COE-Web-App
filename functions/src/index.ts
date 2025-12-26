@@ -1,0 +1,271 @@
+/**
+ * Firebase Cloud Functions for AIML COE Web App
+ *
+ * These functions handle server-side operations that require elevated privileges:
+ * - User creation with default permissions
+ * - Admin role management
+ * - Custom claims management
+ */
+
+import * as functions from 'firebase-functions';
+import * as admin from 'firebase-admin';
+
+// Initialize Firebase Admin SDK
+admin.initializeApp();
+
+interface UserPermissions {
+  userId: string;
+  email: string;
+  isAdmin: boolean;
+  pillars: {
+    pillar1: boolean;
+    pillar2: boolean;
+    pillar3: boolean;
+    pillar4: boolean;
+    pillar5: boolean;
+    pillar6: boolean;
+  };
+  createdAt: admin.firestore.FieldValue;
+  updatedAt: admin.firestore.FieldValue;
+}
+
+/**
+ * Triggered when a new user signs up
+ * Creates default user permissions in Firestore
+ */
+export const onUserCreate = functions.auth.user().onCreate(async (user) => {
+  const { uid, email } = user;
+
+  if (!email) {
+    console.error('User created without email:', uid);
+    return;
+  }
+
+  try {
+    const defaultPermissions: UserPermissions = {
+      userId: uid,
+      email,
+      isAdmin: false,
+      pillars: {
+        pillar1: false,
+        pillar2: false,
+        pillar3: false,
+        pillar4: false,
+        pillar5: false,
+        pillar6: false,
+      },
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+    };
+
+    await admin.firestore().collection('userPermissions').doc(uid).set(defaultPermissions);
+
+    console.log('Created default permissions for user:', {
+      uid,
+      email,
+    });
+  } catch (error) {
+    console.error('Error creating user permissions:', error);
+    throw error;
+  }
+});
+
+/**
+ * Callable function to set admin custom claim
+ * Can only be called by existing admins
+ */
+export const setAdminClaim = functions.https.onCall(async (data, context) => {
+  // Verify caller is authenticated
+  if (!context.auth) {
+    throw new functions.https.HttpsError('unauthenticated', 'User must be authenticated');
+  }
+
+  // Verify caller is admin
+  const callerToken = context.auth.token;
+  if (!callerToken.admin) {
+    throw new functions.https.HttpsError(
+      'permission-denied',
+      'Only admins can set admin claims'
+    );
+  }
+
+  const { userId, isAdmin } = data;
+
+  if (!userId || typeof userId !== 'string') {
+    throw new functions.https.HttpsError('invalid-argument', 'userId must be a string');
+  }
+
+  if (typeof isAdmin !== 'boolean') {
+    throw new functions.https.HttpsError('invalid-argument', 'isAdmin must be a boolean');
+  }
+
+  try {
+    // Set custom claim
+    await admin.auth().setCustomUserClaims(userId, { admin: isAdmin });
+
+    // Update Firestore permissions document
+    await admin
+      .firestore()
+      .collection('userPermissions')
+      .doc(userId)
+      .update({
+        isAdmin,
+        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      });
+
+    // Log the change for audit purposes
+    await admin
+      .firestore()
+      .collection('adminAuditLog')
+      .add({
+        action: 'admin_claim_set',
+        targetUserId: userId,
+        isAdmin,
+        performedBy: context.auth.uid,
+        performedByEmail: context.auth.token.email,
+        timestamp: admin.firestore.FieldValue.serverTimestamp(),
+      });
+
+    console.log('Admin claim set:', {
+      targetUserId: userId,
+      isAdmin,
+      performedBy: context.auth.uid,
+    });
+
+    return {
+      success: true,
+      message: `Admin claim ${isAdmin ? 'granted' : 'revoked'} for user ${userId}`,
+    };
+  } catch (error) {
+    console.error('Error setting admin claim:', error);
+    throw new functions.https.HttpsError('internal', 'Failed to set admin claim');
+  }
+});
+
+/**
+ * Callable function to update user pillar permissions
+ * Can only be called by admins
+ */
+export const updateUserPermissions = functions.https.onCall(async (data, context) => {
+  // Verify caller is authenticated
+  if (!context.auth) {
+    throw new functions.https.HttpsError('unauthenticated', 'User must be authenticated');
+  }
+
+  // Verify caller is admin
+  const callerToken = context.auth.token;
+  if (!callerToken.admin) {
+    throw new functions.https.HttpsError(
+      'permission-denied',
+      'Only admins can update user permissions'
+    );
+  }
+
+  const { userId, pillars } = data;
+
+  if (!userId || typeof userId !== 'string') {
+    throw new functions.https.HttpsError('invalid-argument', 'userId must be a string');
+  }
+
+  if (!pillars || typeof pillars !== 'object') {
+    throw new functions.https.HttpsError('invalid-argument', 'pillars must be an object');
+  }
+
+  // Validate pillars object structure
+  const validPillarKeys = ['pillar1', 'pillar2', 'pillar3', 'pillar4', 'pillar5', 'pillar6'];
+  for (const key of Object.keys(pillars)) {
+    if (!validPillarKeys.includes(key)) {
+      throw new functions.https.HttpsError('invalid-argument', `Invalid pillar key: ${key}`);
+    }
+    if (typeof pillars[key] !== 'boolean') {
+      throw new functions.https.HttpsError(
+        'invalid-argument',
+        `Pillar value must be boolean: ${key}`
+      );
+    }
+  }
+
+  try {
+    // Update Firestore permissions document
+    await admin
+      .firestore()
+      .collection('userPermissions')
+      .doc(userId)
+      .update({
+        pillars,
+        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      });
+
+    // Log the change for audit purposes
+    await admin
+      .firestore()
+      .collection('adminAuditLog')
+      .add({
+        action: 'permissions_updated',
+        targetUserId: userId,
+        pillars,
+        performedBy: context.auth.uid,
+        performedByEmail: context.auth.token.email,
+        timestamp: admin.firestore.FieldValue.serverTimestamp(),
+      });
+
+    console.log('User permissions updated:', {
+      targetUserId: userId,
+      pillars,
+      performedBy: context.auth.uid,
+    });
+
+    return {
+      success: true,
+      message: `Permissions updated for user ${userId}`,
+    };
+  } catch (error) {
+    console.error('Error updating user permissions:', error);
+    throw new functions.https.HttpsError('internal', 'Failed to update user permissions');
+  }
+});
+
+/**
+ * Callable function to get user permissions
+ * Users can get their own permissions, admins can get any user's permissions
+ */
+export const getUserPermissions = functions.https.onCall(async (data, context) => {
+  // Verify caller is authenticated
+  if (!context.auth) {
+    throw new functions.https.HttpsError('unauthenticated', 'User must be authenticated');
+  }
+
+  const { userId } = data;
+  const requestedUserId = userId || context.auth.uid;
+
+  // Check if user is requesting their own permissions or is an admin
+  const isOwnPermissions = requestedUserId === context.auth.uid;
+  const isAdmin = context.auth.token.admin === true;
+
+  if (!isOwnPermissions && !isAdmin) {
+    throw new functions.https.HttpsError(
+      'permission-denied',
+      'Users can only view their own permissions'
+    );
+  }
+
+  try {
+    const permissionsDoc = await admin
+      .firestore()
+      .collection('userPermissions')
+      .doc(requestedUserId)
+      .get();
+
+    if (!permissionsDoc.exists) {
+      throw new functions.https.HttpsError('not-found', 'User permissions not found');
+    }
+
+    return {
+      success: true,
+      permissions: permissionsDoc.data(),
+    };
+  } catch (error) {
+    console.error('Error getting user permissions:', error);
+    throw new functions.https.HttpsError('internal', 'Failed to get user permissions');
+  }
+});

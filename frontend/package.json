@@ -33,6 +33,7 @@
     "expo-file-system": "latest",
     "expo-gl": "latest",
     "firebase": "^12.7.0",
+    "firebase-admin": "^13.6.0",
     "framer-motion": "^12.4.10",
     "input-otp": "^1.4.2",
     "lucide-react": "^0.542.0",

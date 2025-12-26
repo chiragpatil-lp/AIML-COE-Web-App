@@ -1,16 +1,22 @@
 'use client';
 
 import { useAuth } from '@/contexts/AuthContext';
+import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
 export function SignInButton() {
   const { signInWithGoogle, loading } = useAuth();
+  const router = useRouter();
 
   const handleSignIn = async () => {
     try {
       await signInWithGoogle();
-      toast.success('Successfully signed in!');
+      // Success toast is shown in AuthContext after permissions load
+      // Navigate to dashboard
+      router.push('/dashboard');
     } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : 'Failed to sign in';
+      console.error('Sign-in error:', errorMsg);
       toast.error('Failed to sign in. Please try again.');
     }
   };
