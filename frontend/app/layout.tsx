@@ -2,6 +2,8 @@ import type React from "react";
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, Inter, Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+import { Toaster } from "sonner";
+import { AuthProvider } from "@/contexts/AuthContext";
 import "./globals.css";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
@@ -40,7 +42,10 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${plusJakartaSans.variable} ${geistMono.variable} font-sans antialiased`}
       >
-        {children}
+        <AuthProvider>
+          {children}
+          <Toaster position="bottom-right" />
+        </AuthProvider>
         <Analytics />
       </body>
     </html>

@@ -1,6 +1,8 @@
 "use client";
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import Link from "next/link";
 type ProductTeaserCardProps = {
   dailyVolume?: string;
   dailyVolumeLabel?: string;
@@ -17,6 +19,8 @@ type ProductTeaserCardProps = {
 
 // @component: ProductTeaserCard
 export const ProductTeaserCard = (props: ProductTeaserCardProps) => {
+  const { user } = useAuth();
+
   const {
     dailyVolume = "1,430,992,688",
     dailyVolumeLabel = "AI Solutions Showcase",
@@ -30,6 +34,9 @@ export const ProductTeaserCard = (props: ProductTeaserCardProps) => {
     secondaryButtonText = "View Docs",
     secondaryButtonHref = "",
   } = props;
+
+  // Determine the login button destination based on auth state
+  const loginDestination = user ? "/dashboard" : "/auth/signin";
 
   // @return
   return (
@@ -123,22 +130,21 @@ export const ProductTeaserCard = (props: ProductTeaserCardProps) => {
 
             <ul className="flex gap-1.5 flex-wrap mt-10">
               <li>
-                <a
-                  href={primaryButtonHref}
-                  onClick={(e) => e.preventDefault()}
-                  className="block cursor-pointer text-white bg-[#f35959ff] rounded-full px-[18px] py-[15px] text-base leading-4 whitespace-nowrap transition-all duration-150 ease-[cubic-bezier(0.455,0.03,0.515,0.955)] hover:rounded-2xl"
+                <Link
+                  href={loginDestination}
+                  className="block cursor-pointer text-white bg-[#f35959ff] rounded-full px-[18px] py-[15px] text-base leading-4 whitespace-nowrap transition-all duration-150 ease-[cubic-bezier(0.455,0.03,0.515,0.955)] hover:bg-[#f35959ff]/90"
                   style={{
                     background: "#f35959ff",
                   }}
                 >
                   {primaryButtonText}
-                </a>
+                </Link>
               </li>
               <li>
                 <a
                   href={secondaryButtonHref}
                   onClick={(e) => e.preventDefault()}
-                  className="block cursor-pointer text-[#202020] border border-[#202020] rounded-full px-[18px] py-[15px] text-base leading-4 whitespace-nowrap transition-all duration-150 ease-[cubic-bezier(0.455,0.03,0.515,0.955)] hover:rounded-2xl"
+                  className="block cursor-pointer text-[#202020] border border-[#202020] rounded-full px-[18px] py-[15px] text-base leading-4 whitespace-nowrap transition-all duration-150 ease-[cubic-bezier(0.455,0.03,0.515,0.955)] hover:bg-[#202020] hover:text-white"
                 >
                   {secondaryButtonText}
                 </a>

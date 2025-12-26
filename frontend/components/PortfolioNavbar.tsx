@@ -3,6 +3,9 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
+import Image from "next/image";
+import { useAuth } from "@/contexts/AuthContext";
+import Link from "next/link";
 const navigationLinks = [
   {
     name: "Features",
@@ -20,6 +23,7 @@ const navigationLinks = [
 
 // @component: PortfolioNavbar
 export const PortfolioNavbar = () => {
+  const { user } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   useEffect(() => {
@@ -57,7 +61,13 @@ export const PortfolioNavbar = () => {
               onClick={() => handleLinkClick("#home")}
               className="flex items-center gap-3 text-2xl font-bold text-foreground hover:text-primary transition-colors duration-200"
             >
-              <img src="/icon.svg" alt="CoE Logo" className="h-5 w-auto" />
+              <Image
+                src="/icon.svg"
+                alt="CoE Logo"
+                width={20}
+                height={20}
+                className="h-5 w-auto"
+              />
               <span
                 className="mt-1"
                 style={{
@@ -90,9 +100,9 @@ export const PortfolioNavbar = () => {
           </div>
 
           <div className="hidden md:block">
-            <button
-              onClick={() => handleLinkClick("#contact")}
-              className="bg-[#f35959ff] text-white px-[18px] rounded-full text-base font-semibold hover:bg-[#f35959ff]/90 transition-all duration-200 hover:rounded-2xl shadow-sm hover:shadow-md whitespace-nowrap leading-4 py-[15px]"
+            <Link
+              href={user ? "/dashboard" : "/auth/signin"}
+              className="block bg-[#f35959ff] text-white px-[18px] rounded-full text-base font-semibold hover:bg-[#f35959ff]/90 transition-all duration-200 shadow-sm hover:shadow-md whitespace-nowrap leading-4 py-[15px] cursor-pointer"
               style={{
                 fontFamily: "Plus Jakarta Sans, sans-serif",
               }}
@@ -105,7 +115,7 @@ export const PortfolioNavbar = () => {
               >
                 Get Started
               </span>
-            </button>
+            </Link>
           </div>
 
           <div className="md:hidden">
@@ -156,15 +166,16 @@ export const PortfolioNavbar = () => {
                 </button>
               ))}
               <div className="pt-4 border-t border-border">
-                <button
-                  onClick={() => handleLinkClick("#contact")}
-                  className="w-full bg-[#f35959ff] text-white px-[18px] py-[15px] rounded-full text-base font-semibold hover:bg-[#f35959ff]/90 transition-all duration-200"
+                <Link
+                  href={user ? "/dashboard" : "/auth/signin"}
+                  onClick={closeMobileMenu}
+                  className="block w-full bg-[#f35959ff] text-white px-[18px] py-[15px] rounded-full text-base font-semibold hover:bg-[#f35959ff]/90 transition-colors duration-200 text-center cursor-pointer"
                   style={{
                     fontFamily: "Plus Jakarta Sans, sans-serif",
                   }}
                 >
-                  <span>Start Free Trial</span>
-                </button>
+                  <span>Get Started</span>
+                </Link>
               </div>
             </div>
           </motion.div>

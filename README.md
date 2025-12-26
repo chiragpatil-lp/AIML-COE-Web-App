@@ -87,10 +87,35 @@ This project uses GitHub Actions to automatically deploy to Google Cloud Run on 
 - **Service**: aiml-coe-web-app
 
 Every push to `main` automatically triggers:
-1. Docker image build with Node.js 20
-2. Push to Google Container Registry
-3. Deploy to Cloud Run
-4. Live in ~3-4 minutes
+1. Lint and format validation checks
+2. Docker image build with Node.js 20
+3. Push to Google Container Registry
+4. Deploy to Cloud Run
+5. Live in ~3-4 minutes
+
+### CI Validation Checks
+
+Before pushing changes or creating a pull request, run these commands in the `frontend` directory:
+
+```bash
+cd frontend
+
+# Lint check - identifies code quality issues (must pass)
+pnpm lint
+
+# Format check - ensures consistent code formatting (must pass)
+pnpm format:check
+
+# Build check - ensures production build succeeds (must pass)
+pnpm build
+```
+
+**Fix formatting issues:**
+```bash
+pnpm format
+```
+
+All checks must pass for the CI/CD pipeline to succeed.
 
 ## Contributing
 

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
+import Image from "next/image";
 type IntegrationApp = {
   name: string;
   logo: string;
@@ -232,10 +233,12 @@ export const IntegrationCarousel = ({
                   "rgba(0, 0, 0, 0.04) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 1px 1px 0px, rgba(0, 0, 0, 0.04) 0px 3px 3px -1.4px, rgba(0, 0, 0, 0.04) 0px 6px 6px -3px, rgba(0, 0, 0, 0.04) 0px 12px 12px -6px, rgba(0, 0, 0, 0.04) 0px 12px 12px -12px",
               }}
             >
-              <img
+              <Image
                 src={app.logo || "/placeholder.svg"}
                 alt={app.name}
-                className="w-9 h-9 block object-contain"
+                width={36}
+                height={36}
+                className="block object-contain"
               />
             </div>
           ))}
@@ -275,10 +278,12 @@ export const IntegrationCarousel = ({
                   "rgba(0, 0, 0, 0.04) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 1px 1px 0px, rgba(0, 0, 0, 0.04) 0px 3px 3px -1.4px, rgba(0, 0, 0, 0.04) 0px 6px 6px -3px, rgba(0, 0, 0, 0.04) 0px 12px 12px -6px, rgba(0, 0, 0, 0.04) 0px 12px 12px -12px",
               }}
             >
-              <img
+              <Image
                 src={app.logo || "/placeholder.svg"}
                 alt={app.name}
-                className="w-9 h-9 block object-contain"
+                width={36}
+                height={36}
+                className="block object-contain"
               />
             </div>
           ))}

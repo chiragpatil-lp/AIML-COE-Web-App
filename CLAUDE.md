@@ -154,9 +154,37 @@ When reviewing code, focus on:
 ### CI/CD
 
 1. **Automated Checks**: All PRs must pass lint, format, and build checks
+   - Run locally before committing:
+     ```bash
+     cd frontend
+     pnpm lint           # ESLint check - must pass
+     pnpm format:check   # Prettier formatting check - must pass
+     pnpm build          # Production build - must succeed
+     ```
+   - All checks must pass before merging to `main`
 2. **Deployment**: Only `main` branch deploys to production
 3. **Environment**: Use GitHub Secrets for sensitive configuration
 4. **Rollback**: Be prepared to revert breaking changes
+
+### CI Validation Commands
+
+Before creating a pull request, always run these commands in the `frontend` directory:
+
+```bash
+# Lint check - identifies code quality issues
+pnpm lint
+
+# Format check - ensures consistent code formatting
+pnpm format:check
+
+# Build check - ensures production build succeeds
+pnpm build
+```
+
+If formatting issues are found, fix them with:
+```bash
+pnpm format
+```
 
 ## Common Patterns
 
