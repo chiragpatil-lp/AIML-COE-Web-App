@@ -152,33 +152,6 @@ export function PillarGrid(_props: PillarGridProps = {}) {
                   </svg>
                 )}
               </div>
-
-              <div className="card-actions justify-start mt-2">
-                {!hasAccess && (
-                  <div
-                    className="badge badge-ghost badge-sm font-jakarta"
-                    aria-label="Access status: not granted"
-                  >
-                    Access not granted
-                  </div>
-                )}
-                {permissions?.isAdmin && (
-                  <div
-                    className="badge badge-success badge-sm font-jakarta"
-                    aria-label="Access level: admin"
-                  >
-                    Admin Access
-                  </div>
-                )}
-                {hasAccess && !permissions?.isAdmin && (
-                  <div
-                    className="badge badge-primary badge-sm font-jakarta"
-                    aria-label="Access status: authorized"
-                  >
-                    Authorized
-                  </div>
-                )}
-              </div>
             </div>
           </button>
         );
