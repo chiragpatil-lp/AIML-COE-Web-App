@@ -5,6 +5,7 @@ import { SignOutButton } from "@/components/auth/SignOutButton";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import Image from "next/image";
+import { ArrowLeft } from "lucide-react";
 
 export default function ProfilePage() {
   const { user, permissions, loading } = useAuth();
@@ -66,28 +67,43 @@ export default function ProfilePage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
-      <div className="bg-[#e9e9e9] shadow-sm">
-        <div className="max-w-7xl mx-auto px-8 py-6">
-          <div className="flex items-center justify-between">
-            <h1
-              className="text-3xl font-bold text-[#202020]"
-              style={{
-                fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
-              }}
-            >
-              My Profile
-            </h1>
-            <div className="flex items-center gap-4">
-              <button
-                onClick={() => router.push("/dashboard")}
-                className="border border-[#202020] text-[#202020] px-[18px] py-[15px] rounded-full text-base leading-4 font-semibold transition-all duration-150 ease-[cubic-bezier(0.455,0.03,0.515,0.955)] hover:bg-[#202020] hover:text-white cursor-pointer"
+      <div className="w-full bg-white border-b border-gray-100">
+        <div className="max-w-7xl mx-auto px-8 py-8">
+          {/* Back Button */}
+          <button
+            onClick={() => router.push("/dashboard")}
+            className="inline-flex items-center gap-2 text-[#146e96] hover:text-[#146e96]/80 transition-colors duration-200 mb-6"
+            style={{
+              fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
+            }}
+          >
+            <ArrowLeft className="w-5 h-5" />
+            <span className="text-base font-medium">Back to Dashboard</span>
+          </button>
+
+          <div className="flex items-start justify-between">
+            <div className="flex-1">
+              <h1
+                className="text-[40px] font-normal leading-tight tracking-tight text-[#111A4A] mb-3"
+                style={{
+                  fontFamily:
+                    "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
+                  fontWeight: "400",
+                }}
+              >
+                My Profile
+              </h1>
+              <p
+                className="text-lg leading-6 text-[#111A4A] opacity-60"
                 style={{
                   fontFamily:
                     "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
                 }}
               >
-                Back to Dashboard
-              </button>
+                Manage your account settings and access permissions
+              </p>
+            </div>
+            <div className="flex items-center gap-3">
               <SignOutButton />
             </div>
           </div>
@@ -95,9 +111,9 @@ export default function ProfilePage() {
       </div>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-8 py-8">
+      <div className="max-w-7xl mx-auto px-8 py-16">
         {/* Profile Card */}
-        <div className="bg-[#e9e9e9] rounded-[40px] p-8 shadow-xl">
+        <div className="bg-white border border-gray-100 rounded-3xl p-10 shadow-sm">
           <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
             {/* Profile Picture */}
             <div className="shrink-0">
@@ -107,10 +123,10 @@ export default function ProfilePage() {
                   alt={user.displayName || "User"}
                   width={128}
                   height={128}
-                  className="rounded-full border-4 border-white shadow-lg"
+                  className="rounded-full ring-4 ring-[#146e96]/10 ring-offset-2"
                 />
               ) : (
-                <div className="w-32 h-32 rounded-full bg-[#202020] text-white flex items-center justify-center text-4xl font-bold shadow-lg">
+                <div className="w-32 h-32 rounded-full bg-gradient-to-br from-[#146e96] to-[#146e96]/80 text-white flex items-center justify-center text-4xl font-bold ring-4 ring-[#146e96]/10 ring-offset-2">
                   {(user.displayName || user.email || "U")[0].toUpperCase()}
                 </div>
               )}
@@ -121,16 +137,17 @@ export default function ProfilePage() {
               {/* Name */}
               <div>
                 <h2
-                  className="text-3xl font-bold text-[#202020] mb-1"
+                  className="text-[32px] font-normal leading-tight tracking-tight text-[#111A4A] mb-2"
                   style={{
                     fontFamily:
                       "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
+                    fontWeight: "400",
                   }}
                 >
                   {user.displayName || "User"}
                 </h2>
                 <p
-                  className="text-lg text-[#404040]"
+                  className="text-lg leading-6 text-[#111A4A] opacity-60"
                   style={{
                     fontFamily:
                       "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
@@ -143,7 +160,7 @@ export default function ProfilePage() {
               {/* Access Level */}
               <div>
                 <label
-                  className="text-sm font-semibold text-[#404040] uppercase tracking-wider mb-2 block"
+                  className="text-sm font-medium text-[#111A4A] opacity-60 uppercase tracking-wider mb-3 block"
                   style={{
                     fontFamily:
                       "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
@@ -152,10 +169,11 @@ export default function ProfilePage() {
                   Access Level
                 </label>
                 <span
-                  className={`badge ${getAccessLevelBadgeClass()} badge-lg font-semibold`}
+                  className="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-[#146e96]/10 text-[#146e96] border border-[#146e96]/20"
                   style={{
                     fontFamily:
                       "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
+                    fontWeight: "500",
                   }}
                 >
                   {getAccessLevel()}
@@ -166,7 +184,7 @@ export default function ProfilePage() {
               {!permissions?.isAdmin && (
                 <div>
                   <label
-                    className="text-sm font-semibold text-[#404040] uppercase tracking-wider mb-3 block"
+                    className="text-sm font-medium text-[#111A4A] opacity-60 uppercase tracking-wider mb-4 block"
                     style={{
                       fontFamily:
                         "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
@@ -188,24 +206,27 @@ export default function ProfilePage() {
                         return (
                           <div
                             key={key}
-                            className={`flex items-center gap-2 p-3 rounded-2xl ${
+                            className={`flex items-center gap-2.5 p-3.5 rounded-xl transition-all duration-200 ${
                               hasAccess
-                                ? "bg-white border border-green-200"
-                                : "bg-[#d9d9d9]"
+                                ? "bg-gradient-to-r from-[#146e96]/5 to-transparent border border-[#146e96]/20"
+                                : "bg-gray-50 border border-gray-100 opacity-50"
                             }`}
                           >
                             <div
-                              className={`w-3 h-3 rounded-full ${
-                                hasAccess ? "bg-green-500" : "bg-[#808080]"
+                              className={`w-2.5 h-2.5 rounded-full ${
+                                hasAccess ? "bg-[#146e96]" : "bg-gray-300"
                               }`}
                             />
                             <span
                               className={`text-sm font-medium ${
-                                hasAccess ? "text-[#202020]" : "text-[#606060]"
+                                hasAccess
+                                  ? "text-[#111A4A]"
+                                  : "text-[#111A4A] opacity-60"
                               }`}
                               style={{
                                 fontFamily:
                                   "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
+                                fontWeight: "500",
                               }}
                             >
                               {pillarNames[key]}
@@ -222,20 +243,21 @@ export default function ProfilePage() {
         </div>
 
         {/* Request Additional Access Section */}
-        <div className="mt-8 bg-[#e9e9e9] rounded-[40px] p-8 shadow-xl">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="mt-8 bg-gradient-to-r from-[#146e96]/5 to-transparent border border-[#146e96]/10 rounded-2xl p-8">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
             <div className="flex-1">
               <h3
-                className="text-xl font-bold text-[#202020] mb-2"
+                className="text-2xl font-normal leading-tight tracking-tight text-[#111A4A] mb-2"
                 style={{
                   fontFamily:
                     "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
+                  fontWeight: "400",
                 }}
               >
                 Need More Access?
               </h3>
               <p
-                className="text-[#404040]"
+                className="text-base leading-6 text-[#111A4A] opacity-60"
                 style={{
                   fontFamily:
                     "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
@@ -247,31 +269,33 @@ export default function ProfilePage() {
             </div>
             <button
               disabled
-              className="border border-[#202020] text-[#202020] px-[18px] py-[15px] rounded-full text-base leading-4 font-semibold transition-all duration-150 ease-[cubic-bezier(0.455,0.03,0.515,0.955)] hover:bg-[#202020] hover:text-white cursor-not-allowed opacity-50"
+              className="border border-[#146e96] text-[#146e96] px-[18px] py-[15px] rounded-full text-base leading-4 font-semibold transition-all duration-200 cursor-not-allowed opacity-50"
               style={{
                 fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
+                fontWeight: "500",
               }}
               title="This feature is coming soon"
             >
-              Request Additional Access
+              Request Access
             </button>
           </div>
         </div>
 
         {/* Account Information */}
-        <div className="mt-8 bg-[#e9e9e9] rounded-[40px] p-8 shadow-xl">
+        <div className="mt-8 bg-white border border-gray-100 rounded-3xl p-10 shadow-sm">
           <h3
-            className="text-xl font-bold text-[#202020] mb-6"
+            className="text-2xl font-normal leading-tight tracking-tight text-[#111A4A] mb-8"
             style={{
               fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
+              fontWeight: "400",
             }}
           >
             Account Information
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div>
               <label
-                className="text-sm font-semibold text-[#404040] uppercase tracking-wider mb-2 block"
+                className="text-sm font-medium text-[#111A4A] opacity-60 uppercase tracking-wider mb-3 block"
                 style={{
                   fontFamily:
                     "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
@@ -280,7 +304,7 @@ export default function ProfilePage() {
                 User ID
               </label>
               <p
-                className="text-[#202020] font-mono text-sm break-all bg-white px-4 py-2 rounded-2xl"
+                className="text-[#111A4A] font-mono text-sm break-all bg-gray-50 border border-gray-100 px-4 py-3 rounded-xl"
                 style={{
                   fontFamily: "var(--font-geist-mono), monospace",
                 }}
@@ -290,7 +314,7 @@ export default function ProfilePage() {
             </div>
             <div>
               <label
-                className="text-sm font-semibold text-[#404040] uppercase tracking-wider mb-2 block"
+                className="text-sm font-medium text-[#111A4A] opacity-60 uppercase tracking-wider mb-3 block"
                 style={{
                   fontFamily:
                     "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
@@ -299,7 +323,7 @@ export default function ProfilePage() {
                 Account Created
               </label>
               <p
-                className="text-[#202020] bg-white px-4 py-2 rounded-2xl"
+                className="text-[#111A4A] bg-gray-50 border border-gray-100 px-4 py-3 rounded-xl"
                 style={{
                   fontFamily:
                     "var(--font-plus-jakarta-sans), Plus Jakarta Sans",

@@ -75,25 +75,17 @@ export default function DashboardPage() {
                     "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
                 }}
               >
-                {permissions?.isAdmin ? (
-                  <span className="inline-flex items-center gap-2">
-                    <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-[#146e96]/10 text-[#146e96]">
-                      Administrator
-                    </span>
-                    <span>{user?.email}</span>
-                  </span>
-                ) : (
-                  <span>{user?.email}</span>
-                )}
+                {user?.email}
               </p>
             </div>
             <div className="flex items-center gap-3">
               <button
                 onClick={() => router.push("/profile")}
-                className="relative inline-flex justify-center items-center leading-4 text-center cursor-pointer whitespace-nowrap outline-none font-medium h-10 text-[#232730] bg-white/50 backdrop-blur-sm shadow-[0_1px_1px_0_rgba(255,255,255,0),0_0_0_1px_rgba(87,90,100,0.12)] transition-all duration-200 ease-in-out rounded-lg px-4 text-sm hover:shadow-[0_1px_2px_0_rgba(0,0,0,0.05),0_0_0_1px_rgba(87,90,100,0.18)]"
+                className="border border-[#146e96] text-[#146e96] px-[18px] py-[15px] rounded-full text-base leading-4 font-semibold hover:bg-[#146e96] hover:text-white transition-all duration-200 cursor-pointer"
                 style={{
                   fontFamily:
                     "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
+                  fontWeight: "500",
                 }}
               >
                 My Profile
