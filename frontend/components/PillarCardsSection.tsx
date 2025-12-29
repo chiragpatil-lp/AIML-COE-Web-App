@@ -71,22 +71,16 @@ const PILLARS: PillarInfo[] = [
 ];
 
 export function PillarCardsSection() {
-  const { user, hasAccessToPillar } = useAuth();
+  const { user } = useAuth();
   const router = useRouter();
 
-  const handlePillarClick = (pillar: PillarInfo) => {
+  const handlePillarClick = () => {
     if (!user) {
       router.push("/auth/signin");
       return;
     }
 
-    const hasAccess = hasAccessToPillar(pillar.number);
-    if (!hasAccess || pillar.url === "#") {
-      return;
-    }
-
-    const apiUrl = `/api/pillar/${pillar.number}`;
-    window.open(apiUrl, "_blank", "noopener,noreferrer");
+    router.push("/dashboard");
   };
 
   return (
@@ -117,9 +111,6 @@ export function PillarCardsSection() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {PILLARS.map((pillar, index) => {
-            const hasAccess = user ? hasAccessToPillar(pillar.number) : false;
-            const isClickable = user ? hasAccess && pillar.url !== "#" : true;
-
             return (
               <motion.button
                 key={pillar.id}
@@ -131,15 +122,9 @@ export function PillarCardsSection() {
                   delay: index * 0.1,
                   ease: [0.4, 0, 0.2, 1],
                 }}
-                onClick={() => handlePillarClick(pillar)}
-                className={`relative overflow-hidden bg-white rounded-3xl shadow-lg text-left transition-all duration-300 ${
-                  isClickable
-                    ? "hover:shadow-2xl hover:-translate-y-1 cursor-pointer"
-                    : user && !hasAccess
-                      ? "opacity-60 cursor-not-allowed"
-                      : "cursor-pointer hover:shadow-2xl hover:-translate-y-1"
-                }`}
-                aria-label={`${pillar.name} - ${user ? (hasAccess ? "Click to open" : "Access not granted") : "Sign in to access"}`}
+                onClick={handlePillarClick}
+                className="relative overflow-hidden bg-white rounded-3xl shadow-lg text-left transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 cursor-pointer"
+                aria-label={`${pillar.name} - ${user ? "Go to dashboard" : "Sign in to access"}`}
                 type="button"
               >
                 {pillar.image && (
@@ -171,12 +156,10 @@ export function PillarCardsSection() {
                     >
                       {pillar.name}
                     </h3>
-                    {isClickable && (
-                      <ArrowRight
-                        className="w-5 h-5 text-[#146e96] flex-shrink-0 transition-transform duration-300 group-hover:translate-x-1"
-                        aria-hidden="true"
-                      />
-                    )}
+                    <ArrowRight
+                      className="w-5 h-5 text-[#146e96] flex-shrink-0 transition-transform duration-300 group-hover:translate-x-1"
+                      aria-hidden="true"
+                    />
                   </div>
 
                   <p
@@ -188,24 +171,6 @@ export function PillarCardsSection() {
                   >
                     {pillar.description}
                   </p>
-
-                  <div className="flex flex-wrap gap-2">
-                    {!user && (
-                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-[#f35959]/10 text-[#f35959]">
-                        Sign in to access
-                      </span>
-                    )}
-                    {user && !hasAccess && (
-                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
-                        Access not granted
-                      </span>
-                    )}
-                    {user && hasAccess && (
-                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-[#146e96]/10 text-[#146e96]">
-                        Authorized
-                      </span>
-                    )}
-                  </div>
                 </div>
               </motion.button>
             );
