@@ -5,6 +5,7 @@ import { PillarGrid } from "@/components/dashboard/PillarGrid";
 import { SignOutButton } from "@/components/auth/SignOutButton";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { ArrowLeft } from "lucide-react";
 
 export default function DashboardPage() {
   const { user, permissions, loading } = useAuth();
@@ -41,21 +42,34 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
-      <div className="bg-[#e9e9e9] shadow-sm">
-        <div className="max-w-7xl mx-auto px-8 py-6">
-          <div className="flex items-center justify-between">
-            <div>
+      <div className="w-full bg-white border-b border-gray-100">
+        <div className="max-w-7xl mx-auto px-8 py-8">
+          {/* Back Button */}
+          <button
+            onClick={() => router.push("/")}
+            className="inline-flex items-center gap-2 text-[#146e96] hover:text-[#146e96]/80 transition-colors duration-200 mb-6"
+            style={{
+              fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
+            }}
+          >
+            <ArrowLeft className="w-5 h-5" />
+            <span className="text-base font-medium">Back to Home</span>
+          </button>
+
+          <div className="flex items-start justify-between">
+            <div className="flex-1">
               <h1
-                className="text-3xl font-bold text-[#202020]"
+                className="text-[40px] font-normal leading-tight tracking-tight text-[#111A4A] mb-3"
                 style={{
                   fontFamily:
                     "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
+                  fontWeight: "400",
                 }}
               >
                 Welcome, {user?.displayName || "User"}
               </h1>
               <p
-                className="text-[#404040] mt-1"
+                className="text-lg leading-6 text-[#111A4A] opacity-60"
                 style={{
                   fontFamily:
                     "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
@@ -63,13 +77,7 @@ export default function DashboardPage() {
               >
                 {permissions?.isAdmin ? (
                   <span className="inline-flex items-center gap-2">
-                    <span
-                      className="badge badge-success badge-sm"
-                      style={{
-                        fontFamily:
-                          "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
-                      }}
-                    >
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-[#146e96]/10 text-[#146e96]">
                       Administrator
                     </span>
                     <span>{user?.email}</span>
@@ -79,10 +87,10 @@ export default function DashboardPage() {
                 )}
               </p>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
               <button
                 onClick={() => router.push("/profile")}
-                className="border border-[#202020] text-[#202020] px-[18px] py-[15px] rounded-full text-base leading-4 font-semibold transition-all duration-150 ease-[cubic-bezier(0.455,0.03,0.515,0.955)] hover:bg-[#202020] hover:text-white cursor-pointer"
+                className="relative inline-flex justify-center items-center leading-4 text-center cursor-pointer whitespace-nowrap outline-none font-medium h-10 text-[#232730] bg-white/50 backdrop-blur-sm shadow-[0_1px_1px_0_rgba(255,255,255,0),0_0_0_1px_rgba(87,90,100,0.12)] transition-all duration-200 ease-in-out rounded-lg px-4 text-sm hover:shadow-[0_1px_2px_0_rgba(0,0,0,0.05),0_0_0_1px_rgba(87,90,100,0.18)]"
                 style={{
                   fontFamily:
                     "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
@@ -97,18 +105,19 @@ export default function DashboardPage() {
       </div>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-8 py-8">
-        <div className="mb-8">
+      <div className="max-w-7xl mx-auto px-8 py-16">
+        <div className="mb-12">
           <h2
-            className="text-2xl font-semibold mb-2 text-[#202020]"
+            className="text-[32px] font-normal leading-tight tracking-tight text-[#111A4A] mb-3"
             style={{
               fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
+              fontWeight: "400",
             }}
           >
             Your Strategic Pillars
           </h2>
           <p
-            className="text-[#404040]"
+            className="text-lg leading-6 text-[#111A4A] opacity-60"
             style={{
               fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
             }}
@@ -122,12 +131,12 @@ export default function DashboardPage() {
 
         {/* Info Banner */}
         {!permissions?.isAdmin && (
-          <div className="bg-[#e9e9e9] rounded-[40px] p-6 mt-8 flex items-start gap-4 shadow-xl">
+          <div className="bg-gradient-to-r from-[#146e96]/5 to-transparent border border-[#146e96]/10 rounded-2xl p-6 mt-12 flex items-start gap-4">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
-              className="stroke-[#404040] shrink-0 w-6 h-6"
+              className="stroke-[#146e96] shrink-0 w-6 h-6"
             >
               <path
                 strokeLinecap="round"
@@ -137,7 +146,7 @@ export default function DashboardPage() {
               ></path>
             </svg>
             <span
-              className="text-[#404040]"
+              className="text-[#111A4A] opacity-60 text-base"
               style={{
                 fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
               }}

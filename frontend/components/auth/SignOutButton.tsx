@@ -26,9 +26,10 @@ export function SignOutButton() {
     <button
       onClick={handleSignOut}
       disabled={loading}
-      className="border border-[#202020] text-[#202020] px-[18px] py-[15px] rounded-full text-base leading-4 font-semibold transition-all duration-150 ease-[cubic-bezier(0.455,0.03,0.515,0.955)] hover:bg-[#202020] hover:text-white cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+      className="bg-[#f35959ff] text-white px-[18px] py-[15px] rounded-full text-base leading-4 font-semibold hover:bg-[#f35959ff]/90 transition-all duration-200 shadow-sm hover:shadow-md cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
       style={{
         fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
+        fontWeight: "500",
       }}
     >
       {loading ? "Signing out..." : "Sign Out"}
