@@ -79,7 +79,19 @@ export default function DashboardPage() {
                 )}
               </p>
             </div>
-            <SignOutButton />
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => router.push("/profile")}
+                className="border border-[#202020] text-[#202020] px-[18px] py-[15px] rounded-full text-base leading-4 font-semibold transition-all duration-150 ease-[cubic-bezier(0.455,0.03,0.515,0.955)] hover:bg-[#202020] hover:text-white cursor-pointer"
+                style={{
+                  fontFamily:
+                    "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
+                }}
+              >
+                My Profile
+              </button>
+              <SignOutButton />
+            </div>
           </div>
         </div>
       </div>
