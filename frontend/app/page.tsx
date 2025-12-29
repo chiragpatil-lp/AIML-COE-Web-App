@@ -1,9 +1,8 @@
 import { PortfolioNavbar } from "@/components/PortfolioNavbar";
 import { ProductTeaserCard } from "@/components/ProductTeaserCard";
-import { BankingScaleHero } from "@/components/BankingScaleHero";
+import { COEHero } from "@/components/COEHero";
 import { CaseStudiesCarousel } from "@/components/CaseStudiesCarousel";
 import { IntegrationCarousel } from "@/components/IntegrationCarousel";
-// import { PricingSection } from "@/components/PricingSection"
 import { PillarCardsSection } from "@/components/PillarCardsSection";
 import { FAQSection } from "@/components/FAQSection";
 import { Footer } from "@/components/Footer";
@@ -13,10 +12,9 @@ export default function Page() {
     <>
       <PortfolioNavbar />
       <ProductTeaserCard />
-      <BankingScaleHero />
+      <COEHero />
       <CaseStudiesCarousel />
       <IntegrationCarousel />
-      {/* <PricingSection /> */}
       <PillarCardsSection />
       <FAQSection />
       <Footer />
