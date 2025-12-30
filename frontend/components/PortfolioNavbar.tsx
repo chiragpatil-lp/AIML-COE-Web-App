@@ -100,22 +100,45 @@ export const PortfolioNavbar = () => {
           </div>
 
           <div className="hidden md:block">
-            <Link
-              href={user ? "/dashboard" : "/auth/signin"}
-              className="block bg-[#f35959ff] text-white px-[18px] rounded-full text-base font-semibold hover:bg-[#f35959ff]/90 transition-all duration-200 shadow-sm hover:shadow-md whitespace-nowrap leading-4 py-[15px] cursor-pointer"
-              style={{
-                fontFamily: "Plus Jakarta Sans, sans-serif",
-              }}
-            >
-              <span
+            {user ? (
+              <Link
+                href="/profile"
+                className="flex items-center gap-2 hover:opacity-80 transition-opacity duration-200"
+                aria-label="View profile"
+              >
+                <div className="relative w-10 h-10 rounded-full overflow-hidden ring-2 ring-[#146e96] ring-offset-2">
+                  {user.photoURL ? (
+                    <Image
+                      src={user.photoURL}
+                      alt={user.displayName || "User"}
+                      fill
+                      className="object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-[#146e96] flex items-center justify-center text-white font-semibold">
+                      {user.displayName?.charAt(0).toUpperCase() || "U"}
+                    </div>
+                  )}
+                </div>
+              </Link>
+            ) : (
+              <Link
+                href="/auth/signin"
+                className="block bg-[#f35959ff] text-white px-[18px] rounded-full text-base font-semibold hover:bg-[#f35959ff]/90 transition-all duration-200 shadow-sm hover:shadow-md whitespace-nowrap leading-4 py-[15px] cursor-pointer"
                 style={{
-                  fontFamily: "Plus Jakarta Sans",
-                  fontWeight: "500",
+                  fontFamily: "Plus Jakarta Sans, sans-serif",
                 }}
               >
-                Get Started
-              </span>
-            </Link>
+                <span
+                  style={{
+                    fontFamily: "Plus Jakarta Sans",
+                    fontWeight: "500",
+                  }}
+                >
+                  Login
+                </span>
+              </Link>
+            )}
           </div>
 
           <div className="md:hidden">
@@ -166,16 +189,50 @@ export const PortfolioNavbar = () => {
                 </button>
               ))}
               <div className="pt-4 border-t border-border">
-                <Link
-                  href={user ? "/dashboard" : "/auth/signin"}
-                  onClick={closeMobileMenu}
-                  className="block w-full bg-[#f35959ff] text-white px-[18px] py-[15px] rounded-full text-base font-semibold hover:bg-[#f35959ff]/90 transition-colors duration-200 text-center cursor-pointer"
-                  style={{
-                    fontFamily: "Plus Jakarta Sans, sans-serif",
-                  }}
-                >
-                  <span>Get Started</span>
-                </Link>
+                {user ? (
+                  <Link
+                    href="/profile"
+                    onClick={closeMobileMenu}
+                    className="flex items-center gap-3 w-full px-4 py-3 rounded-lg hover:bg-gray-100 transition-colors duration-200"
+                  >
+                    <div className="relative w-10 h-10 rounded-full overflow-hidden ring-2 ring-[#146e96]">
+                      {user.photoURL ? (
+                        <Image
+                          src={user.photoURL}
+                          alt={user.displayName || "User"}
+                          fill
+                          className="object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-[#146e96] flex items-center justify-center text-white font-semibold">
+                          {user.displayName?.charAt(0).toUpperCase() || "U"}
+                        </div>
+                      )}
+                    </div>
+                    <div>
+                      <p
+                        className="font-medium text-foreground"
+                        style={{
+                          fontFamily: "Plus Jakarta Sans, sans-serif",
+                        }}
+                      >
+                        {user.displayName || "User"}
+                      </p>
+                      <p className="text-sm text-gray-500">View Profile</p>
+                    </div>
+                  </Link>
+                ) : (
+                  <Link
+                    href="/auth/signin"
+                    onClick={closeMobileMenu}
+                    className="block w-full bg-[#f35959ff] text-white px-[18px] py-[15px] rounded-full text-base font-semibold hover:bg-[#f35959ff]/90 transition-colors duration-200 text-center cursor-pointer"
+                    style={{
+                      fontFamily: "Plus Jakarta Sans, sans-serif",
+                    }}
+                  >
+                    <span>Login</span>
+                  </Link>
+                )}
               </div>
             </div>
           </motion.div>

@@ -88,8 +88,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
             updatedAt: toDate(data.updatedAt),
           });
 
-          // Show success toast after permissions are loaded
-          toast.success("Signed in successfully!");
           setError(null);
           return; // Success - exit retry loop
         }

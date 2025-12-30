@@ -61,8 +61,8 @@ const generateDataPoints = (): DataPoint[] => {
   return points;
 };
 
-// @component: BankingScaleHero
-export const BankingScaleHero = () => {
+// @component: COEHero
+export const COEHero = () => {
   const [isVisible] = useState(true);
   const [isMounted, setIsMounted] = useState(false);
   const [typingComplete, setTypingComplete] = useState(false);
