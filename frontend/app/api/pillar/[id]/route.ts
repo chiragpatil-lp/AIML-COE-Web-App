@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifyIdToken, getUserPermissions } from "@/lib/firebase/admin";
 import { cookies } from "next/headers";
+import { UserPermissions } from "@/lib/types/auth.types";
 
 // Pillar URL mapping - should match environment variables
 const PILLAR_URLS: Record<string, string> = {
@@ -13,9 +14,9 @@ const PILLAR_URLS: Record<string, string> = {
 };
 
 interface RouteParams {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 /**
@@ -81,7 +82,7 @@ export async function GET(
 
     // Check if user has access to this pillar
     const isAdmin = permissions.isAdmin === true;
-    const pillarKey = `pillar${pillarNumber}`;
+    const pillarKey = `pillar${pillarNumber}` as keyof UserPermissions["pillars"];
     const hasAccess = isAdmin || permissions.pillars?.[pillarKey] === true;
 
     if (!hasAccess) {

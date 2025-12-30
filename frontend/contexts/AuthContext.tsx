@@ -176,9 +176,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
     // Refresh token every 50 minutes (Firebase tokens expire in 1 hour)
     const refreshTokenInterval = setInterval(
       async () => {
-        if (auth.currentUser) {
+        const currentUser = auth?.currentUser;
+        if (currentUser) {
           try {
-            const token = await auth.currentUser.getIdToken(true); // Force refresh
+            const token = await currentUser.getIdToken(true); // Force refresh
             document.cookie = `firebase-token=${token}; path=/; max-age=3600; secure; samesite=lax`;
           } catch (error) {
             console.error("Failed to refresh auth token:", error);
