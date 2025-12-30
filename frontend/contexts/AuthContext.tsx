@@ -31,14 +31,10 @@ interface AuthProviderProps {
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null);
   const [permissions, setPermissions] = useState<UserPermissions | null>(null);
-  // Initialize loading state - if auth isn't initialized, we're not really loading
-  const [loading, setLoading] = useState(!!auth);
-  // Initialize error state based on auth initialization
-  const [error, setError] = useState<string | null>(
-    !auth
-      ? "Firebase Auth is not initialized. Please check your environment variables."
-      : null,
-  );
+  // Initialize loading to true consistently on server and client
+  const [loading, setLoading] = useState(true);
+  // Initialize error to null consistently
+  const [error, setError] = useState<string | null>(null);
 
   /**
    * Fetches user permissions from Firestore
@@ -127,14 +123,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   // Listen to auth state changes
   useEffect(() => {
-    // Early check for auth initialization
+    // Check for auth initialization once mounted on client
     if (!auth) {
       console.error(
         "Firebase Auth is not initialized. Please check your environment variables.",
       );
-      toast.error(
-        "Authentication service unavailable. Please contact support.",
-      );
+      setError("Firebase Auth is not initialized. Please check your environment variables.");
+      setLoading(false);
       return;
     }
 

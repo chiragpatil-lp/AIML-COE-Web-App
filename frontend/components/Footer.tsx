@@ -79,7 +79,12 @@ export const Footer = ({
   },
   copyrightText,
 }: FooterProps) => {
-  const currentYear = new Date().getFullYear();
+  const [currentYear, setCurrentYear] = useState(2025);
+
+  useEffect(() => {
+    setCurrentYear(new Date().getFullYear());
+  }, []);
+
   const copyright =
     copyrightText || `© ${currentYear} ${companyName}. All rights reserved.`;
   return (
