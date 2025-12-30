@@ -44,7 +44,7 @@ export async function GET(
 
     // Get ID token from Authorization header or cookie
     const authHeader = request.headers.get("Authorization");
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const tokenFromCookie = cookieStore.get("firebase-token")?.value;
 
     const token = authHeader?.replace("Bearer ", "") || tokenFromCookie;
@@ -119,8 +119,14 @@ export async function GET(
       timestamp: new Date().toISOString(),
     });
 
-    // Redirect to the pillar URL
-    return NextResponse.redirect(pillarUrl, { status: 302 });
+    // Construct the verify URL with token and pillar number
+    // Pillar apps expect: /auth/verify?token={firebase_token}&pillar={pillar_number}
+    const verifyUrl = new URL(`/auth/verify`, pillarUrl);
+    verifyUrl.searchParams.set("token", token);
+    verifyUrl.searchParams.set("pillar", id);
+
+    // Redirect to the pillar's verify endpoint with the token
+    return NextResponse.redirect(verifyUrl.toString(), { status: 302 });
   } catch (error) {
     const errorMsg =
       error instanceof Error ? error.message : "Internal server error";
