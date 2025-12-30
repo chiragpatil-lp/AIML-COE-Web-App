@@ -16,6 +16,16 @@ import type { NextRequest } from "next/server";
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  // Helper to determine the correct base URL, prioritizing X-Forwarded headers
+  const getBaseUrl = () => {
+    const forwardedHost = request.headers.get("x-forwarded-host");
+    const forwardedProto = request.headers.get("x-forwarded-proto");
+    if (forwardedHost) {
+      return `${forwardedProto || "https"}://${forwardedHost}`;
+    }
+    return request.nextUrl.origin;
+  };
+
   // Public routes that don't require authentication
   const publicRoutes = ["/auth/signin", "/", "/api"];
 
@@ -36,7 +46,8 @@ export function middleware(request: NextRequest) {
 
   if (!hasAuthToken) {
     // No token found, redirect to sign-in
-    const signInUrl = new URL("/auth/signin", request.url);
+    const baseUrl = getBaseUrl();
+    const signInUrl = new URL("/auth/signin", baseUrl);
     signInUrl.searchParams.set("returnUrl", pathname);
     return NextResponse.redirect(signInUrl);
   }
