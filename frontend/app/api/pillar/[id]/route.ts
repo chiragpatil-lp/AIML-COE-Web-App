@@ -106,9 +106,32 @@ export async function GET(
     // Get the pillar URL
     const pillarUrl = PILLAR_URLS[id];
 
+    console.log(`[PillarAuth] Redirecting to Pillar ${id}`, {
+      pillarUrl,
+      userId: decodedToken.uid,
+    });
+
     if (!pillarUrl || pillarUrl === "#") {
+      console.error(`[PillarAuth] Pillar ${id} URL not configured`);
       return NextResponse.json(
         { error: "Pillar URL not configured. Please contact support." },
+        { status: 500 },
+      );
+    }
+
+    // Security check: Prevent redirecting to localhost/0.0.0.0 in production
+    if (
+      process.env.NODE_ENV === "production" &&
+      (pillarUrl.includes("localhost") || pillarUrl.includes("0.0.0.0"))
+    ) {
+      console.error(
+        `[PillarAuth] Invalid production configuration: Pillar ${id} URL is set to ${pillarUrl}`,
+      );
+      return NextResponse.json(
+        {
+          error:
+            "Configuration error. Pillar URL is invalid for production environment.",
+        },
         { status: 500 },
       );
     }
