@@ -9,9 +9,12 @@ function Avatar({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
-interface AvatarImageProps extends Omit<React.ComponentProps<"img">, "src"> {
+interface AvatarImageProps
+  extends Omit<React.ComponentProps<"img">, "src" | "width" | "height"> {
   src: string;
   alt?: string;
+  width?: number;
+  height?: number;
 }
 
 function AvatarImage({ className, alt = "", src, ...props }: AvatarImageProps) {

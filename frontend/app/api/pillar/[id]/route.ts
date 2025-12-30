@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifyIdToken, getUserPermissions } from "@/lib/firebase/admin";
 import { cookies } from "next/headers";
+import { UserPermissions } from "@/lib/types/auth.types";
 
 // Pillar URL mapping - should match environment variables
 const PILLAR_URLS: Record<string, string> = {
@@ -13,9 +14,9 @@ const PILLAR_URLS: Record<string, string> = {
 };
 
 interface RouteParams {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 /**
@@ -44,7 +45,7 @@ export async function GET(
 
     // Get ID token from Authorization header or cookie
     const authHeader = request.headers.get("Authorization");
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const tokenFromCookie = cookieStore.get("firebase-token")?.value;
 
     const token = authHeader?.replace("Bearer ", "") || tokenFromCookie;
@@ -81,7 +82,8 @@ export async function GET(
 
     // Check if user has access to this pillar
     const isAdmin = permissions.isAdmin === true;
-    const pillarKey = `pillar${pillarNumber}`;
+    const pillarKey =
+      `pillar${pillarNumber}` as keyof UserPermissions["pillars"];
     const hasAccess = isAdmin || permissions.pillars?.[pillarKey] === true;
 
     if (!hasAccess) {
@@ -119,8 +121,14 @@ export async function GET(
       timestamp: new Date().toISOString(),
     });
 
-    // Redirect to the pillar URL
-    return NextResponse.redirect(pillarUrl, { status: 302 });
+    // Construct the verify URL with token and pillar number
+    // Pillar apps expect: /auth/verify?token={firebase_token}&pillar={pillar_number}
+    const verifyUrl = new URL(`/auth/verify`, pillarUrl);
+    verifyUrl.searchParams.set("token", token);
+    verifyUrl.searchParams.set("pillar", id);
+
+    // Redirect to the pillar's verify endpoint with the token
+    return NextResponse.redirect(verifyUrl.toString(), { status: 302 });
   } catch (error) {
     const errorMsg =
       error instanceof Error ? error.message : "Internal server error";

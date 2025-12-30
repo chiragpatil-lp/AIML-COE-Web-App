@@ -12,13 +12,14 @@ Welcome to the documentation for the AIML COE Web Application. This directory co
    - GitHub Secrets configuration
    - **Status**: ⚠️ **ACTION REQUIRED** - Complete this before deployment will work
 
-### 🔐 Authentication (NEW)
+### 🔐 Authentication & Pillar Access (NEW)
 
 2. **[Firebase Authentication](./firebase/)** - **START HERE FOR AUTH**
 
    - ✅ **Complete implementation** (Dec 26, 2024)
+   - ✅ **Pillar SSO authentication** (Dec 30, 2024)
    - Google OAuth sign-in with Firestore permissions
-   - 6 strategic pillar access control
+   - 6 strategic pillar access control with SSO
    - **Status**: ✅ **IMPLEMENTED AND TESTED**
 
    **Key Documents**:
@@ -26,6 +27,8 @@ Welcome to the documentation for the AIML COE Web Application. This directory co
    - [Complete Setup Guide](./firebase/FIREBASE-AUTH-COMPLETE-SETUP.md) ⭐ Main reference
    - [Implementation Details](./firebase/FIREBASE-AUTH-IMPLEMENTATION.md)
    - [Firebase Folder README](./firebase/README.md)
+   - [Pillar Authentication Guide](./PILLAR-AUTHENTICATION.md) ⭐ **NEW** - Pillar SSO flow
+   - [Production Deployment Checklist](./PRODUCTION-DEPLOYMENT-CHECKLIST.md) ⭐ **NEW**
 
 ### 💻 Development
 
