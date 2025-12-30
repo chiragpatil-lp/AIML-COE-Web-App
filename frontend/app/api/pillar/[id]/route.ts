@@ -31,7 +31,7 @@ export async function GET(
   { params }: RouteParams,
 ): Promise<NextResponse> {
   try {
-    const { id } = params;
+    const { id } = await params;
     const pillarNumber = parseInt(id, 10);
 
     // Validate pillar number
