@@ -4,13 +4,14 @@ import { cookies } from "next/headers";
 import { UserPermissions } from "@/lib/types/auth.types";
 
 // Pillar URL mapping - should match environment variables
+// Prioritize runtime variables (PILLAR_X_URL) over build-time variables (NEXT_PUBLIC_PILLAR_X_URL)
 const PILLAR_URLS: Record<string, string> = {
-  "1": process.env.NEXT_PUBLIC_PILLAR_1_URL || "",
-  "2": process.env.NEXT_PUBLIC_PILLAR_2_URL || "",
-  "3": process.env.NEXT_PUBLIC_PILLAR_3_URL || "",
-  "4": process.env.NEXT_PUBLIC_PILLAR_4_URL || "",
-  "5": process.env.NEXT_PUBLIC_PILLAR_5_URL || "",
-  "6": process.env.NEXT_PUBLIC_PILLAR_6_URL || "",
+  "1": process.env.PILLAR_1_URL || process.env.NEXT_PUBLIC_PILLAR_1_URL || "",
+  "2": process.env.PILLAR_2_URL || process.env.NEXT_PUBLIC_PILLAR_2_URL || "",
+  "3": process.env.PILLAR_3_URL || process.env.NEXT_PUBLIC_PILLAR_3_URL || "",
+  "4": process.env.PILLAR_4_URL || process.env.NEXT_PUBLIC_PILLAR_4_URL || "",
+  "5": process.env.PILLAR_5_URL || process.env.NEXT_PUBLIC_PILLAR_5_URL || "",
+  "6": process.env.PILLAR_6_URL || process.env.NEXT_PUBLIC_PILLAR_6_URL || "",
 };
 
 interface RouteParams {
