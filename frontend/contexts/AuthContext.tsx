@@ -125,11 +125,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
   useEffect(() => {
     // Check for auth initialization once mounted on client
     if (!auth) {
-      console.error(
-        "Firebase Auth is not initialized. Please check your environment variables.",
-      );
-      setError("Firebase Auth is not initialized. Please check your environment variables.");
-      setLoading(false);
+      setTimeout(() => {
+        console.error(
+          "Firebase Auth is not initialized. Please check your environment variables.",
+        );
+        setError(
+          "Firebase Auth is not initialized. Please check your environment variables.",
+        );
+        setLoading(false);
+      }, 0);
       return;
     }
 
