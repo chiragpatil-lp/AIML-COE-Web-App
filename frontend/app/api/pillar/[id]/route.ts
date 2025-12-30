@@ -103,12 +103,7 @@ export async function GET(
     }
 
     // Get the pillar URL
-    const pillarUrl = PILLAR_URLS[id];
-
-    console.log(`[PillarAuth] Redirecting to Pillar ${id}`, {
-      pillarUrl,
-      userId: decodedToken.uid,
-    });
+    const pillarUrl = PILLAR_URLS[pillarNumber.toString()];
 
     if (!pillarUrl || pillarUrl === "#") {
       console.error(`[PillarAuth] Pillar ${id} URL not configured`);
@@ -118,10 +113,20 @@ export async function GET(
       );
     }
 
-    // Security check: Prevent redirecting to localhost/0.0.0.0 in production
+    // Security check: Prevent redirecting to local loopback addresses in production
+    let hostname: string;
+    try {
+      hostname = new URL(pillarUrl).hostname;
+    } catch {
+      hostname = "";
+    }
+
     if (
       process.env.NODE_ENV === "production" &&
-      (pillarUrl.includes("localhost") || pillarUrl.includes("0.0.0.0"))
+      (hostname === "localhost" ||
+        hostname === "127.0.0.1" ||
+        hostname === "0.0.0.0" ||
+        hostname === "::1")
     ) {
       console.error(
         `[PillarAuth] Invalid production configuration: Pillar ${id} URL is set to ${pillarUrl}`,
@@ -135,22 +140,15 @@ export async function GET(
       );
     }
 
-    // Log successful access (for audit purposes)
-    console.info("Pillar access granted:", {
-      userId: decodedToken.uid,
-      email: decodedToken.email,
-      pillarNumber,
-      isAdmin,
-      timestamp: new Date().toISOString(),
-    });
-
     // Construct the verify URL with token and pillar number
     // Pillar apps expect: /auth/verify?token={firebase_token}&pillar={pillar_number}
     let verifyUrl: URL;
     try {
-      verifyUrl = new URL(`/auth/verify`, pillarUrl);
+      // Use relative path to preserve any base path in pillarUrl
+      const baseUrl = pillarUrl.endsWith("/") ? pillarUrl : `${pillarUrl}/`;
+      verifyUrl = new URL(`auth/verify`, baseUrl);
       verifyUrl.searchParams.set("token", token);
-      verifyUrl.searchParams.set("pillar", id);
+      verifyUrl.searchParams.set("pillar", pillarNumber.toString());
     } catch (urlError) {
       console.error("[PillarAuth] Failed to construct verify URL:", {
         pillarUrl,
@@ -161,6 +159,20 @@ export async function GET(
         { status: 500 },
       );
     }
+
+    console.log(`[PillarAuth] Redirecting to Pillar ${id}`, {
+      verifyUrl: verifyUrl.toString().split("?")[0], // Log URL without token for security
+      userId: decodedToken.uid,
+    });
+
+    // Log successful access (for audit purposes)
+    console.info("Pillar access granted:", {
+      userId: decodedToken.uid,
+      email: decodedToken.email,
+      pillarNumber,
+      isAdmin,
+      timestamp: new Date().toISOString(),
+    });
 
     // Redirect to the pillar's verify endpoint with the token
     return NextResponse.redirect(verifyUrl.toString(), { status: 302 });
