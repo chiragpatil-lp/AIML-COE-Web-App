@@ -84,15 +84,17 @@ User sees Pillar 1 Dashboard
 **Purpose**: Server-side endpoint that validates and redirects users to Pillar apps
 
 **Key Functions**:
+
 - Retrieves Firebase ID token from cookies (Next.js 16+ requires `await cookies()`)
 - Verifies token authenticity with Firebase Admin SDK
 - Checks user permissions in Firestore (`userPermissions` collection)
 - Constructs redirect URL with token: `{pillar_url}/auth/verify?token={token}&pillar={id}`
 
 **Important Implementation Details**:
+
 ```typescript
 // CRITICAL: In Next.js 15+, cookies() returns a Promise
-const cookieStore = await cookies();  // ✅ Must await
+const cookieStore = await cookies(); // ✅ Must await
 
 // Construct verify URL with token
 const verifyUrl = new URL(`/auth/verify`, pillarUrl);
@@ -108,6 +110,7 @@ return NextResponse.redirect(verifyUrl.toString(), { status: 302 });
 **Purpose**: Dashboard UI that displays pillar cards and handles clicks
 
 **Key Functions**:
+
 ```typescript
 const handlePillarClick = (pillar: PillarInfo, hasAccess: boolean) => {
   if (!hasAccess || pillar.url === "#") {
@@ -131,6 +134,7 @@ Each Pillar app must implement:
 **Purpose**: Receives token from main app, verifies it, creates session
 
 **Key Functions**:
+
 - Accepts `token` and `pillar` query parameters
 - Verifies token with Firebase Admin SDK
 - Checks user permissions in Firestore
@@ -142,6 +146,7 @@ Each Pillar app must implement:
 **Purpose**: Protects all routes except public paths
 
 **Key Functions**:
+
 - Checks for valid session on every request
 - Redirects to `/auth/unauthorized` if no session
 - Allows public paths: `/auth/verify`, `/auth/unauthorized`, `/auth/logout`
@@ -151,12 +156,13 @@ Each Pillar app must implement:
 **Purpose**: Manages encrypted session cookies using iron-session
 
 **Key Configuration**:
+
 ```typescript
 const sessionOptions = {
-  password: process.env.SESSION_SECRET!,  // Must be 32+ characters
-  cookieName: process.env.SESSION_COOKIE_NAME || 'pillar_session',
+  password: process.env.SESSION_SECRET!, // Must be 32+ characters
+  cookieName: process.env.SESSION_COOKIE_NAME || "pillar_session",
   cookieOptions: {
-    secure: process.env.NODE_ENV === 'production',
+    secure: process.env.NODE_ENV === "production",
     httpOnly: true,
   },
 };
@@ -221,12 +227,14 @@ Ensure your user has permissions in Firestore:
 ### Step 5: Start Development Servers
 
 **Terminal 1 - Main App**:
+
 ```bash
 cd /home/lordpatil/AIML-COE-Web-App/frontend
 pnpm dev
 ```
 
 **Terminal 2 - Pillar 1**:
+
 ```bash
 cd /home/lordpatil/aiml-coe-pillar-strategy-value-dashboard/frontend
 pnpm dev --port 3001
@@ -251,19 +259,19 @@ pnpm dev --port 3001
 
 Set the following secrets in GitHub repository settings:
 
-| Secret Name | Value | Purpose |
-|-------------|-------|---------|
-| `FIREBASE_API_KEY` | From Firebase Console | Client-side Firebase config |
-| `FIREBASE_AUTH_DOMAIN` | `search-ahmed.firebaseapp.com` | Firebase auth domain |
-| `FIREBASE_PROJECT_ID` | `search-ahmed` | Firebase project ID |
-| `FIREBASE_STORAGE_BUCKET` | From Firebase Console | Firebase storage |
-| `FIREBASE_MESSAGING_SENDER_ID` | From Firebase Console | Firebase messaging |
-| `FIREBASE_APP_ID` | From Firebase Console | Firebase app ID |
-| `FIREBASE_SERVICE_ACCOUNT_KEY` | Full JSON from Firebase Console | Server-side Firebase Admin SDK |
-| `PILLAR_1_URL` | `https://aiml-coe-pillar-1-*.run.app` | Pillar 1 production URL |
-| `PILLAR_2_URL` | `https://aiml-coe-pillar-2-*.run.app` | Pillar 2 production URL |
-| ... | ... | ... |
-| `PILLAR_6_URL` | `https://aiml-coe-pillar-6-*.run.app` | Pillar 6 production URL |
+| Secret Name                    | Value                                 | Purpose                        |
+| ------------------------------ | ------------------------------------- | ------------------------------ |
+| `FIREBASE_API_KEY`             | From Firebase Console                 | Client-side Firebase config    |
+| `FIREBASE_AUTH_DOMAIN`         | `search-ahmed.firebaseapp.com`        | Firebase auth domain           |
+| `FIREBASE_PROJECT_ID`          | `search-ahmed`                        | Firebase project ID            |
+| `FIREBASE_STORAGE_BUCKET`      | From Firebase Console                 | Firebase storage               |
+| `FIREBASE_MESSAGING_SENDER_ID` | From Firebase Console                 | Firebase messaging             |
+| `FIREBASE_APP_ID`              | From Firebase Console                 | Firebase app ID                |
+| `FIREBASE_SERVICE_ACCOUNT_KEY` | Full JSON from Firebase Console       | Server-side Firebase Admin SDK |
+| `PILLAR_1_URL`                 | `https://aiml-coe-pillar-1-*.run.app` | Pillar 1 production URL        |
+| `PILLAR_2_URL`                 | `https://aiml-coe-pillar-2-*.run.app` | Pillar 2 production URL        |
+| ...                            | ...                                   | ...                            |
+| `PILLAR_6_URL`                 | `https://aiml-coe-pillar-6-*.run.app` | Pillar 6 production URL        |
 
 #### 2. Deployment
 
@@ -276,6 +284,7 @@ git push origin main
 ```
 
 GitHub Actions will:
+
 1. Build Docker image with environment variables
 2. Push to Google Container Registry
 3. Deploy to Cloud Run
@@ -299,6 +308,7 @@ gcloud secrets versions add pillar-1-session-secret --data-file=-
 **What is SESSION_SECRET?**
 
 `SESSION_SECRET` is a cryptographic key used by `iron-session` to encrypt session cookies. It:
+
 - **Encrypts session data** stored in cookies
 - **Signs cookies** to prevent tampering
 - **Must be at least 32 characters** long
@@ -307,18 +317,19 @@ gcloud secrets versions add pillar-1-session-secret --data-file=-
 - **Should be different** for each environment (dev, staging, prod)
 
 **Why it matters**:
+
 - If compromised, attackers can forge session cookies
 - If changed, all existing user sessions are invalidated
 - Must be consistent across all app instances (horizontal scaling)
 
 #### 2. GitHub Secrets for Pillar App
 
-| Secret Name | Value | Purpose |
-|-------------|-------|---------|
-| `GCP_WORKLOAD_IDENTITY_PROVIDER` | From Terraform output | GitHub Actions auth |
-| `GCP_SERVICE_ACCOUNT` | `github-ci-cd@...` | Service account for deployment |
-| `GCP_PROJECT_ID` | `search-ahmed` | GCP project ID |
-| `MAIN_APP_URL` | `https://aiml-coe-web-app-*.run.app` | Main app production URL |
+| Secret Name                      | Value                                | Purpose                        |
+| -------------------------------- | ------------------------------------ | ------------------------------ |
+| `GCP_WORKLOAD_IDENTITY_PROVIDER` | From Terraform output                | GitHub Actions auth            |
+| `GCP_SERVICE_ACCOUNT`            | `github-ci-cd@...`                   | Service account for deployment |
+| `GCP_PROJECT_ID`                 | `search-ahmed`                       | GCP project ID                 |
+| `MAIN_APP_URL`                   | `https://aiml-coe-web-app-*.run.app` | Main app production URL        |
 
 #### 3. Deploy Pillar App
 
@@ -330,6 +341,7 @@ git push origin main
 ```
 
 Cloud Run deployment will:
+
 1. Pull `SESSION_SECRET` from Secret Manager
 2. Set environment variables
 3. Use Cloud Run service account for Firebase Admin SDK (Application Default Credentials)
@@ -355,23 +367,26 @@ Update the `PILLAR_1_URL` secret in the main app's GitHub repository, then redep
 **Cause**: Missing `await` for `cookies()` in Next.js 15+
 
 **Solution**: Ensure the API route uses:
+
 ```typescript
-const cookieStore = await cookies();  // ✅ Correct
+const cookieStore = await cookies(); // ✅ Correct
 // NOT: const cookieStore = cookies();  // ❌ Wrong in Next.js 15+
 ```
 
 ### Issue: "User not found in database"
 
 **Causes**:
+
 1. User doesn't have permissions in Firestore
 2. Pillar app is looking in wrong Firestore database
 3. Wrong collection name
 
 **Solutions**:
+
 1. Check Firestore `userPermissions` collection in `aiml-coe-web-app` database
 2. Ensure Pillar app uses:
    ```typescript
-   getFirestore(app, 'aiml-coe-web-app')  // ✅ Named database
+   getFirestore(app, "aiml-coe-web-app"); // ✅ Named database
    // NOT: getFirestore()  // ❌ Default database
    ```
 3. Verify collection is `userPermissions` not `users`
@@ -381,6 +396,7 @@ const cookieStore = await cookies();  // ✅ Correct
 **Cause**: `SESSION_SECRET` is too short
 
 **Solution**:
+
 ```bash
 # Generate a proper secret (44 characters)
 openssl rand -base64 32
@@ -393,6 +409,7 @@ Update `.env.local` or Secret Manager with the new value.
 **Cause**: User doesn't have permission for this pillar
 
 **Solution**:
+
 1. Go to Firebase Console → Firestore
 2. Database: `aiml-coe-web-app`
 3. Collection: `userPermissions`
@@ -404,11 +421,13 @@ Update `.env.local` or Secret Manager with the new value.
 ### Issue: Redirect to `/auth/unauthorized` on Pillar
 
 **Causes**:
+
 1. Token not being passed correctly
 2. Token expired (1 hour expiry)
 3. Firebase Admin SDK not configured
 
 **Solutions**:
+
 1. Check URL has token: `/auth/verify?token=...&pillar=1`
 2. Sign out and sign in again to get fresh token
 3. Run `gcloud auth application-default login` (local dev)
@@ -458,10 +477,12 @@ Update `.env.local` or Secret Manager with the new value.
 **Recommended?** ✅ Yes - As a security best practice, rotate every 3-6 months
 
 **When to rotate:**
+
 - **Optional**: Every 3-6 months (security best practice)
 - **Required**: After security incident or if secret is compromised
 
 **Steps**:
+
 ```bash
 # Generate new secret
 NEW_SECRET=$(openssl rand -base64 32)
@@ -482,11 +503,13 @@ echo "$NEW_SECRET" | gcloud secrets versions add pillar-1-session-secret --data-
 **When**: Monitor Firebase Auth usage monthly
 
 **Check**:
+
 - Token verification success/failure rates
 - Authentication errors in logs
 - Unusual access patterns
 
 **Command**:
+
 ```bash
 # Check Cloud Run logs for authentication errors
 gcloud run services logs read aiml-coe-pillar-1 \
@@ -500,6 +523,7 @@ gcloud run services logs read aiml-coe-pillar-1 \
 **When**: Monthly or when users change roles
 
 **Steps**:
+
 1. Go to Firebase Console → Firestore
 2. Database: `aiml-coe-web-app`
 3. Collection: `userPermissions`
@@ -512,6 +536,7 @@ gcloud run services logs read aiml-coe-pillar-1 \
 **When**: Quarterly or when adding new features
 
 **Check**:
+
 ```bash
 # View current rules
 gcloud firestore databases describe aiml-coe-web-app
@@ -524,6 +549,7 @@ gcloud firestore databases describe aiml-coe-web-app
 **When**: Monthly or when security advisories are released
 
 **Steps**:
+
 ```bash
 cd frontend
 pnpm update
@@ -532,6 +558,7 @@ pnpm build  # Ensure no breaking changes
 ```
 
 **Critical packages to monitor**:
+
 - `next` - Framework updates
 - `firebase` - Client SDK
 - `firebase-admin` - Server SDK
@@ -591,6 +618,7 @@ gcloud alpha monitoring policies create \
 **Schedule**: Daily automated backups
 
 **Setup**:
+
 ```bash
 # Enable automatic backups
 gcloud firestore backups schedules create \
@@ -600,6 +628,7 @@ gcloud firestore backups schedules create \
 ```
 
 **Restore** (if needed):
+
 ```bash
 # List backups
 gcloud firestore backups list --database=aiml-coe-web-app
@@ -631,29 +660,29 @@ Both main app and Pillar apps scale automatically with Cloud Run. Ensure:
 
 ### Main App
 
-| Variable | Required | Description | Example |
-|----------|----------|-------------|---------|
-| `NEXT_PUBLIC_FIREBASE_API_KEY` | Yes | Firebase client API key | `AIzaSy...` |
-| `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN` | Yes | Firebase auth domain | `project.firebaseapp.com` |
-| `NEXT_PUBLIC_FIREBASE_PROJECT_ID` | Yes | Firebase project ID | `search-ahmed` |
-| `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET` | Yes | Firebase storage | `project.appspot.com` |
-| `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID` | Yes | Firebase messaging ID | `123456789` |
-| `NEXT_PUBLIC_FIREBASE_APP_ID` | Yes | Firebase app ID | `1:123:web:abc` |
-| `FIREBASE_SERVICE_ACCOUNT_KEY` | Yes (prod) | Firebase Admin SDK JSON | `{...}` |
-| `NEXT_PUBLIC_PILLAR_1_URL` | Yes | Pillar 1 URL | `https://pillar-1.run.app` |
-| `NEXT_PUBLIC_PILLAR_2_URL` | No | Pillar 2 URL | `https://pillar-2.run.app` |
+| Variable                                   | Required   | Description             | Example                    |
+| ------------------------------------------ | ---------- | ----------------------- | -------------------------- |
+| `NEXT_PUBLIC_FIREBASE_API_KEY`             | Yes        | Firebase client API key | `AIzaSy...`                |
+| `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN`         | Yes        | Firebase auth domain    | `project.firebaseapp.com`  |
+| `NEXT_PUBLIC_FIREBASE_PROJECT_ID`          | Yes        | Firebase project ID     | `search-ahmed`             |
+| `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET`      | Yes        | Firebase storage        | `project.appspot.com`      |
+| `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID` | Yes        | Firebase messaging ID   | `123456789`                |
+| `NEXT_PUBLIC_FIREBASE_APP_ID`              | Yes        | Firebase app ID         | `1:123:web:abc`            |
+| `FIREBASE_SERVICE_ACCOUNT_KEY`             | Yes (prod) | Firebase Admin SDK JSON | `{...}`                    |
+| `NEXT_PUBLIC_PILLAR_1_URL`                 | Yes        | Pillar 1 URL            | `https://pillar-1.run.app` |
+| `NEXT_PUBLIC_PILLAR_2_URL`                 | No         | Pillar 2 URL            | `https://pillar-2.run.app` |
 
 ### Pillar App
 
-| Variable | Required | Description | Example |
-|----------|----------|-------------|---------|
-| `NEXT_PUBLIC_FIREBASE_PROJECT_ID` | Yes | Firebase project ID | `search-ahmed` |
-| `PILLAR_NUMBER` | Yes | Pillar number (1-6) | `1` |
-| `SESSION_SECRET` | Yes | 32+ char encryption key | (from Secret Manager) |
-| `SESSION_MAX_AGE` | No | Session duration (seconds) | `86400` (24h) |
-| `SESSION_COOKIE_NAME` | No | Cookie name | `pillar_session` |
-| `NEXT_PUBLIC_MAIN_APP_URL` | Yes | Main app URL | `https://main.run.app` |
-| `NODE_ENV` | Yes | Environment | `production` |
+| Variable                          | Required | Description                | Example                |
+| --------------------------------- | -------- | -------------------------- | ---------------------- |
+| `NEXT_PUBLIC_FIREBASE_PROJECT_ID` | Yes      | Firebase project ID        | `search-ahmed`         |
+| `PILLAR_NUMBER`                   | Yes      | Pillar number (1-6)        | `1`                    |
+| `SESSION_SECRET`                  | Yes      | 32+ char encryption key    | (from Secret Manager)  |
+| `SESSION_MAX_AGE`                 | No       | Session duration (seconds) | `86400` (24h)          |
+| `SESSION_COOKIE_NAME`             | No       | Cookie name                | `pillar_session`       |
+| `NEXT_PUBLIC_MAIN_APP_URL`        | Yes      | Main app URL               | `https://main.run.app` |
+| `NODE_ENV`                        | Yes      | Environment                | `production`           |
 
 ---
 

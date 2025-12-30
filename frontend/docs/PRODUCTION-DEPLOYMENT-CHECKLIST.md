@@ -27,6 +27,7 @@ Go to: https://github.com/[YOUR_ORG]/AIML-COE-Web-App/settings/secrets/actions
 Create/verify these secrets:
 
 #### Firebase Configuration
+
 - [ ] `FIREBASE_API_KEY` - Get from Firebase Console → Project Settings → General
 - [ ] `FIREBASE_AUTH_DOMAIN` - Should be `search-ahmed.firebaseapp.com`
 - [ ] `FIREBASE_PROJECT_ID` - Should be `search-ahmed`
@@ -35,9 +36,11 @@ Create/verify these secrets:
 - [ ] `FIREBASE_APP_ID` - Get from Firebase Console
 
 #### Firebase Admin SDK
+
 - [ ] `FIREBASE_SERVICE_ACCOUNT_KEY` - Full JSON from Firebase Console → Project Settings → Service Accounts → Generate New Private Key
 
 **How to get it:**
+
 ```bash
 # Go to Firebase Console
 # Project Settings → Service Accounts → Generate New Private Key
@@ -46,11 +49,13 @@ Create/verify these secrets:
 ```
 
 #### Google Cloud Configuration
+
 - [ ] `GCP_WORKLOAD_IDENTITY_PROVIDER` - From Terraform output
 - [ ] `GCP_SERVICE_ACCOUNT` - Should be `github-ci-cd@search-ahmed.iam.gserviceaccount.com`
 - [ ] `GCP_PROJECT_ID` - Should be `search-ahmed`
 
 #### Pillar URLs
+
 - [ ] `PILLAR_1_URL` - Pillar 1 production URL (get after deploying Pillar 1)
 - [ ] `PILLAR_2_URL` - Pillar 2 production URL (or leave empty if not deployed)
 - [ ] `PILLAR_3_URL` - Pillar 3 production URL (or leave empty if not deployed)
@@ -135,6 +140,7 @@ gcloud projects get-iam-policy search-ahmed \
 ```
 
 Required roles:
+
 - [ ] `roles/firebase.admin` - For Firebase Admin SDK
 - [ ] `roles/datastore.user` - For Firestore access
 - [ ] `roles/secretmanager.secretAccessor` - For accessing SESSION_SECRET
@@ -387,6 +393,7 @@ gcloud run services update-traffic aiml-coe-pillar-1 \
 ### Issue: Deployment fails with "Permission denied"
 
 **Solution:**
+
 ```bash
 # Verify service account has necessary roles
 gcloud projects get-iam-policy search-ahmed
@@ -400,11 +407,13 @@ gcloud projects add-iam-policy-binding search-ahmed \
 ### Issue: Pillar redirect shows 500 error
 
 **Possible causes:**
+
 - SESSION_SECRET not uploaded to Secret Manager
 - Cloud Run service account missing Firebase roles
 - Wrong Pillar URL in main app secrets
 
 **Debug:**
+
 ```bash
 # Check logs
 gcloud run services logs read aiml-coe-pillar-1 --region=us-central1 --limit=50
@@ -419,11 +428,13 @@ gcloud projects get-iam-policy search-ahmed
 ### Issue: Users can't authenticate
 
 **Possible causes:**
+
 - Firestore permissions not set up
 - Wrong Firebase project ID
 - Service account missing Firebase Admin role
 
 **Debug:**
+
 ```bash
 # Check Firestore
 # Firebase Console → Firestore → aiml-coe-web-app → userPermissions
@@ -439,16 +450,19 @@ gcloud projects get-iam-policy search-ahmed
 ## Next Steps After Deployment
 
 1. **User Onboarding**
+
    - [ ] Create documentation for end users
    - [ ] Set up user permissions in Firestore
    - [ ] Communicate production URL to users
 
 2. **Monitoring**
+
    - [ ] Set up daily checks of error logs
    - [ ] Monitor Cloud Run costs
    - [ ] Track user authentication metrics
 
 3. **Maintenance Schedule**
+
    - [ ] Weekly: Review error logs
    - [ ] Monthly: User permission audit
    - [ ] Quarterly: Dependency updates
@@ -469,13 +483,14 @@ gcloud projects get-iam-policy search-ahmed
 
 ---
 
-**Deployment Date**: _____________
-**Deployed By**: _____________
+**Deployment Date**: **\*\***\_**\*\***
+**Deployed By**: **\*\***\_**\*\***
 **Production URLs**:
-- Main App: _____________
-- Pillar 1: _____________
-- Pillar 2: _____________
-- Pillar 3: _____________
-- Pillar 4: _____________
-- Pillar 5: _____________
-- Pillar 6: _____________
+
+- Main App: **\*\***\_**\*\***
+- Pillar 1: **\*\***\_**\*\***
+- Pillar 2: **\*\***\_**\*\***
+- Pillar 3: **\*\***\_**\*\***
+- Pillar 4: **\*\***\_**\*\***
+- Pillar 5: **\*\***\_**\*\***
+- Pillar 6: **\*\***\_**\*\***

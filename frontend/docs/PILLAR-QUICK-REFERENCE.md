@@ -9,18 +9,23 @@ This is a quick reference guide for the most common operations related to Pillar
 ## 🚀 Quick Start - Local Development
 
 ### 1. Authenticate with Google Cloud
+
 ```bash
 gcloud auth application-default login
 ```
 
 ### 2. Configure Main App
+
 Create `/home/lordpatil/AIML-COE-Web-App/frontend/.env.local`:
+
 ```env
 NEXT_PUBLIC_PILLAR_1_URL=http://localhost:3001
 ```
 
 ### 3. Configure Pillar App
+
 Create pillar app `.env.local`:
+
 ```env
 NEXT_PUBLIC_FIREBASE_PROJECT_ID=search-ahmed
 PILLAR_NUMBER=1
@@ -30,9 +35,11 @@ NODE_ENV=development
 ```
 
 ### 4. Grant Yourself Access
+
 Firebase Console → Firestore → `aiml-coe-web-app` → `userPermissions` → Your UID → Set `isAdmin: true`
 
 ### 5. Start Servers
+
 ```bash
 # Terminal 1 - Main App
 cd /home/lordpatil/AIML-COE-Web-App/frontend
@@ -48,6 +55,7 @@ pnpm dev --port 3001
 ## 🔐 Granting User Access
 
 ### Make Someone an Admin (Full Access)
+
 1. Firebase Console: https://console.firebase.google.com/project/search-ahmed/firestore
 2. Database: `aiml-coe-web-app`
 3. Collection: `userPermissions`
@@ -56,6 +64,7 @@ pnpm dev --port 3001
 6. User signs out and back in
 
 ### Grant Access to Specific Pillar
+
 1. Same as above, but:
 2. Set `pillars.pillar1: true` (for Pillar 1)
 3. Set `pillars.pillar2: true` (for Pillar 2)
@@ -66,21 +75,25 @@ pnpm dev --port 3001
 ## 🔑 Session Secrets
 
 ### What is SESSION_SECRET?
+
 - Encrypts session cookies in Pillar apps
 - **Must be at least 32 characters**
 - Should be cryptographically random
 - Different for each environment
 
 ### Generate a Secure Secret
+
 ```bash
 openssl rand -base64 32
 ```
 
 ### Local Development
+
 - Store in `.env.local` file
 - Example: `SESSION_SECRET=local-dev-secret-must-be-32-chars-long-minimum`
 
 ### Production
+
 ```bash
 # Upload to Google Secret Manager
 openssl rand -base64 32 | \
@@ -95,6 +108,7 @@ gcloud secrets versions list pillar-1-session-secret
 ## 🏗️ Production Deployment
 
 ### Main App
+
 1. Set GitHub Secrets (see PRODUCTION-DEPLOYMENT-CHECKLIST.md)
 2. Push to `main` branch
 3. GitHub Actions deploys automatically
@@ -104,6 +118,7 @@ gcloud secrets versions list pillar-1-session-secret
    ```
 
 ### Pillar App
+
 1. Generate and upload SESSION_SECRET (see above)
 2. Set GitHub Secrets for pillar
 3. Push to `main` branch
@@ -120,15 +135,19 @@ gcloud secrets versions list pillar-1-session-secret
 ## 🐛 Common Issues
 
 ### "User not found in database"
+
 **Fix**: Grant user access in Firestore (see above)
 
 ### "iron-session: Password must be at least 32 characters long"
+
 **Fix**: Generate new secret with `openssl rand -base64 32`
 
 ### "Access denied to Pillar X"
+
 **Fix**: Set `isAdmin: true` or `pillars.pillarX: true` in Firestore
 
 ### Redirect to `/auth/unauthorized`
+
 **Fix**: Check token is in URL, verify Firestore permissions, check logs
 
 ---
@@ -136,6 +155,7 @@ gcloud secrets versions list pillar-1-session-secret
 ## 📊 Monitoring
 
 ### View Logs
+
 ```bash
 # Main app logs
 gcloud run services logs read aiml-coe-web-app --region=us-central1 --limit=50
@@ -148,6 +168,7 @@ gcloud run services logs read aiml-coe-pillar-1 --region=us-central1 --filter="s
 ```
 
 ### Check Service Status
+
 ```bash
 # Main app
 gcloud run services describe aiml-coe-web-app --region=us-central1
@@ -165,6 +186,7 @@ gcloud run services describe aiml-coe-pillar-1 --region=us-central1
 **Do you need to rotate?** ❌ No - it's optional but recommended for security
 
 **When to rotate:**
+
 - Optional: Every 3-6 months (security best practice)
 - Required: After security incident or compromise
 
@@ -183,12 +205,14 @@ echo "$NEW_SECRET" | gcloud secrets versions add pillar-1-session-secret --data-
 **Recommendation**: Set a strong secret during initial setup and leave it unchanged unless your organization's security policy requires rotation or there's a security incident.
 
 ### Audit User Permissions (Monthly)
+
 1. Go to Firebase Console → Firestore → `aiml-coe-web-app` → `userPermissions`
 2. Review all user documents
 3. Remove access for departed users
 4. Ensure permissions match organizational roles
 
 ### Update Dependencies (Monthly)
+
 ```bash
 cd frontend
 pnpm update
@@ -201,12 +225,14 @@ pnpm build  # Ensure no breaking changes
 ## 📝 Important Files
 
 ### Main App
+
 - `/app/api/pillar/[id]/route.ts` - Pillar redirect API
 - `/components/dashboard/PillarGrid.tsx` - Pillar cards UI
 - `/.env.local` - Local environment (gitignored)
 - `/docs/PILLAR-AUTHENTICATION.md` - Complete guide
 
 ### Pillar App
+
 - `/app/auth/verify/route.ts` - Token verification endpoint
 - `/middleware.ts` - Route protection
 - `/lib/auth/session.ts` - Session management
@@ -240,6 +266,7 @@ For detailed information, see:
 ## Key Concepts
 
 ### Authentication Flow
+
 ```
 User clicks Pillar card
   ↓
@@ -255,6 +282,7 @@ Redirects to Pillar dashboard
 ```
 
 ### Firestore Schema
+
 ```javascript
 Collection: userPermissions (in 'aiml-coe-web-app' database)
 Document ID: {user_uid}
@@ -277,10 +305,12 @@ Document ID: {user_uid}
 ### Environment Variables
 
 **Main App** (must have `NEXT_PUBLIC_` prefix for client-side):
+
 - `NEXT_PUBLIC_PILLAR_1_URL` - Pillar 1 URL
 - `FIREBASE_SERVICE_ACCOUNT_KEY` - Server-side Firebase Admin SDK
 
 **Pillar App**:
+
 - `SESSION_SECRET` - 32+ char encryption key (from Secret Manager in prod)
 - `PILLAR_NUMBER` - Which pillar this is (1-6)
 - `NEXT_PUBLIC_FIREBASE_PROJECT_ID` - Firebase project ID
