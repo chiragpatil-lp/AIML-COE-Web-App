@@ -3,17 +3,6 @@ import { verifyIdToken, getUserPermissions } from "@/lib/firebase/admin";
 import { cookies } from "next/headers";
 import { UserPermissions } from "@/lib/types/auth.types";
 
-// Pillar URL mapping - should match environment variables
-// Prioritize runtime variables (PILLAR_X_URL) over build-time variables (NEXT_PUBLIC_PILLAR_X_URL)
-const PILLAR_URLS: Record<string, string> = {
-  "1": process.env.PILLAR_1_URL || process.env.NEXT_PUBLIC_PILLAR_1_URL || "",
-  "2": process.env.PILLAR_2_URL || process.env.NEXT_PUBLIC_PILLAR_2_URL || "",
-  "3": process.env.PILLAR_3_URL || process.env.NEXT_PUBLIC_PILLAR_3_URL || "",
-  "4": process.env.PILLAR_4_URL || process.env.NEXT_PUBLIC_PILLAR_4_URL || "",
-  "5": process.env.PILLAR_5_URL || process.env.NEXT_PUBLIC_PILLAR_5_URL || "",
-  "6": process.env.PILLAR_6_URL || process.env.NEXT_PUBLIC_PILLAR_6_URL || "",
-};
-
 interface RouteParams {
   params: Promise<{
     id: string;
@@ -32,6 +21,16 @@ export async function GET(
   request: NextRequest,
   { params }: RouteParams,
 ): Promise<NextResponse> {
+  // Move PILLAR_URLS inside the handler to ensure it uses runtime environment variables
+  const PILLAR_URLS: Record<string, string> = {
+    "1": process.env.PILLAR_1_URL || process.env.NEXT_PUBLIC_PILLAR_1_URL || "",
+    "2": process.env.PILLAR_2_URL || process.env.NEXT_PUBLIC_PILLAR_2_URL || "",
+    "3": process.env.PILLAR_3_URL || process.env.NEXT_PUBLIC_PILLAR_3_URL || "",
+    "4": process.env.PILLAR_4_URL || process.env.NEXT_PUBLIC_PILLAR_4_URL || "",
+    "5": process.env.PILLAR_5_URL || process.env.NEXT_PUBLIC_PILLAR_5_URL || "",
+    "6": process.env.PILLAR_6_URL || process.env.NEXT_PUBLIC_PILLAR_6_URL || "",
+  };
+
   try {
     const { id } = await params;
     const pillarNumber = parseInt(id, 10);
@@ -147,9 +146,21 @@ export async function GET(
 
     // Construct the verify URL with token and pillar number
     // Pillar apps expect: /auth/verify?token={firebase_token}&pillar={pillar_number}
-    const verifyUrl = new URL(`/auth/verify`, pillarUrl);
-    verifyUrl.searchParams.set("token", token);
-    verifyUrl.searchParams.set("pillar", id);
+    let verifyUrl: URL;
+    try {
+      verifyUrl = new URL(`/auth/verify`, pillarUrl);
+      verifyUrl.searchParams.set("token", token);
+      verifyUrl.searchParams.set("pillar", id);
+    } catch (urlError) {
+      console.error("[PillarAuth] Failed to construct verify URL:", {
+        pillarUrl,
+        error: urlError instanceof Error ? urlError.message : String(urlError),
+      });
+      return NextResponse.json(
+        { error: "Invalid Pillar URL configuration." },
+        { status: 500 },
+      );
+    }
 
     // Redirect to the pillar's verify endpoint with the token
     return NextResponse.redirect(verifyUrl.toString(), { status: 302 });
