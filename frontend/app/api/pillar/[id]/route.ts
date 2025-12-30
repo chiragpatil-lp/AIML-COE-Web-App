@@ -82,7 +82,8 @@ export async function GET(
 
     // Check if user has access to this pillar
     const isAdmin = permissions.isAdmin === true;
-    const pillarKey = `pillar${pillarNumber}` as keyof UserPermissions["pillars"];
+    const pillarKey =
+      `pillar${pillarNumber}` as keyof UserPermissions["pillars"];
     const hasAccess = isAdmin || permissions.pillars?.[pillarKey] === true;
 
     if (!hasAccess) {
