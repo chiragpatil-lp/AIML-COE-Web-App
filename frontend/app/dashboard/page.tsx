@@ -79,6 +79,19 @@ export default function DashboardPage() {
               </p>
             </div>
             <div className="flex items-center gap-3">
+              {permissions?.isAdmin && (
+                <button
+                  onClick={() => router.push("/admin")}
+                  className="border border-[#146e96] text-[#146e96] px-[18px] py-[15px] rounded-full text-base leading-4 font-semibold hover:bg-[#146e96] hover:text-white transition-all duration-200 cursor-pointer"
+                  style={{
+                    fontFamily:
+                      "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
+                    fontWeight: "500",
+                  }}
+                >
+                  Admin Panel
+                </button>
+              )}
               <button
                 onClick={() => router.push("/profile")}
                 className="border border-[#146e96] text-[#146e96] px-[18px] py-[15px] rounded-full text-base leading-4 font-semibold hover:bg-[#146e96] hover:text-white transition-all duration-200 cursor-pointer"
