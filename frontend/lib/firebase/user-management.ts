@@ -26,14 +26,18 @@ export async function getAllUserPermissions(): Promise<UserPermissions[]> {
 
   try {
     const permissionsCollection = collection(db, "userPermissions");
-    const q = query(permissionsCollection, orderBy("email", "asc"));
-    const snapshot = await getDocs(q);
+    // Remove orderBy to avoid issues with missing email fields or indexes
+    const snapshot = await getDocs(permissionsCollection);
+
+    console.log(`[Admin] Fetched ${snapshot.size} user documents from Firestore`);
 
     const users: UserPermissions[] = [];
-    snapshot.forEach((doc) => {
-      const data = doc.data();
+    snapshot.forEach((docSnapshot) => {
+      const data = docSnapshot.data();
+      console.log(`[Admin] Processing user document:`, docSnapshot.id, data);
+      
       users.push({
-        userId: doc.id,
+        userId: docSnapshot.id,
         email: data.email || "",
         isAdmin: data.isAdmin || false,
         pillars: {
@@ -49,9 +53,19 @@ export async function getAllUserPermissions(): Promise<UserPermissions[]> {
       });
     });
 
+    // Sort by email on the client side
+    users.sort((a, b) => a.email.localeCompare(b.email));
+
+    console.log(`[Admin] Returning ${users.length} users`);
     return users;
   } catch (error) {
     console.error("Error fetching all user permissions:", error);
+    if (error instanceof Error) {
+      console.error("Error details:", {
+        message: error.message,
+        stack: error.stack,
+      });
+    }
     throw error;
   }
 }

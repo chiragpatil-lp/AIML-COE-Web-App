@@ -13,6 +13,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { EditUserPermissionsDialog } from "@/components/admin/EditUserPermissionsDialog";
+import { AddUserDialog } from "@/components/admin/AddUserDialog";
 import { getAllUserPermissions, getPillarAccessSummary } from "@/lib/firebase/user-management";
 import type { UserPermissions } from "@/lib/types/auth.types";
 import { toast } from "sonner";
@@ -26,6 +27,7 @@ export default function AdminDashboardPage() {
   const [loadingUsers, setLoadingUsers] = useState(true);
   const [selectedUser, setSelectedUser] = useState<UserPermissions | null>(null);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [addUserDialogOpen, setAddUserDialogOpen] = useState(false);
   const [summary, setSummary] = useState<{ [key: string]: number }>({});
 
   const userIsAdmin = permissions?.isAdmin === true;
@@ -308,20 +310,47 @@ export default function AdminDashboardPage() {
               </p>
             </div>
 
-            {/* Search Bar */}
-            <div className="relative w-80">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[#111A4A] opacity-40" />
-              <input
-                type="text"
-                placeholder="Search by email or ID..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-[#146e96] focus:border-transparent"
+            {/* Actions: Add User Button and Search Bar */}
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => setAddUserDialogOpen(true)}
+                className="bg-[#146e96] text-white px-6 py-2.5 rounded-full text-sm font-medium hover:bg-[#146e96]/90 transition-all duration-200 flex items-center gap-2"
                 style={{
                   fontFamily:
                     "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
                 }}
-              />
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                  className="w-4 h-4"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 4.5v15m7.5-7.5h-15"
+                  />
+                </svg>
+                Add User
+              </button>
+              
+              <div className="relative w-80">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[#111A4A] opacity-40" />
+                <input
+                  type="text"
+                  placeholder="Search by email or ID..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-[#146e96] focus:border-transparent"
+                  style={{
+                    fontFamily:
+                      "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
+                  }}
+                />
+              </div>
             </div>
           </div>
 
@@ -498,6 +527,13 @@ export default function AdminDashboardPage() {
         user={selectedUser}
         open={editDialogOpen}
         onOpenChange={setEditDialogOpen}
+        onSuccess={handleEditSuccess}
+      />
+
+      {/* Add User Dialog */}
+      <AddUserDialog
+        open={addUserDialogOpen}
+        onOpenChange={setAddUserDialogOpen}
         onSuccess={handleEditSuccess}
       />
     </div>
