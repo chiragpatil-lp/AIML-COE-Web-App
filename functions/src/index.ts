@@ -9,9 +9,13 @@
 
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
+import { getFirestore } from 'firebase-admin/firestore';
 
 // Initialize Firebase Admin SDK
 admin.initializeApp();
+
+// Initialize Firestore with the specific database ID
+const db = getFirestore('aiml-coe-web-app');
 
 interface UserPermissions {
   userId: string;
@@ -58,7 +62,7 @@ export const onUserCreate = functions.auth.user().onCreate(async (user) => {
       updatedAt: admin.firestore.FieldValue.serverTimestamp(),
     };
 
-    await admin.firestore().collection('userPermissions').doc(uid).set(defaultPermissions);
+    await db.collection('userPermissions').doc(uid).set(defaultPermissions);
 
     console.log('Created default permissions for user:', {
       uid,
@@ -104,8 +108,7 @@ export const setAdminClaim = functions.https.onCall(async (data, context) => {
     await admin.auth().setCustomUserClaims(userId, { admin: isAdmin });
 
     // Update Firestore permissions document
-    await admin
-      .firestore()
+    await db
       .collection('userPermissions')
       .doc(userId)
       .update({
@@ -114,8 +117,7 @@ export const setAdminClaim = functions.https.onCall(async (data, context) => {
       });
 
     // Log the change for audit purposes
-    await admin
-      .firestore()
+    await db
       .collection('adminAuditLog')
       .add({
         action: 'admin_claim_set',
@@ -187,8 +189,7 @@ export const updateUserPermissions = functions.https.onCall(async (data, context
 
   try {
     // Update Firestore permissions document
-    await admin
-      .firestore()
+    await db
       .collection('userPermissions')
       .doc(userId)
       .update({
@@ -197,8 +198,7 @@ export const updateUserPermissions = functions.https.onCall(async (data, context
       });
 
     // Log the change for audit purposes
-    await admin
-      .firestore()
+    await db
       .collection('adminAuditLog')
       .add({
         action: 'permissions_updated',
@@ -250,8 +250,7 @@ export const getUserPermissions = functions.https.onCall(async (data, context) =
   }
 
   try {
-    const permissionsDoc = await admin
-      .firestore()
+    const permissionsDoc = await db
       .collection('userPermissions')
       .doc(requestedUserId)
       .get();
@@ -267,5 +266,56 @@ export const getUserPermissions = functions.https.onCall(async (data, context) =
   } catch (error) {
     console.error('Error getting user permissions:', error);
     throw new functions.https.HttpsError('internal', 'Failed to get user permissions');
+  }
+});
+
+/**
+ * Callable function to manually initialize user permissions
+ * Use this as a fallback if the onCreate trigger fails
+ */
+export const initializeUser = functions.https.onCall(async (data, context) => {
+  // Verify caller is authenticated
+  if (!context.auth) {
+    throw new functions.https.HttpsError('unauthenticated', 'User must be authenticated');
+  }
+
+  const { uid, email } = context.auth.token;
+
+  if (!email) {
+     throw new functions.https.HttpsError('failed-precondition', 'User must have an email');
+  }
+
+  const userRef = db.collection('userPermissions').doc(uid);
+
+  try {
+    const doc = await userRef.get();
+    
+    if (doc.exists) {
+        return { success: true, message: 'User already initialized' };
+    }
+
+    const defaultPermissions: UserPermissions = {
+      userId: uid,
+      email,
+      isAdmin: false,
+      pillars: {
+        pillar1: false,
+        pillar2: false,
+        pillar3: false,
+        pillar4: false,
+        pillar5: false,
+        pillar6: false,
+      },
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+    };
+
+    await userRef.set(defaultPermissions);
+    
+    return { success: true, message: 'User initialized successfully' };
+
+  } catch (error) {
+    console.error('Error initializing user:', error);
+    throw new functions.https.HttpsError('internal', 'Failed to initialize user');
   }
 });

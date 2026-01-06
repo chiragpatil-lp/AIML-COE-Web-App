@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/table";
 import { EditUserPermissionsDialog } from "@/components/admin/EditUserPermissionsDialog";
 import { AddUserDialog } from "@/components/admin/AddUserDialog";
+import { DebugAdminStatus } from "@/components/admin/DebugAdminStatus";
 import { getAllUserPermissions, getPillarAccessSummary } from "@/lib/firebase/user-management";
 import type { UserPermissions } from "@/lib/types/auth.types";
 import { toast } from "sonner";
@@ -117,6 +118,7 @@ export default function AdminDashboardPage() {
 
   return (
     <div className="min-h-screen bg-white">
+      <DebugAdminStatus />
       {/* Header */}
       <div className="w-full bg-white border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-8 py-8">

@@ -75,6 +75,30 @@ AIML-COE-Web-App/
 - [GCP Setup Guide](./frontend/docs/GCP-SETUP.md) - Google Cloud Platform configuration steps
 - [Terraform README](./frontend/terraform/README.md) - Infrastructure provisioning guide
 
+## Firestore Database Configuration
+
+This project uses a **named Firestore database** rather than the default database for environment isolation and security.
+
+- **Database ID**: `aiml-coe-web-app`
+- **Project**: `search-ahmed`
+
+### CRITICAL: Code Implementation
+
+When initializing Firestore in any part of the application (Frontend, Cloud Functions, or Scripts), you **MUST** specify the database ID:
+
+**Frontend (Firebase Web SDK):**
+```typescript
+const db = getFirestore(app, "aiml-coe-web-app");
+```
+
+**Backend (Firebase Admin SDK):**
+```typescript
+const { getFirestore } = require('firebase-admin/firestore');
+const db = getFirestore("aiml-coe-web-app");
+```
+
+**DO NOT** use `getFirestore(app)` or `admin.firestore()` without parameters, as these will point to the `(default)` database, which is not used by this application.
+
 ## CI/CD Pipeline
 
 This project uses GitHub Actions to automatically deploy to Google Cloud Run on every push to the `main` branch.
