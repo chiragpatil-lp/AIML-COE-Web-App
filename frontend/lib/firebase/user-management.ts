@@ -25,13 +25,15 @@ export async function getAllUserPermissions(): Promise<UserPermissions[]> {
     // Remove orderBy to avoid issues with missing email fields or indexes
     const snapshot = await getDocs(permissionsCollection);
 
-    console.log(`[Admin] Fetched ${snapshot.size} user documents from Firestore`);
+    console.log(
+      `[Admin] Fetched ${snapshot.size} user documents from Firestore`,
+    );
 
     const users: UserPermissions[] = [];
     snapshot.forEach((docSnapshot) => {
       const data = docSnapshot.data();
       console.log(`[Admin] Processing user document:`, docSnapshot.id, data);
-      
+
       users.push({
         userId: docSnapshot.id,
         email: data.email || "",
@@ -75,7 +77,7 @@ export async function getAllUserPermissions(): Promise<UserPermissions[]> {
  */
 export async function updateUserPermissions(
   userId: string,
-  updates: Partial<Omit<UserPermissions, "userId" | "createdAt">>
+  updates: Partial<Omit<UserPermissions, "userId" | "createdAt">>,
 ): Promise<void> {
   if (!functions) {
     throw new Error("Cloud Functions are not initialized");
@@ -86,13 +88,18 @@ export async function updateUserPermissions(
     const promises = [];
 
     if (updates.isAdmin !== undefined) {
-      const setAdminClaim = httpsCallable(functions, 'setAdminClaim');
+      const setAdminClaim = httpsCallable(functions, "setAdminClaim");
       promises.push(setAdminClaim({ userId, isAdmin: updates.isAdmin }));
     }
 
     if (updates.pillars !== undefined) {
-      const updatePermissionsFunc = httpsCallable(functions, 'updateUserPermissions');
-      promises.push(updatePermissionsFunc({ userId, pillars: updates.pillars }));
+      const updatePermissionsFunc = httpsCallable(
+        functions,
+        "updateUserPermissions",
+      );
+      promises.push(
+        updatePermissionsFunc({ userId, pillars: updates.pillars }),
+      );
     }
 
     await Promise.all(promises);
@@ -121,7 +128,7 @@ export async function createUserPermissions(
       pillar5: boolean;
       pillar6: boolean;
     };
-  }
+  },
 ): Promise<void> {
   if (!db) {
     throw new Error("Firestore is not initialized");

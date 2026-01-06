@@ -34,7 +34,7 @@ function getFirebaseAdminApp(): App {
   if (!serviceAccount) {
     throw new Error(
       "FIREBASE_SERVICE_ACCOUNT_KEY environment variable is not set. " +
-        "Please set it in your .env.local file for local development."
+        "Please set it in your .env.local file for local development.",
     );
   }
 
@@ -43,7 +43,7 @@ function getFirebaseAdminApp(): App {
     serviceAccountJson = JSON.parse(serviceAccount);
   } catch (error) {
     throw new Error(
-      "Failed to parse FIREBASE_SERVICE_ACCOUNT_KEY. Ensure it is valid JSON."
+      "Failed to parse FIREBASE_SERVICE_ACCOUNT_KEY. Ensure it is valid JSON.",
     );
   }
 
@@ -84,7 +84,7 @@ export async function verifyIdToken(token: string) {
  * @returns User permissions or null if not found
  */
 export async function getUserPermissions(
-  userId: string
+  userId: string,
 ): Promise<UserPermissions | null> {
   try {
     const db = getAdminFirestore();

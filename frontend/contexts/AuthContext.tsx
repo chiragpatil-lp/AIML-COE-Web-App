@@ -96,34 +96,37 @@ export function AuthProvider({ children }: AuthProviderProps) {
           );
           await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS));
         } else {
-            // Retries exhausted - try fallback
-            if (functions) {
-                console.log("Retries exhausted. Attempting to initialize user via callable function...");
-                try {
-                    const initializeUser = httpsCallable(functions, 'initializeUser');
-                    await initializeUser();
-                    
-                    // Try to fetch one last time immediately
-                    const retrySnap = await getDoc(permissionsRef);
-                    if (retrySnap.exists()) {
-                         const data = retrySnap.data();
-                         // Validate data
-                         if (isValidUserPermissions(data)) {
-                             setPermissions({
-                                 ...data,
-                                 createdAt: toDate(data.createdAt),
-                                 updatedAt: toDate(data.updatedAt),
-                             });
-                             setError(null);
-                             return;
-                         }
-                    }
-                } catch (fallbackError) {
-                    console.error("Fallback initialization failed:", fallbackError);
+          // Retries exhausted - try fallback
+          if (functions) {
+            console.log(
+              "Retries exhausted. Attempting to initialize user via callable function...",
+            );
+            try {
+              const initializeUser = httpsCallable(functions, "initializeUser");
+              await initializeUser();
+
+              // Try to fetch one last time immediately
+              const retrySnap = await getDoc(permissionsRef);
+              if (retrySnap.exists()) {
+                const data = retrySnap.data();
+                // Validate data
+                if (isValidUserPermissions(data)) {
+                  setPermissions({
+                    ...data,
+                    createdAt: toDate(data.createdAt),
+                    updatedAt: toDate(data.updatedAt),
+                  });
+                  setError(null);
+                  return;
                 }
+              }
+            } catch (fallbackError) {
+              console.error("Fallback initialization failed:", fallbackError);
             }
-            
-          const errorMsg = "User permissions not found after retries and fallback.";
+          }
+
+          const errorMsg =
+            "User permissions not found after retries and fallback.";
           console.error(errorMsg, { userId, userEmail });
           setError(errorMsg);
           toast.error(

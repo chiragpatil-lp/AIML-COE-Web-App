@@ -19,4 +19,3 @@ export function DebugAdminStatus() {
 
   return null;
 }
-

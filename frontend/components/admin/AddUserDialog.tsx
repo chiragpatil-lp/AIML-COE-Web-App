@@ -78,9 +78,9 @@ export function AddUserDialog({
       });
 
       toast.success(
-        `User ${trimmedEmail} added successfully. They will have access when they sign in.`
+        `User ${trimmedEmail} added successfully. They will have access when they sign in.`,
       );
-      
+
       // Reset form
       setEmail("");
       setIsAdmin(false);
@@ -92,7 +92,7 @@ export function AddUserDialog({
         pillar5: false,
         pillar6: false,
       });
-      
+
       onSuccess();
       onOpenChange(false);
     } catch (error) {
@@ -139,8 +139,8 @@ export function AddUserDialog({
               fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
             }}
           >
-            Pre-authorize a user by email address. They will have access when they
-            sign in for the first time.
+            Pre-authorize a user by email address. They will have access when
+            they sign in for the first time.
           </DialogDescription>
         </DialogHeader>
 
@@ -305,8 +305,8 @@ export function AddUserDialog({
                 fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
               }}
             >
-              The user won't receive an email notification. Share the sign-in link
-              with them directly.
+              The user won&apos;t receive an email notification. Share the
+              sign-in link with them directly.
             </p>
           </div>
         </div>
@@ -340,4 +340,3 @@ export function AddUserDialog({
     </Dialog>
   );
 }
-

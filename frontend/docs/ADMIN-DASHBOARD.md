@@ -45,6 +45,7 @@ The admin dashboard displays key metrics at a glance:
 ### 2. User Management Table
 
 A comprehensive table showing:
+
 - **Email**: User's email address and truncated user ID
 - **Role**: Badge indicating "Admin" or "User" status
 - **Pillar Access**: Visual indicators (numbered circles) showing access to each pillar
@@ -61,6 +62,7 @@ A comprehensive table showing:
 ### 4. Permission Editor Dialog
 
 A modal dialog for editing user permissions with:
+
 - **User Information**: Displays email and user ID
 - **Admin Access Toggle**: Single switch to grant/revoke administrator privileges
   - When enabled, user automatically gets access to all pillars
@@ -114,7 +116,7 @@ The admin dashboard follows the existing AIML COE design system:
 
 - **Typography**: Plus Jakarta Sans font family
 - **Primary Color**: `#146e96` (teal blue)
-- **Accent Colors**: 
+- **Accent Colors**:
   - Pillar 1, 3, 5: `#f2545b` (coral red)
   - Pillar 2, 4, 6: `#2c3e50` (dark blue)
 - **Layout**: Consistent with dashboard page styling
@@ -156,6 +158,7 @@ frontend/
 **Purpose**: Main admin dashboard page with user list and statistics
 
 **State Management**:
+
 - `users`: Array of all UserPermissions
 - `filteredUsers`: Filtered array based on search query
 - `searchQuery`: Current search input
@@ -165,6 +168,7 @@ frontend/
 - `summary`: Pillar access statistics
 
 **Key Functions**:
+
 - `loadUsers()`: Fetches all users and statistics from Firestore
 - `handleEditUser(user)`: Opens edit dialog for selected user
 - `handleEditSuccess()`: Reloads user list after successful update
@@ -174,17 +178,20 @@ frontend/
 **Purpose**: Modal dialog for editing user permissions
 
 **Props**:
+
 - `user`: UserPermissions object to edit
 - `open`: Dialog visibility state
 - `onOpenChange`: Callback to change dialog state
 - `onSuccess`: Callback after successful save
 
 **State Management**:
+
 - `isAdmin`: Local state for admin toggle
 - `pillars`: Local state for pillar access toggles
 - `isSaving`: Loading state during save operation
 
 **Key Functions**:
+
 - `handlePillarToggle(pillarKey)`: Toggles individual pillar access
 - `handleSave()`: Saves changes to Firestore and triggers success callback
 
@@ -193,6 +200,7 @@ frontend/
 **Purpose**: Firebase Admin SDK functions for server-side operations
 
 **Functions**:
+
 - `getFirebaseAdminApp()`: Initializes Firebase Admin SDK
   - Uses Application Default Credentials in Cloud Run
   - Uses service account JSON in development
@@ -205,6 +213,7 @@ frontend/
 **Purpose**: Client-side Firestore functions for admin operations
 
 **Functions**:
+
 - `getAllUserPermissions()`: Fetches all users from Firestore
 - `updateUserPermissions(userId, updates)`: Updates user permissions
 - `createUserPermissions(email, permissions)`: Creates pre-authorized user
@@ -250,10 +259,12 @@ frontend/
 #### Understanding the Visual Indicators
 
 **Role Badges**:
+
 - Blue badge with shield icon = Administrator
 - Gray badge = Regular user
 
 **Pillar Access Circles**:
+
 - Blue circle with white number = Access granted to that pillar
 - Gray circle with gray number = Access denied to that pillar
 - "All Pillars (6/6)" text = User is an admin with full access
@@ -275,7 +286,7 @@ frontend/
 - Firestore rules enforce write restrictions:
   ```javascript
   // Only admins can write to userPermissions
-  allow write: if request.auth != null && 
+  allow write: if request.auth != null &&
                   request.auth.token.admin == true;
   ```
 
@@ -300,6 +311,7 @@ frontend/
 **Cause**: User is not an admin or permissions not loaded
 
 **Solution**:
+
 1. Verify `isAdmin: true` in Firestore for your user
 2. Sign out and sign back in to refresh permissions
 3. Check browser console for errors
@@ -310,6 +322,7 @@ frontend/
 **Cause**: Firestore connection error or permission denied
 
 **Solution**:
+
 1. Check Firestore security rules
 2. Verify Firebase configuration in `.env.local`
 3. Check browser console for detailed error
@@ -320,6 +333,7 @@ frontend/
 **Cause**: Firestore write error or network issue
 
 **Solution**:
+
 1. Check network connectivity
 2. Verify Firestore security rules allow writes
 3. Ensure user ID is valid
@@ -330,6 +344,7 @@ frontend/
 **Cause**: User is not an admin or permissions not loaded
 
 **Solution**:
+
 1. Verify `permissions.isAdmin === true` in browser console:
    ```javascript
    // In browser console
@@ -343,6 +358,7 @@ frontend/
 **Cause**: JavaScript error or state issue
 
 **Solution**:
+
 1. Check browser console for errors
 2. Refresh the page
 3. Clear browser cache if needed
@@ -354,23 +370,28 @@ frontend/
 ### Planned Features
 
 1. **Bulk Operations**
+
    - Select multiple users for batch permission updates
    - Import/export user permissions via CSV
 
 2. **Audit Logs**
+
    - Track all permission changes with timestamp and admin who made the change
    - Export audit logs for compliance
 
 3. **User Invitation System**
+
    - Pre-create user permissions before first sign-in
    - Send invitation emails with custom messages
 
 4. **Advanced Filtering**
+
    - Filter by role (admin/user)
    - Filter by pillar access
    - Filter by last activity date
 
 5. **Permission Templates**
+
    - Create named permission templates (e.g., "Finance Team", "Engineering Lead")
    - Apply templates to multiple users
 
@@ -393,6 +414,7 @@ frontend/
 ## Support
 
 For issues or questions:
+
 1. Check this documentation
 2. Review browser console for errors
 3. Check Firestore database configuration
@@ -404,4 +426,3 @@ For issues or questions:
 **Version**: 1.0.0
 **Last Updated**: January 5, 2026
 **Status**: Production Ready
-

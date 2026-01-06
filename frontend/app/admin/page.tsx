@@ -15,7 +15,10 @@ import {
 import { EditUserPermissionsDialog } from "@/components/admin/EditUserPermissionsDialog";
 import { AddUserDialog } from "@/components/admin/AddUserDialog";
 import { DebugAdminStatus } from "@/components/admin/DebugAdminStatus";
-import { getAllUserPermissions, getPillarAccessSummary } from "@/lib/firebase/user-management";
+import {
+  getAllUserPermissions,
+  getPillarAccessSummary,
+} from "@/lib/firebase/user-management";
 import type { UserPermissions } from "@/lib/types/auth.types";
 import { toast } from "sonner";
 
@@ -26,7 +29,9 @@ export default function AdminDashboardPage() {
   const [filteredUsers, setFilteredUsers] = useState<UserPermissions[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [loadingUsers, setLoadingUsers] = useState(true);
-  const [selectedUser, setSelectedUser] = useState<UserPermissions | null>(null);
+  const [selectedUser, setSelectedUser] = useState<UserPermissions | null>(
+    null,
+  );
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [addUserDialogOpen, setAddUserDialogOpen] = useState(false);
   const [summary, setSummary] = useState<{ [key: string]: number }>({});
@@ -77,7 +82,7 @@ export default function AdminDashboardPage() {
       const filtered = users.filter(
         (u) =>
           u.email.toLowerCase().includes(query) ||
-          u.userId.toLowerCase().includes(query)
+          u.userId.toLowerCase().includes(query),
       );
       setFilteredUsers(filtered);
     }
@@ -338,7 +343,7 @@ export default function AdminDashboardPage() {
                 </svg>
                 Add User
               </button>
-              
+
               <div className="relative w-80">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[#111A4A] opacity-40" />
                 <input
@@ -370,7 +375,9 @@ export default function AdminDashboardPage() {
                     "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
                 }}
               >
-                {searchQuery ? "No users found matching your search" : "No users found"}
+                {searchQuery
+                  ? "No users found matching your search"
+                  : "No users found"}
               </p>
             </div>
           ) : (
@@ -541,4 +548,3 @@ export default function AdminDashboardPage() {
     </div>
   );
 }
-

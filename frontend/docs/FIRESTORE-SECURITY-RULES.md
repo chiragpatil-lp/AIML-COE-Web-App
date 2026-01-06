@@ -8,25 +8,25 @@ Copy these rules to Firebase Console → Firestore Database → Rules:
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    
+
     // Helper function to check if user is admin by reading their permissions document
     function isAdmin() {
       return request.auth != null &&
              exists(/databases/$(database)/documents/userPermissions/$(request.auth.uid)) &&
              get(/databases/$(database)/documents/userPermissions/$(request.auth.uid)).data.isAdmin == true;
     }
-    
+
     // User permissions collection
     match /userPermissions/{userId} {
       // Users can read their own permissions
       allow read: if request.auth != null && request.auth.uid == userId;
-      
+
       // Admins can read all permissions (for admin dashboard)
       allow read: if isAdmin();
-      
+
       // Admins can write/update any user permissions
       allow write, update, delete: if isAdmin();
-      
+
       // Allow creation of new permission documents by admins
       allow create: if isAdmin();
     }
@@ -53,13 +53,13 @@ cat > firestore.rules << 'EOF'
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    
+
     function isAdmin() {
       return request.auth != null &&
              exists(/databases/$(database)/documents/userPermissions/$(request.auth.uid)) &&
              get(/databases/$(database)/documents/userPermissions/$(request.auth.uid)).data.isAdmin == true;
     }
-    
+
     match /userPermissions/{userId} {
       allow read: if request.auth != null && request.auth.uid == userId;
       allow read: if isAdmin();
@@ -76,13 +76,15 @@ firebase deploy --only firestore:rules
 ## What Changed?
 
 ### Old Rules (Problematic)
+
 ```javascript
 // ❌ This checks for custom claims (requires Cloud Functions)
-allow write: if request.auth != null && 
+allow write: if request.auth != null &&
                 request.auth.token.admin == true;
 ```
 
 ### New Rules (Working)
+
 ```javascript
 // ✅ This checks the Firestore document directly
 function isAdmin() {
@@ -99,11 +101,13 @@ allow write: if isAdmin();
 ### Security Considerations
 
 1. **The `isAdmin()` function makes an extra read** to check permissions on every write
+
    - This counts against your Firestore read quota
    - For 5 admins making 100 writes/day each = 500 extra reads/day
    - Well within the free tier (50K reads/day)
 
 2. **Users can't change their own permissions** because:
+
    - The `isAdmin()` check happens BEFORE the write
    - Users can't write to their own document to make themselves admin
    - Only existing admins can modify permissions
@@ -127,14 +131,16 @@ allow write: if isAdmin();
 ### "Still getting permission denied"
 
 1. **Check rule deployment**:
+
    - Go to Firebase Console → Firestore → Rules
    - Verify the new rules are there
    - Check the "Last deployed" timestamp
 
 2. **Verify your admin status**:
+
    ```javascript
    // In browser console
-   console.log('My user ID:', firebase.auth().currentUser.uid);
+   console.log("My user ID:", firebase.auth().currentUser.uid);
    // Go to Firestore and verify this user has isAdmin: true
    ```
 
@@ -160,8 +166,8 @@ For production environments with many admins, custom claims are more efficient:
 
 ```typescript
 // functions/src/index.ts
-import * as functions from 'firebase-functions';
-import * as admin from 'firebase-admin';
+import * as functions from "firebase-functions";
+import * as admin from "firebase-admin";
 
 admin.initializeApp();
 
@@ -169,15 +175,15 @@ export const setAdminClaim = functions.https.onCall(async (data, context) => {
   // Only existing admins can set admin claims
   if (!context.auth?.token?.admin) {
     throw new functions.https.HttpsError(
-      'permission-denied',
-      'Only admins can set admin claims'
+      "permission-denied",
+      "Only admins can set admin claims",
     );
   }
 
   const { uid, isAdmin } = data;
-  
+
   await admin.auth().setCustomUserClaims(uid, { admin: isAdmin });
-  
+
   return { success: true };
 });
 ```
@@ -185,7 +191,7 @@ export const setAdminClaim = functions.https.onCall(async (data, context) => {
 ### Then use the original rules
 
 ```javascript
-allow write: if request.auth != null && 
+allow write: if request.auth != null &&
                 request.auth.token.admin == true;
 ```
 
@@ -193,14 +199,13 @@ allow write: if request.auth != null &&
 
 ## Quick Reference
 
-| What | Where | Value |
-|------|-------|-------|
-| Database Name | Firestore | `aiml-coe-web-app` |
-| Collection | Firestore | `userPermissions` |
-| Admin Field | Document | `isAdmin: true` |
-| Security Rules | Firestore Rules | See above |
+| What           | Where           | Value              |
+| -------------- | --------------- | ------------------ |
+| Database Name  | Firestore       | `aiml-coe-web-app` |
+| Collection     | Firestore       | `userPermissions`  |
+| Admin Field    | Document        | `isAdmin: true`    |
+| Security Rules | Firestore Rules | See above          |
 
 ---
 
 **Next Steps**: Apply the security rules and try adding a user again!
-
