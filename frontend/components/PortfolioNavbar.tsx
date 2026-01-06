@@ -60,18 +60,17 @@ export const PortfolioNavbar = () => {
           <div className="flex-shrink-0">
             <button
               onClick={() => handleLinkClick("#home")}
-              className="flex items-center gap-3 text-2xl font-bold text-foreground hover:text-primary transition-colors duration-200"
+              className="flex items-end gap-3 text-xl font-bold text-foreground hover:text-primary transition-colors duration-200"
             >
               <Image
                 src={getAssetUrl("/icon.svg")}
                 alt="CoE Logo"
-                width={20}
-                height={20}
-                className="h-5 w-auto"
+                width={32}
+                height={32}
+                className="h-8 w-auto"
                 priority
               />
               <span
-                className="mt-1"
                 style={{
                   fontFamily: "Plus Jakarta Sans",
                   fontWeight: "600",

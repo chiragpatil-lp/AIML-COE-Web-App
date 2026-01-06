@@ -14,8 +14,8 @@ import { getFirestore } from 'firebase-admin/firestore';
 // Initialize Firebase Admin SDK
 admin.initializeApp();
 
-// Initialize Firestore with the specific database ID
-const db = process.env.FIRESTORE_DB_ID ? getFirestore(process.env.FIRESTORE_DB_ID) : getFirestore('aiml-coe-web-app');
+// Initialize Firestore with named database
+const db = getFirestore(admin.app(), 'aiml-coe-web-app');
 
 interface UserPermissions {
   userId: string;
