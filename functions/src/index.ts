@@ -15,7 +15,7 @@ import { getFirestore } from 'firebase-admin/firestore';
 admin.initializeApp();
 
 // Initialize Firestore with the specific database ID
-const db = getFirestore('aiml-coe-web-app');
+const db = process.env.FIRESTORE_DB_ID ? getFirestore(process.env.FIRESTORE_DB_ID) : getFirestore('aiml-coe-web-app');
 
 interface UserPermissions {
   userId: string;
@@ -46,6 +46,36 @@ export const onUserCreate = functions.auth.user().onCreate(async (user) => {
   }
 
   try {
+    // Check for pending permissions by email before creating defaults
+    const pendingQuery = await db.collection('userPermissions')
+      .where('email', '==', email.toLowerCase())
+      .where('isPending', '==', true)
+      .limit(1)
+      .get();
+
+    if (!pendingQuery.empty) {
+      const pendingDoc = pendingQuery.docs[0];
+      const pendingData = pendingDoc.data();
+      const defaultPermissions: UserPermissions = {
+        userId: uid,
+        email,
+        isAdmin: pendingData.isAdmin || false,
+        pillars: pendingData.pillars,
+        createdAt: pendingData.createdAt || admin.firestore.FieldValue.serverTimestamp(),
+        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      };
+      
+      await db.collection('userPermissions').doc(uid).set(defaultPermissions);
+      await pendingDoc.ref.delete(); // Clean up pending document
+      
+      console.log('Created user permissions from pending record:', {
+        uid,
+        email,
+        originalPendingId: pendingDoc.id
+      });
+      return;
+    }
+
     const defaultPermissions: UserPermissions = {
       userId: uid,
       email,
@@ -85,8 +115,19 @@ export const setAdminClaim = functions.https.onCall(async (data, context) => {
   }
 
   // Verify caller is admin
+  // Check Firestore for admin status as a fallback or primary source
+  // This resolves the Catch-22 where an admin needs the claim to set the claim
   const callerToken = context.auth.token;
-  if (!callerToken.admin) {
+  let hasAdminPrivileges = callerToken.admin === true;
+
+  if (!hasAdminPrivileges) {
+    const callerPermissions = await db.collection('userPermissions').doc(context.auth.uid).get();
+    if (callerPermissions.exists && callerPermissions.data()?.isAdmin === true) {
+      hasAdminPrivileges = true;
+    }
+  }
+
+  if (!hasAdminPrivileges) {
     throw new functions.https.HttpsError(
       'permission-denied',
       'Only admins can set admin claims'
@@ -155,8 +196,18 @@ export const updateUserPermissions = functions.https.onCall(async (data, context
   }
 
   // Verify caller is admin
+  // Check Firestore for admin status as a fallback or primary source
   const callerToken = context.auth.token;
-  if (!callerToken.admin) {
+  let hasAdminPrivileges = callerToken.admin === true;
+
+  if (!hasAdminPrivileges) {
+    const callerPermissions = await db.collection('userPermissions').doc(context.auth.uid).get();
+    if (callerPermissions.exists && callerPermissions.data()?.isAdmin === true) {
+      hasAdminPrivileges = true;
+    }
+  }
+
+  if (!hasAdminPrivileges) {
     throw new functions.https.HttpsError(
       'permission-denied',
       'Only admins can update user permissions'
@@ -240,7 +291,18 @@ export const getUserPermissions = functions.https.onCall(async (data, context) =
 
   // Check if user is requesting their own permissions or is an admin
   const isOwnPermissions = requestedUserId === context.auth.uid;
-  const isAdmin = context.auth.token.admin === true;
+  let isAdmin = context.auth.token.admin === true;
+
+  // Also check Firestore for admin status if not in token
+  if (!isAdmin) {
+    // We can't easily await inside this synchronous check flow efficiently without refactoring 
+    // but for read permissions, strict token check + own permission check is usually safer.
+    // However, to be consistent with write operations, we should allow Firestore admins to read.
+    const callerPermissions = await db.collection('userPermissions').doc(context.auth.uid).get();
+    if (callerPermissions.exists && callerPermissions.data()?.isAdmin === true) {
+      isAdmin = true;
+    }
+  }
 
   if (!isOwnPermissions && !isAdmin) {
     throw new functions.https.HttpsError(
@@ -292,6 +354,31 @@ export const initializeUser = functions.https.onCall(async (data, context) => {
     
     if (doc.exists) {
         return { success: true, message: 'User already initialized' };
+    }
+
+    // Check for pending permissions by email before creating defaults
+    const pendingQuery = await db.collection('userPermissions')
+      .where('email', '==', email.toLowerCase())
+      .where('isPending', '==', true)
+      .limit(1)
+      .get();
+
+    if (!pendingQuery.empty) {
+      const pendingDoc = pendingQuery.docs[0];
+      const pendingData = pendingDoc.data();
+      const defaultPermissions: UserPermissions = {
+        userId: uid,
+        email,
+        isAdmin: pendingData.isAdmin || false,
+        pillars: pendingData.pillars,
+        createdAt: pendingData.createdAt || admin.firestore.FieldValue.serverTimestamp(),
+        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      };
+      
+      await userRef.set(defaultPermissions);
+      await pendingDoc.ref.delete(); // Clean up pending document
+      
+      return { success: true, message: 'User initialized from pending permissions' };
     }
 
     const defaultPermissions: UserPermissions = {

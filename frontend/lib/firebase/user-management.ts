@@ -1,17 +1,13 @@
-"use client";
-
 import {
   collection,
   getDocs,
   doc,
-  updateDoc,
   setDoc,
   getDoc,
-  query,
-  orderBy,
   Timestamp,
 } from "firebase/firestore";
-import { db } from "@/lib/firebase/config";
+import { httpsCallable } from "firebase/functions";
+import { db, functions } from "@/lib/firebase/config";
 import type { UserPermissions } from "@/lib/types/auth.types";
 
 /**
@@ -71,7 +67,7 @@ export async function getAllUserPermissions(): Promise<UserPermissions[]> {
 }
 
 /**
- * Updates user permissions in Firestore
+ * Updates user permissions via Cloud Functions
  * Admin-only function
  * @param userId - Firebase Auth user ID
  * @param updates - Partial UserPermissions to update
@@ -81,24 +77,25 @@ export async function updateUserPermissions(
   userId: string,
   updates: Partial<Omit<UserPermissions, "userId" | "createdAt">>
 ): Promise<void> {
-  if (!db) {
-    throw new Error("Firestore is not initialized");
+  if (!functions) {
+    throw new Error("Cloud Functions are not initialized");
   }
 
   try {
-    const userRef = doc(db, "userPermissions", userId);
+    // Use Cloud Functions to ensure audit logging and custom claim synchronization
+    const promises = [];
 
-    // Check if user exists
-    const userSnap = await getDoc(userRef);
-    if (!userSnap.exists()) {
-      throw new Error("User not found");
+    if (updates.isAdmin !== undefined) {
+      const setAdminClaim = httpsCallable(functions, 'setAdminClaim');
+      promises.push(setAdminClaim({ userId, isAdmin: updates.isAdmin }));
     }
 
-    // Update with timestamp
-    await updateDoc(userRef, {
-      ...updates,
-      updatedAt: Timestamp.now(),
-    });
+    if (updates.pillars !== undefined) {
+      const updatePermissionsFunc = httpsCallable(functions, 'updateUserPermissions');
+      promises.push(updatePermissionsFunc({ userId, pillars: updates.pillars }));
+    }
+
+    await Promise.all(promises);
   } catch (error) {
     console.error("Error updating user permissions:", error);
     throw error;
