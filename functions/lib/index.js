@@ -41,11 +41,14 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.initializeUser = exports.syncAllUsersToAdmins = exports.getUserPermissions = exports.updateUserPermissions = exports.setAdminClaim = exports.onUserCreate = void 0;
+exports.initializeUser = exports.getUserPermissions = exports.updateUserPermissions = exports.setAdminClaim = exports.onUserCreate = void 0;
 const functions = __importStar(require("firebase-functions"));
 const admin = __importStar(require("firebase-admin"));
+const firestore_1 = require("firebase-admin/firestore");
 // Initialize Firebase Admin SDK
 admin.initializeApp();
+// Initialize Firestore with the specific database ID
+const db = process.env.FIRESTORE_DB_ID ? (0, firestore_1.getFirestore)(process.env.FIRESTORE_DB_ID) : (0, firestore_1.getFirestore)('aiml-coe-web-app');
 /**
  * Triggered when a new user signs up
  * Creates default user permissions in Firestore
@@ -57,6 +60,32 @@ exports.onUserCreate = functions.auth.user().onCreate(async (user) => {
         return;
     }
     try {
+        // Check for pending permissions by email before creating defaults
+        const pendingQuery = await db.collection('userPermissions')
+            .where('email', '==', email.toLowerCase())
+            .where('isPending', '==', true)
+            .limit(1)
+            .get();
+        if (!pendingQuery.empty) {
+            const pendingDoc = pendingQuery.docs[0];
+            const pendingData = pendingDoc.data();
+            const defaultPermissions = {
+                userId: uid,
+                email,
+                isAdmin: pendingData.isAdmin || false,
+                pillars: pendingData.pillars,
+                createdAt: pendingData.createdAt || admin.firestore.FieldValue.serverTimestamp(),
+                updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+            };
+            await db.collection('userPermissions').doc(uid).set(defaultPermissions);
+            await pendingDoc.ref.delete(); // Clean up pending document
+            console.log('Created user permissions from pending record:', {
+                uid,
+                email,
+                originalPendingId: pendingDoc.id
+            });
+            return;
+        }
         const defaultPermissions = {
             userId: uid,
             email,
@@ -72,7 +101,7 @@ exports.onUserCreate = functions.auth.user().onCreate(async (user) => {
             createdAt: admin.firestore.FieldValue.serverTimestamp(),
             updatedAt: admin.firestore.FieldValue.serverTimestamp(),
         };
-        await admin.firestore().collection('userPermissions').doc(uid).set(defaultPermissions);
+        await db.collection('userPermissions').doc(uid).set(defaultPermissions);
         console.log('Created default permissions for user:', {
             uid,
             email,
@@ -88,13 +117,23 @@ exports.onUserCreate = functions.auth.user().onCreate(async (user) => {
  * Can only be called by existing admins
  */
 exports.setAdminClaim = functions.https.onCall(async (data, context) => {
+    var _a;
     // Verify caller is authenticated
     if (!context.auth) {
         throw new functions.https.HttpsError('unauthenticated', 'User must be authenticated');
     }
     // Verify caller is admin
+    // Check Firestore for admin status as a fallback or primary source
+    // This resolves the Catch-22 where an admin needs the claim to set the claim
     const callerToken = context.auth.token;
-    if (!callerToken.admin) {
+    let hasAdminPrivileges = callerToken.admin === true;
+    if (!hasAdminPrivileges) {
+        const callerPermissions = await db.collection('userPermissions').doc(context.auth.uid).get();
+        if (callerPermissions.exists && ((_a = callerPermissions.data()) === null || _a === void 0 ? void 0 : _a.isAdmin) === true) {
+            hasAdminPrivileges = true;
+        }
+    }
+    if (!hasAdminPrivileges) {
         throw new functions.https.HttpsError('permission-denied', 'Only admins can set admin claims');
     }
     const { userId, isAdmin } = data;
@@ -108,8 +147,7 @@ exports.setAdminClaim = functions.https.onCall(async (data, context) => {
         // Set custom claim
         await admin.auth().setCustomUserClaims(userId, { admin: isAdmin });
         // Update Firestore permissions document
-        await admin
-            .firestore()
+        await db
             .collection('userPermissions')
             .doc(userId)
             .update({
@@ -117,8 +155,7 @@ exports.setAdminClaim = functions.https.onCall(async (data, context) => {
             updatedAt: admin.firestore.FieldValue.serverTimestamp(),
         });
         // Log the change for audit purposes
-        await admin
-            .firestore()
+        await db
             .collection('adminAuditLog')
             .add({
             action: 'admin_claim_set',
@@ -148,13 +185,22 @@ exports.setAdminClaim = functions.https.onCall(async (data, context) => {
  * Can only be called by admins
  */
 exports.updateUserPermissions = functions.https.onCall(async (data, context) => {
+    var _a;
     // Verify caller is authenticated
     if (!context.auth) {
         throw new functions.https.HttpsError('unauthenticated', 'User must be authenticated');
     }
     // Verify caller is admin
+    // Check Firestore for admin status as a fallback or primary source
     const callerToken = context.auth.token;
-    if (!callerToken.admin) {
+    let hasAdminPrivileges = callerToken.admin === true;
+    if (!hasAdminPrivileges) {
+        const callerPermissions = await db.collection('userPermissions').doc(context.auth.uid).get();
+        if (callerPermissions.exists && ((_a = callerPermissions.data()) === null || _a === void 0 ? void 0 : _a.isAdmin) === true) {
+            hasAdminPrivileges = true;
+        }
+    }
+    if (!hasAdminPrivileges) {
         throw new functions.https.HttpsError('permission-denied', 'Only admins can update user permissions');
     }
     const { userId, pillars } = data;
@@ -176,8 +222,7 @@ exports.updateUserPermissions = functions.https.onCall(async (data, context) => 
     }
     try {
         // Update Firestore permissions document
-        await admin
-            .firestore()
+        await db
             .collection('userPermissions')
             .doc(userId)
             .update({
@@ -185,8 +230,7 @@ exports.updateUserPermissions = functions.https.onCall(async (data, context) => 
             updatedAt: admin.firestore.FieldValue.serverTimestamp(),
         });
         // Log the change for audit purposes
-        await admin
-            .firestore()
+        await db
             .collection('adminAuditLog')
             .add({
             action: 'permissions_updated',
@@ -216,6 +260,7 @@ exports.updateUserPermissions = functions.https.onCall(async (data, context) => 
  * Users can get their own permissions, admins can get any user's permissions
  */
 exports.getUserPermissions = functions.https.onCall(async (data, context) => {
+    var _a;
     // Verify caller is authenticated
     if (!context.auth) {
         throw new functions.https.HttpsError('unauthenticated', 'User must be authenticated');
@@ -224,13 +269,22 @@ exports.getUserPermissions = functions.https.onCall(async (data, context) => {
     const requestedUserId = userId || context.auth.uid;
     // Check if user is requesting their own permissions or is an admin
     const isOwnPermissions = requestedUserId === context.auth.uid;
-    const isAdmin = context.auth.token.admin === true;
+    let isAdmin = context.auth.token.admin === true;
+    // Also check Firestore for admin status if not in token
+    if (!isAdmin) {
+        // We can't easily await inside this synchronous check flow efficiently without refactoring 
+        // but for read permissions, strict token check + own permission check is usually safer.
+        // However, to be consistent with write operations, we should allow Firestore admins to read.
+        const callerPermissions = await db.collection('userPermissions').doc(context.auth.uid).get();
+        if (callerPermissions.exists && ((_a = callerPermissions.data()) === null || _a === void 0 ? void 0 : _a.isAdmin) === true) {
+            isAdmin = true;
+        }
+    }
     if (!isOwnPermissions && !isAdmin) {
         throw new functions.https.HttpsError('permission-denied', 'Users can only view their own permissions');
     }
     try {
-        const permissionsDoc = await admin
-            .firestore()
+        const permissionsDoc = await db
             .collection('userPermissions')
             .doc(requestedUserId)
             .get();
@@ -248,88 +302,6 @@ exports.getUserPermissions = functions.https.onCall(async (data, context) => {
     }
 });
 /**
- * Callable function to sync all users as admins
- * CAUTION: This is a maintenance function to bootstrap admins.
- * It will make ALL existing users admins.
- */
-exports.syncAllUsersToAdmins = functions.https.onCall(async (data, context) => {
-    // Verify caller is authenticated
-    if (!context.auth) {
-        throw new functions.https.HttpsError('unauthenticated', 'User must be authenticated');
-    }
-    // NOTE: In a real production app, you'd want to restrict this to existing admins or a specific secure key.
-    // For this fix/bootstrap request, we allow any authenticated user to trigger it to ensure we can set up the first admin.
-    try {
-        const usersResult = await admin.auth().listUsers(1000);
-        const users = usersResult.users;
-        let updatedCount = 0;
-        let errorsCount = 0;
-        console.log(`Found ${users.length} users to process.`);
-        for (const user of users) {
-            try {
-                const { uid, email } = user;
-                if (!email)
-                    continue;
-                // 1. Set Custom Claim
-                await admin.auth().setCustomUserClaims(uid, { admin: true });
-                // 2. Update/Create Firestore Document
-                const userRef = admin.firestore().collection('userPermissions').doc(uid);
-                const adminPermissions = {
-                    userId: uid,
-                    email,
-                    isAdmin: true,
-                    pillars: {
-                        pillar1: true,
-                        pillar2: true,
-                        pillar3: true,
-                        pillar4: true,
-                        pillar5: true,
-                        pillar6: true,
-                    },
-                    createdAt: admin.firestore.FieldValue.serverTimestamp(),
-                    updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-                };
-                // Use set with merge to create if missing or update if exists
-                // We use merge: true to preserve createdAt if it exists, but we are overwriting everything else basically.
-                // Actually, to ensure clean "Admin" state, let's just use set().
-                // But we want to preserve createdAt if it was there? 
-                // Let's do a check.
-                const docSnap = await userRef.get();
-                if (docSnap.exists) {
-                    await userRef.update({
-                        isAdmin: true,
-                        pillars: {
-                            pillar1: true,
-                            pillar2: true,
-                            pillar3: true,
-                            pillar4: true,
-                            pillar5: true,
-                            pillar6: true,
-                        },
-                        updatedAt: admin.firestore.FieldValue.serverTimestamp()
-                    });
-                }
-                else {
-                    await userRef.set(adminPermissions);
-                }
-                updatedCount++;
-            }
-            catch (err) {
-                console.error(`Failed to update user ${user.uid}:`, err);
-                errorsCount++;
-            }
-        }
-        return {
-            success: true,
-            message: `Processed ${users.length} users. Updated: ${updatedCount}, Errors: ${errorsCount}`,
-        };
-    }
-    catch (error) {
-        console.error('Error syncing users:', error);
-        throw new functions.https.HttpsError('internal', 'Failed to sync users');
-    }
-});
-/**
  * Callable function to manually initialize user permissions
  * Use this as a fallback if the onCreate trigger fails
  */
@@ -342,11 +314,32 @@ exports.initializeUser = functions.https.onCall(async (data, context) => {
     if (!email) {
         throw new functions.https.HttpsError('failed-precondition', 'User must have an email');
     }
-    const userRef = admin.firestore().collection('userPermissions').doc(uid);
+    const userRef = db.collection('userPermissions').doc(uid);
     try {
         const doc = await userRef.get();
         if (doc.exists) {
             return { success: true, message: 'User already initialized' };
+        }
+        // Check for pending permissions by email before creating defaults
+        const pendingQuery = await db.collection('userPermissions')
+            .where('email', '==', email.toLowerCase())
+            .where('isPending', '==', true)
+            .limit(1)
+            .get();
+        if (!pendingQuery.empty) {
+            const pendingDoc = pendingQuery.docs[0];
+            const pendingData = pendingDoc.data();
+            const defaultPermissions = {
+                userId: uid,
+                email,
+                isAdmin: pendingData.isAdmin || false,
+                pillars: pendingData.pillars,
+                createdAt: pendingData.createdAt || admin.firestore.FieldValue.serverTimestamp(),
+                updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+            };
+            await userRef.set(defaultPermissions);
+            await pendingDoc.ref.delete(); // Clean up pending document
+            return { success: true, message: 'User initialized from pending permissions' };
         }
         const defaultPermissions = {
             userId: uid,
