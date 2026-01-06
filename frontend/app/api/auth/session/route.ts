@@ -8,22 +8,19 @@ export async function POST(request: NextRequest) {
     const { idToken } = await request.json();
 
     if (!idToken) {
-      return NextResponse.json(
-        { error: "Missing ID token" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Missing ID token" }, { status: 400 });
     }
 
     // Verify the ID token
     try {
       const decodedToken = await verifyIdToken(idToken);
-      
+
       // Calculate expiration (e.g., 5 days or match token expiry)
-      // Firebase ID tokens last 1 hour, but we can create a session 
+      // Firebase ID tokens last 1 hour, but we can create a session
       // cookie that lasts longer if we were using session cookies.
       // For this implementation, we'll match the standard session duration.
       const expiresIn = 60 * 60 * 24 * 5 * 1000; // 5 days
-      
+
       const cookieStore = await cookies();
       cookieStore.set("firebase-token", idToken, {
         maxAge: expiresIn,
@@ -36,15 +33,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ status: "success", uid: decodedToken.uid });
     } catch (error) {
       console.error("Error verifying token:", error);
-      return NextResponse.json(
-        { error: "Invalid token" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Invalid token" }, { status: 401 });
     }
   } catch (error) {
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
