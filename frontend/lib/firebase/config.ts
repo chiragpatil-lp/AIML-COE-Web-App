@@ -27,7 +27,7 @@ let functions: Functions | undefined;
 if (typeof window !== "undefined" && isConfigValid) {
   app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
   auth = getAuth(app);
-  db = getFirestore(app, "aiml-coe-web-app");
+  db = getFirestore(app, "aiml-coe-web-app"); // Use named database
   functions = getFunctions(app);
 }
 

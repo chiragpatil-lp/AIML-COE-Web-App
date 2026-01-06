@@ -24,7 +24,7 @@ export const ProductTeaserCard = (props: ProductTeaserCardProps) => {
 
   const {
     dailyVolume = "1,430,992,688",
-    dailyVolumeLabel = "AI Solutions Showcase",
+    dailyVolumeLabel = "Interactive Demo Hub",
     headline = "Unified Vision for Scalable AI",
     subheadline = "To drive industrialized AI adoption that rewires business processes for measurable economic value, moving from ad-hoc experimentation to scalable, secure, and strategic outcomes.",
     description = "Trusted by fast-growing teams and enterprises, CoE powers smarter communication across 1,000+ organizations — with enterprise-grade security, multilingual analysis, and instant emotional detection.",
