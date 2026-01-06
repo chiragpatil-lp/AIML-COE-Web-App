@@ -103,12 +103,7 @@ export default function AdminDashboardPage() {
       <div className="min-h-screen flex items-center justify-center bg-white">
         <div className="flex flex-col items-center gap-4">
           <span className="loading loading-spinner loading-lg text-primary"></span>
-          <p
-            className="text-[#404040]"
-            style={{
-              fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
-            }}
-          >
+          <p className="text-[#404040]" style={{}}>
             {loading ? "Verifying admin access..." : "Redirecting..."}
           </p>
         </div>
@@ -124,14 +119,15 @@ export default function AdminDashboardPage() {
         <div className="max-w-7xl mx-auto px-8 py-8">
           {/* Back Button */}
           <button
-            onClick={() => router.push("/dashboard")}
+            onClick={() =>
+              window.history.length > 1
+                ? router.back()
+                : router.push("/dashboard")
+            }
             className="inline-flex items-center gap-2 text-[#146e96] hover:text-[#146e96]/80 transition-colors duration-200 mb-6"
-            style={{
-              fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
-            }}
           >
             <ArrowLeft className="w-5 h-5" />
-            <span className="text-base font-medium">Back to Dashboard</span>
+            <span className="text-base font-medium">Back</span>
           </button>
 
           <div className="flex items-start justify-between">
@@ -141,21 +137,13 @@ export default function AdminDashboardPage() {
                 <h1
                   className="text-[40px] font-normal leading-tight tracking-tight text-[#111A4A]"
                   style={{
-                    fontFamily:
-                      "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
                     fontWeight: "400",
                   }}
                 >
                   Admin Dashboard
                 </h1>
               </div>
-              <p
-                className="text-lg leading-6 text-[#111A4A] opacity-60"
-                style={{
-                  fontFamily:
-                    "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
-                }}
-              >
+              <p className="text-lg leading-6 text-[#111A4A] opacity-60">
                 Manage user permissions and access control
               </p>
             </div>
@@ -171,20 +159,10 @@ export default function AdminDashboardPage() {
             <div className="flex items-center justify-between mb-2">
               <Users className="w-8 h-8 opacity-80" />
             </div>
-            <p
-              className="text-3xl font-bold mb-1"
-              style={{
-                fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
-              }}
-            >
+            <p className="text-3xl font-bold mb-1" style={{}}>
               {summary.totalUsers || 0}
             </p>
-            <p
-              className="text-sm opacity-80"
-              style={{
-                fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
-              }}
-            >
+            <p className="text-sm opacity-80" style={{}}>
               Total Users
             </p>
           </div>
@@ -193,20 +171,10 @@ export default function AdminDashboardPage() {
             <div className="flex items-center justify-between mb-2">
               <Shield className="w-8 h-8 text-[#146e96]" />
             </div>
-            <p
-              className="text-3xl font-bold text-[#111A4A] mb-1"
-              style={{
-                fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
-              }}
-            >
+            <p className="text-3xl font-bold text-[#111A4A] mb-1" style={{}}>
               {summary.admins || 0}
             </p>
-            <p
-              className="text-sm text-[#111A4A] opacity-60"
-              style={{
-                fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
-              }}
-            >
+            <p className="text-sm text-[#111A4A] opacity-60" style={{}}>
               Administrators
             </p>
           </div>
@@ -219,13 +187,7 @@ export default function AdminDashboardPage() {
               key={index}
               className="bg-white border-2 border-gray-200 rounded-2xl p-6"
             >
-              <p
-                className="text-sm text-[#111A4A] opacity-60 mb-3"
-                style={{
-                  fontFamily:
-                    "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
-                }}
-              >
+              <p className="text-sm text-[#111A4A] opacity-60 mb-3">
                 Pillar Access
               </p>
               <div className="space-y-1">

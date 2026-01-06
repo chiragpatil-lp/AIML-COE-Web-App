@@ -18,38 +18,47 @@ function getFirebaseAdminApp(): App {
     return getApps()[0];
   }
 
-  // Check if running in Cloud Run (Application Default Credentials available)
-  const isCloudRun = process.env.K_SERVICE !== undefined;
+  const projectId = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
+  const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
+  const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n");
+  const storageBucket = process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET;
 
-  if (isCloudRun) {
-    // Cloud Run: Use Application Default Credentials
+  if (clientEmail && privateKey) {
     return initializeApp({
-      projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+      credential: cert({
+        projectId,
+        clientEmail,
+        privateKey,
+      }),
+      projectId,
+      storageBucket,
     });
   }
 
-  // Local development: Use service account key from environment variable
+  // Fallback to legacy service account key from environment variable
   const serviceAccount = process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
-
-  if (!serviceAccount) {
-    throw new Error(
-      "FIREBASE_SERVICE_ACCOUNT_KEY environment variable is not set. " +
-        "Please set it in your .env.local file for local development.",
-    );
+  if (serviceAccount) {
+    let serviceAccountJson;
+    try {
+      serviceAccountJson = JSON.parse(serviceAccount);
+    } catch (error) {
+      throw new Error(
+        "Failed to parse FIREBASE_SERVICE_ACCOUNT_KEY. Ensure it is valid JSON.",
+      );
+    }
+    return initializeApp({
+      credential: cert(serviceAccountJson),
+      projectId,
+      storageBucket,
+    });
   }
 
-  let serviceAccountJson;
-  try {
-    serviceAccountJson = JSON.parse(serviceAccount);
-  } catch (error) {
-    throw new Error(
-      "Failed to parse FIREBASE_SERVICE_ACCOUNT_KEY. Ensure it is valid JSON.",
-    );
-  }
-
+  // Fallback to Application Default Credentials (ADC) or existing config
+  // This works for Cloud Run and local dev if "gcloud auth application-default login" is used
   return initializeApp({
-    credential: cert(serviceAccountJson),
-    projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+    projectId,
+    storageBucket,
+    // Note: Admin SDK usually infers credentials from the environment if not provided
   });
 }
 
