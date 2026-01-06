@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   description: "Onix AI/ML CoE",
   generator: "v0.app",
   icons: {
-    icon: "/icon.svg",
+    icon: "https://storage.googleapis.com/aiml-coe-web-app/icon.svg",
   },
 };
 

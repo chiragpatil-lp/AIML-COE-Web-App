@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import { getAssetUrl } from "@/lib/image-loader";
 type IntegrationApp = {
   name: string;
   logo: string;
@@ -18,93 +19,93 @@ type IntegrationCarouselProps = {
 const defaultTopRowApps: IntegrationApp[] = [
   {
     name: "Vertex AI",
-    logo: "/Product-Icons/Unique Icons/Vertex AI/SVG/VertexAI-512-color.svg",
+    logo: getAssetUrl("/Product-Icons/Unique Icons/Vertex AI/SVG/VertexAI-512-color.svg"),
   },
   {
     name: "GKE",
-    logo: "/Product-Icons/Unique Icons/GKE/SVG/GKE-512-color.svg",
+    logo: getAssetUrl("/Product-Icons/Unique Icons/GKE/SVG/GKE-512-color.svg"),
   },
   {
     name: "Cloud Run",
-    logo: "/Product-Icons/Unique Icons/Cloud Run/SVG/CloudRun-512-color-rgb.svg",
+    logo: getAssetUrl("/Product-Icons/Unique Icons/Cloud Run/SVG/CloudRun-512-color-rgb.svg"),
   },
   {
     name: "Compute Engine",
-    logo: "/Product-Icons/Unique Icons/Compute Engine/SVG/ComputeEngine-512-color-rgb.svg",
+    logo: getAssetUrl("/Product-Icons/Unique Icons/Compute Engine/SVG/ComputeEngine-512-color-rgb.svg"),
   },
   {
     name: "BigQuery",
-    logo: "/Product-Icons/Unique Icons/BigQuery/SVG/BigQuery-512-color.svg",
+    logo: getAssetUrl("/Product-Icons/Unique Icons/BigQuery/SVG/BigQuery-512-color.svg"),
   },
   {
     name: "AI Hypercomputer",
-    logo: "/Product-Icons/Unique Icons/AI Hypercomputer/SVG/AIHypercomputer-512-color.svg",
+    logo: getAssetUrl("/Product-Icons/Unique Icons/AI Hypercomputer/SVG/AIHypercomputer-512-color.svg"),
   },
   {
     name: "Cloud Storage",
-    logo: "/Product-Icons/Unique Icons/Cloud Storage/SVG/Cloud_Storage-512-color.svg",
+    logo: getAssetUrl("/Product-Icons/Unique Icons/Cloud Storage/SVG/Cloud_Storage-512-color.svg"),
   },
   {
     name: "Vertex AI",
-    logo: "/Product-Icons/Unique Icons/Vertex AI/SVG/VertexAI-512-color.svg",
+    logo: getAssetUrl("/Product-Icons/Unique Icons/Vertex AI/SVG/VertexAI-512-color.svg"),
   },
   {
     name: "GKE",
-    logo: "/Product-Icons/Unique Icons/GKE/SVG/GKE-512-color.svg",
+    logo: getAssetUrl("/Product-Icons/Unique Icons/GKE/SVG/GKE-512-color.svg"),
   },
   {
     name: "Cloud Run",
-    logo: "/Product-Icons/Unique Icons/Cloud Run/SVG/CloudRun-512-color-rgb.svg",
+    logo: getAssetUrl("/Product-Icons/Unique Icons/Cloud Run/SVG/CloudRun-512-color-rgb.svg"),
   },
   {
     name: "Compute Engine",
-    logo: "/Product-Icons/Unique Icons/Compute Engine/SVG/ComputeEngine-512-color-rgb.svg",
+    logo: getAssetUrl("/Product-Icons/Unique Icons/Compute Engine/SVG/ComputeEngine-512-color-rgb.svg"),
   },
   {
     name: "BigQuery",
-    logo: "/Product-Icons/Unique Icons/BigQuery/SVG/BigQuery-512-color.svg",
+    logo: getAssetUrl("/Product-Icons/Unique Icons/BigQuery/SVG/BigQuery-512-color.svg"),
   },
 ];
 const defaultBottomRowApps: IntegrationApp[] = [
   {
     name: "Anthos",
-    logo: "/Product-Icons/Unique Icons/Anthos/SVG/Anthos-512-color.svg",
+    logo: getAssetUrl("/Product-Icons/Unique Icons/Anthos/SVG/Anthos-512-color.svg"),
   },
   {
     name: "Cloud SQL",
-    logo: "/Product-Icons/Unique Icons/Cloud SQL/SVG/CloudSQL-512-color.svg",
+    logo: getAssetUrl("/Product-Icons/Unique Icons/Cloud SQL/SVG/CloudSQL-512-color.svg"),
   },
   {
     name: "AlloyDB",
-    logo: "/Product-Icons/Unique Icons/AlloyDB/SVG/AlloyDB-512-color.svg",
+    logo: getAssetUrl("/Product-Icons/Unique Icons/AlloyDB/SVG/AlloyDB-512-color.svg"),
   },
   {
     name: "Looker",
-    logo: "/Product-Icons/Unique Icons/Looker/SVG/Looker-512-color.svg",
+    logo: getAssetUrl("/Product-Icons/Unique Icons/Looker/SVG/Looker-512-color.svg"),
   },
   {
     name: "Apigee",
-    logo: "/Product-Icons/Unique Icons/Apigee/SVG/Apigee-512-color-rgb.svg",
+    logo: getAssetUrl("/Product-Icons/Unique Icons/Apigee/SVG/Apigee-512-color-rgb.svg"),
   },
   {
     name: "Cloud Spanner",
-    logo: "/Product-Icons/Unique Icons/Cloud Spanner/SVG/CloudSpanner-512-color.svg",
+    logo: getAssetUrl("/Product-Icons/Unique Icons/Cloud Spanner/SVG/CloudSpanner-512-color.svg"),
   },
   {
     name: "Anthos",
-    logo: "/Product-Icons/Unique Icons/Anthos/SVG/Anthos-512-color.svg",
+    logo: getAssetUrl("/Product-Icons/Unique Icons/Anthos/SVG/Anthos-512-color.svg"),
   },
   {
     name: "Cloud SQL",
-    logo: "/Product-Icons/Unique Icons/Cloud SQL/SVG/CloudSQL-512-color.svg",
+    logo: getAssetUrl("/Product-Icons/Unique Icons/Cloud SQL/SVG/CloudSQL-512-color.svg"),
   },
   {
     name: "AlloyDB",
-    logo: "/Product-Icons/Unique Icons/AlloyDB/SVG/AlloyDB-512-color.svg",
+    logo: getAssetUrl("/Product-Icons/Unique Icons/AlloyDB/SVG/AlloyDB-512-color.svg"),
   },
   {
     name: "OpenAI",
-    logo: "/OpenAI-black-monoblossom.png",
+    logo: getAssetUrl("/OpenAI-black-monoblossom.png"),
   },
   {
     name: "Gemini",
@@ -234,7 +235,7 @@ export const IntegrationCarousel = ({
               }}
             >
               <Image
-                src={app.logo || "/placeholder.svg"}
+                src={app.logo || getAssetUrl("/placeholder.svg")}
                 alt={app.name}
                 width={36}
                 height={36}
@@ -279,7 +280,7 @@ export const IntegrationCarousel = ({
               }}
             >
               <Image
-                src={app.logo || "/placeholder.svg"}
+                src={app.logo || getAssetUrl("/placeholder.svg")}
                 alt={app.name}
                 width={36}
                 height={36}

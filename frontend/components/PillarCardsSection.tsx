@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import type { PillarInfo } from "@/lib/types/auth.types";
 import { ArrowRight } from "lucide-react";
+import { getAssetUrl } from "@/lib/image-loader";
 
 const PILLARS: PillarInfo[] = [
   {
@@ -16,7 +17,7 @@ const PILLARS: PillarInfo[] = [
     url: process.env.NEXT_PUBLIC_PILLAR_1_URL || "#",
     accentColor: "#f2545b",
     enabled: true,
-    image: "/pillars-landing/strategy-value.jpg",
+    image: getAssetUrl("/pillars-landing/strategy-value.jpg"),
   },
   {
     id: "innovation",
@@ -26,7 +27,7 @@ const PILLARS: PillarInfo[] = [
     url: process.env.NEXT_PUBLIC_PILLAR_2_URL || "#",
     accentColor: "#2c3e50",
     enabled: true,
-    image: "/pillars-landing/innovation-ip.jpg",
+    image: getAssetUrl("/pillars-landing/innovation-ip.jpg"),
   },
   {
     id: "platforms",
@@ -36,7 +37,7 @@ const PILLARS: PillarInfo[] = [
     url: process.env.NEXT_PUBLIC_PILLAR_3_URL || "#",
     accentColor: "#f2545b",
     enabled: true,
-    image: "/pillars-landing/platform-engieering.jpg",
+    image: getAssetUrl("/pillars-landing/platform-engieering.jpg"),
   },
   {
     id: "people",
@@ -46,7 +47,7 @@ const PILLARS: PillarInfo[] = [
     url: process.env.NEXT_PUBLIC_PILLAR_4_URL || "#",
     accentColor: "#2c3e50",
     enabled: true,
-    image: "/pillars-landing/people.jpg",
+    image: getAssetUrl("/pillars-landing/people.jpg"),
   },
   {
     id: "governance",
@@ -56,7 +57,7 @@ const PILLARS: PillarInfo[] = [
     url: process.env.NEXT_PUBLIC_PILLAR_5_URL || "#",
     accentColor: "#f2545b",
     enabled: true,
-    image: "/pillars-landing/operational-excellence.jpg",
+    image: getAssetUrl("/pillars-landing/operational-excellence.jpg"),
   },
   {
     id: "communication",
@@ -66,7 +67,7 @@ const PILLARS: PillarInfo[] = [
     url: process.env.NEXT_PUBLIC_PILLAR_6_URL || "#",
     accentColor: "#2c3e50",
     enabled: true,
-    image: "/pillars-landing/communication-intelligence.jpg",
+    image: getAssetUrl("/pillars-landing/communication-intelligence.jpg"),
   },
 ];
 

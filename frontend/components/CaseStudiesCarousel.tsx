@@ -4,6 +4,7 @@ import type React from "react";
 import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
+import { getAssetUrl } from "@/lib/image-loader";
 type CaseStudy = {
   id: string;
   company: string;
@@ -43,7 +44,7 @@ const caseStudies: CaseStudy[] = [
       "Clear visibility into AI investments enables data-driven decision making and demonstrates tangible business value.",
     attribution: "Strategic Pillar 1",
     accentColor: "#f2545b",
-    image: "/pillars-landing/strategy-value.jpg",
+    image: getAssetUrl("/pillars-landing/strategy-value.jpg"),
     cards: [
       {
         type: "notion",
@@ -81,7 +82,7 @@ const caseStudies: CaseStudy[] = [
       "Building a robust IP portfolio of AI assets accelerates innovation and reduces time-to-value across projects.",
     attribution: "Strategic Pillar 2",
     accentColor: "#2c3e50",
-    image: "/pillars-landing/innovation-ip.jpg",
+    image: getAssetUrl("/pillars-landing/innovation-ip.jpg"),
     cards: [
       {
         type: "stripe",
@@ -119,7 +120,7 @@ const caseStudies: CaseStudy[] = [
       "Standardized platforms and engineering practices ensure quality, reliability, and scalability of AI solutions.",
     attribution: "Strategic Pillar 3",
     accentColor: "#f2545b",
-    image: "/pillars-landing/platform-engieering.jpg",
+    image: getAssetUrl("/pillars-landing/platform-engieering.jpg"),
     cards: [
       {
         type: "meeting",
@@ -161,7 +162,7 @@ const caseStudies: CaseStudy[] = [
       "Investing in people and capability development ensures long-term AI success and organizational transformation.",
     attribution: "Strategic Pillar 4",
     accentColor: "#2c3e50",
-    image: "/pillars-landing/people.jpg",
+    image: getAssetUrl("/pillars-landing/people.jpg"),
     cards: [
       {
         type: "figma",
@@ -203,7 +204,7 @@ const caseStudies: CaseStudy[] = [
       "Operational excellence through standardized processes and continuous improvement drives consistent AI delivery.",
     attribution: "Strategic Pillar 5",
     accentColor: "#f2545b",
-    image: "/pillars-landing/operational-excellence.jpg",
+    image: getAssetUrl("/pillars-landing/operational-excellence.jpg"),
     cards: [
       {
         type: "notion",
@@ -242,7 +243,7 @@ const caseStudies: CaseStudy[] = [
       "Strategic communication and market intelligence keep the COE aligned with industry trends and showcase our impact.",
     attribution: "Strategic Pillar 6",
     accentColor: "#2c3e50",
-    image: "/pillars-landing/communication-intelligence.jpg",
+    image: getAssetUrl("/pillars-landing/communication-intelligence.jpg"),
     cards: [
       {
         type: "stripe",
