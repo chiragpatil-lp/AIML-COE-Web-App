@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { verifyIdToken, getUserPermissions } from "@/lib/firebase/admin";
+import {
+  verifyIdToken,
+  verifySessionCookie,
+  getUserPermissions,
+} from "@/lib/firebase/admin";
 import { cookies } from "next/headers";
 import { UserPermissions } from "@/lib/types/auth.types";
 
@@ -43,29 +47,94 @@ export async function GET(
       );
     }
 
-    // Get ID token from Authorization header or cookie
+    // Get ID token from query parameter (preferred), Authorization header, or cookie
+    const tokenFromQuery = request.nextUrl.searchParams.get("token");
     const authHeader = request.headers.get("Authorization");
     const cookieStore = await cookies();
     const tokenFromCookie = cookieStore.get("firebase-token")?.value;
 
-    const token = authHeader?.replace("Bearer ", "") || tokenFromCookie;
-
-    if (!token) {
+    const hasNoAuthenticationToken = !tokenFromQuery && !authHeader && !tokenFromCookie;
+    if (hasNoAuthenticationToken) {
       return NextResponse.json(
         { error: "Unauthorized. Please sign in." },
         { status: 401 },
       );
     }
 
-    // Verify the ID token
+    // Verify the token
+    // Priority: query param > auth header > cookie
+    // Query param contains fresh ID token for pillar redirection
+    // Cookie contains session cookie for same-domain requests
     let decodedToken;
+    let token = "";
+    let isUsingSessionCookie = false;
+
     try {
-      decodedToken = await verifyIdToken(token);
+      if (tokenFromQuery) {
+        // Fresh ID token from client - use this for pillar redirection
+        token = tokenFromQuery;
+        console.log("[PillarAuth] Verifying fresh ID token from query parameter");
+        console.log("[PillarAuth] Token preview:", token.substring(0, 50) + "...");
+        decodedToken = await verifyIdToken(token);
+        console.log("[PillarAuth] ID token verified successfully", {
+          uid: decodedToken.uid,
+          email: decodedToken.email,
+        });
+      } else if (authHeader) {
+        // ID token from Authorization header
+        token = authHeader.replace("Bearer ", "");
+        console.log("[PillarAuth] Verifying ID token from Authorization header");
+        decodedToken = await verifyIdToken(token);
+        console.log("[PillarAuth] ID token verified successfully", {
+          uid: decodedToken.uid,
+          email: decodedToken.email,
+        });
+      } else if (tokenFromCookie) {
+        // Session cookie from main app authentication
+        // This is valid for same-domain requests but cannot be forwarded to pillar apps
+        token = tokenFromCookie;
+        console.log("[PillarAuth] Verifying session cookie from cookie store");
+        console.log("[PillarAuth] Cookie preview:", token.substring(0, 50) + "...");
+        decodedToken = await verifySessionCookie(token);
+        isUsingSessionCookie = true;
+        console.log("[PillarAuth] Session cookie verified successfully", {
+          uid: decodedToken.uid,
+          email: decodedToken.email,
+        });
+        
+        console.warn(
+          "[PillarAuth] Using session cookie instead of fresh ID token. " +
+          "Pillar redirection requires a fresh ID token from the client."
+        );
+      }
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : "Invalid token";
-      console.error("Token verification failed:", errorMsg);
+      const errorStack = error instanceof Error ? error.stack : undefined;
+      console.error("[PillarAuth] Token verification failed:", {
+        error: errorMsg,
+        stack: errorStack,
+        hasTokenFromQuery: !!tokenFromQuery,
+        hasAuthHeader: !!authHeader,
+        hasTokenFromCookie: !!tokenFromCookie,
+        tokenSource: tokenFromQuery ? "query" : authHeader ? "header" : tokenFromCookie ? "cookie" : "none",
+        tokenPreview: token ? token.substring(0, 50) + "..." : "no token",
+      });
       return NextResponse.json(
-        { error: "Invalid authentication token. Please sign in again." },
+        { 
+          error: "Invalid authentication token. Please sign in again.",
+          debug: process.env.NODE_ENV === "development" ? {
+            message: errorMsg,
+            tokenSource: tokenFromQuery ? "query" : authHeader ? "header" : tokenFromCookie ? "cookie" : "none",
+          } : undefined
+        },
+        { status: 401 },
+      );
+    }
+
+    // Ensure we have a valid decoded token before proceeding
+    if (!decodedToken) {
+      return NextResponse.json(
+        { error: "Invalid authentication state." },
         { status: 401 },
       );
     }
@@ -102,10 +171,28 @@ export async function GET(
       );
     }
 
+    // Session cookies cannot be forwarded to external pillar apps
+    // They are only valid for the main app domain
+    // Pillar apps require a fresh Firebase ID token for authentication
+    if (isUsingSessionCookie) {
+      console.error(
+        "[PillarAuth] Cannot redirect to pillar using session cookie. " +
+        "A fresh ID token is required. Please access pillar from the dashboard."
+      );
+      return NextResponse.json(
+        { 
+          error: "Authentication error. Please try accessing the pillar from the dashboard again.",
+          code: "SESSION_COOKIE_NOT_SUPPORTED"
+        },
+        { status: 400 },
+      );
+    }
+
     // Get the pillar URL
     const pillarUrl = PILLAR_URLS[pillarNumber.toString()];
 
-    if (!pillarUrl || pillarUrl === "#") {
+    const pillarUrlIsNotConfigured = !pillarUrl || pillarUrl === "#";
+    if (pillarUrlIsNotConfigured) {
       console.error(`[PillarAuth] Pillar ${id} URL not configured`);
       return NextResponse.json(
         { error: "Pillar URL not configured. Please contact support." },
@@ -163,39 +250,21 @@ export async function GET(
     console.log(`[PillarAuth] Redirecting to Pillar ${id}`, {
       verifyUrl: verifyUrl.toString().split("?")[0], // Log URL without token for security
       userId: decodedToken.uid,
+      email: decodedToken.email,
     });
 
     // Log successful access (for audit purposes)
     console.info("Pillar access granted:", {
       userId: decodedToken.uid,
-      // Email removed for privacy
+      email: decodedToken.email,
       pillarNumber,
       isAdmin,
       timestamp: new Date().toISOString(),
     });
 
-    // Security improvement: Use a self-submitting form to POST the token
-    // instead of passing it in the URL query parameters.
-    // This prevents the token from being logged in proxy/server logs.
-    const html = `
-      <!DOCTYPE html>
-      <html>
-        <body onload="document.forms[0].submit()">
-          <form action="${verifyUrl.toString().split("?")[0]}" method="POST">
-            <input type="hidden" name="token" value="${token}" />
-            <input type="hidden" name="pillar" value="${pillarNumber}" />
-            <noscript>
-              <p>Please click the button below to continue.</p>
-              <button type="submit">Continue to Pillar ${pillarNumber}</button>
-            </noscript>
-          </form>
-        </body>
-      </html>
-    `;
-
-    return new NextResponse(html, {
-      headers: { "Content-Type": "text/html" },
-    });
+    // Redirect to pillar's /auth/verify endpoint with token and pillar number as query parameters
+    // The pillar app expects GET requests with query parameters, not POST
+    return NextResponse.redirect(verifyUrl.toString(), { status: 302 });
   } catch (error) {
     const errorMsg =
       error instanceof Error ? error.message : "Internal server error";

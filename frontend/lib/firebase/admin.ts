@@ -90,6 +90,23 @@ export async function verifyIdToken(token: string) {
 }
 
 /**
+ * Verifies a Firebase Session Cookie
+ * @param sessionCookie - Firebase Session Cookie from client
+ * @returns Decoded token with user information
+ * @throws Error if cookie is invalid or expired
+ */
+export async function verifySessionCookie(sessionCookie: string) {
+  try {
+    const app = getFirebaseAdminApp();
+    const auth = getAuth(app);
+    return await auth.verifySessionCookie(sessionCookie, true /** checkRevoked */);
+  } catch (error) {
+    console.error("Session cookie verification failed:", error);
+    throw new Error("Invalid or expired session cookie");
+  }
+}
+
+/**
  * Gets user permissions from Firestore
  * @param userId - Firebase Auth user ID
  * @returns User permissions or null if not found

@@ -75,16 +75,36 @@ interface PillarGridProps {
 export function PillarGrid(_props: PillarGridProps = {}) {
   const { hasAccessToPillar, permissions } = useAuth();
 
-  const handlePillarClick = (pillar: PillarInfo, hasAccess: boolean) => {
-    if (!hasAccess || pillar.url === "#") {
+  const handlePillarClick = async (pillar: PillarInfo, hasAccess: boolean) => {
+    const userIsNotAuthorized = !hasAccess || pillar.url === "#";
+    if (userIsNotAuthorized) {
       return;
     }
 
-    // Token is sent automatically via cookie set by AuthContext
-    const apiUrl = `/api/pillar/${pillar.number}`;
+    try {
+      // Get fresh ID token from Firebase client SDK
+      // This ensures we have a valid, non-expired token to pass to the pillar app
+      const { auth } = await import("@/lib/firebase/config");
+      const currentUser = auth?.currentUser;
+      
+      if (!currentUser) {
+        console.error("No authenticated user found");
+        return;
+      }
 
-    // Open in new tab with the API endpoint that will verify and redirect
-    window.open(apiUrl, "_blank", "noopener,noreferrer");
+      // Force refresh to get a fresh token with full 1-hour validity
+      const idToken = await currentUser.getIdToken(true);
+
+      // Construct API URL with token as query parameter
+      // The token is passed in the URL so the server-side route can forward it to the pillar app
+      const apiUrl = `/api/pillar/${pillar.number}?token=${encodeURIComponent(idToken)}`;
+
+      // Open in new tab with the API endpoint that will verify and redirect
+      window.open(apiUrl, "_blank", "noopener,noreferrer");
+    } catch (error) {
+      console.error("Failed to get authentication token:", error);
+      // User will need to sign in again if token retrieval fails
+    }
   };
 
   return (
