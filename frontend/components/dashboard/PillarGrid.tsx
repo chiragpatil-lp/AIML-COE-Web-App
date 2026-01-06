@@ -86,7 +86,7 @@ export function PillarGrid(_props: PillarGridProps = {}) {
       // This ensures we have a valid, non-expired token to pass to the pillar app
       const { auth } = await import("@/lib/firebase/config");
       const currentUser = auth?.currentUser;
-      
+
       if (!currentUser) {
         console.error("No authenticated user found");
         return;

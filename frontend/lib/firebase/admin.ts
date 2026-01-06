@@ -99,7 +99,10 @@ export async function verifySessionCookie(sessionCookie: string) {
   try {
     const app = getFirebaseAdminApp();
     const auth = getAuth(app);
-    return await auth.verifySessionCookie(sessionCookie, true /** checkRevoked */);
+    return await auth.verifySessionCookie(
+      sessionCookie,
+      true /** checkRevoked */,
+    );
   } catch (error) {
     console.error("Session cookie verification failed:", error);
     throw new Error("Invalid or expired session cookie");

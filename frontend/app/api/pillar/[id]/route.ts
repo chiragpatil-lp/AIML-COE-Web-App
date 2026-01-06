@@ -53,7 +53,8 @@ export async function GET(
     const cookieStore = await cookies();
     const tokenFromCookie = cookieStore.get("firebase-token")?.value;
 
-    const hasNoAuthenticationToken = !tokenFromQuery && !authHeader && !tokenFromCookie;
+    const hasNoAuthenticationToken =
+      !tokenFromQuery && !authHeader && !tokenFromCookie;
     if (hasNoAuthenticationToken) {
       return NextResponse.json(
         { error: "Unauthorized. Please sign in." },
@@ -73,8 +74,13 @@ export async function GET(
       if (tokenFromQuery) {
         // Fresh ID token from client - use this for pillar redirection
         token = tokenFromQuery;
-        console.log("[PillarAuth] Verifying fresh ID token from query parameter");
-        console.log("[PillarAuth] Token preview:", token.substring(0, 50) + "...");
+        console.log(
+          "[PillarAuth] Verifying fresh ID token from query parameter",
+        );
+        console.log(
+          "[PillarAuth] Token preview:",
+          token.substring(0, 50) + "...",
+        );
         decodedToken = await verifyIdToken(token);
         console.log("[PillarAuth] ID token verified successfully", {
           uid: decodedToken.uid,
@@ -83,7 +89,9 @@ export async function GET(
       } else if (authHeader) {
         // ID token from Authorization header
         token = authHeader.replace("Bearer ", "");
-        console.log("[PillarAuth] Verifying ID token from Authorization header");
+        console.log(
+          "[PillarAuth] Verifying ID token from Authorization header",
+        );
         decodedToken = await verifyIdToken(token);
         console.log("[PillarAuth] ID token verified successfully", {
           uid: decodedToken.uid,
@@ -94,17 +102,20 @@ export async function GET(
         // This is valid for same-domain requests but cannot be forwarded to pillar apps
         token = tokenFromCookie;
         console.log("[PillarAuth] Verifying session cookie from cookie store");
-        console.log("[PillarAuth] Cookie preview:", token.substring(0, 50) + "...");
+        console.log(
+          "[PillarAuth] Cookie preview:",
+          token.substring(0, 50) + "...",
+        );
         decodedToken = await verifySessionCookie(token);
         isUsingSessionCookie = true;
         console.log("[PillarAuth] Session cookie verified successfully", {
           uid: decodedToken.uid,
           email: decodedToken.email,
         });
-        
+
         console.warn(
           "[PillarAuth] Using session cookie instead of fresh ID token. " +
-          "Pillar redirection requires a fresh ID token from the client."
+            "Pillar redirection requires a fresh ID token from the client.",
         );
       }
     } catch (error) {
@@ -116,16 +127,31 @@ export async function GET(
         hasTokenFromQuery: !!tokenFromQuery,
         hasAuthHeader: !!authHeader,
         hasTokenFromCookie: !!tokenFromCookie,
-        tokenSource: tokenFromQuery ? "query" : authHeader ? "header" : tokenFromCookie ? "cookie" : "none",
+        tokenSource: tokenFromQuery
+          ? "query"
+          : authHeader
+            ? "header"
+            : tokenFromCookie
+              ? "cookie"
+              : "none",
         tokenPreview: token ? token.substring(0, 50) + "..." : "no token",
       });
       return NextResponse.json(
-        { 
+        {
           error: "Invalid authentication token. Please sign in again.",
-          debug: process.env.NODE_ENV === "development" ? {
-            message: errorMsg,
-            tokenSource: tokenFromQuery ? "query" : authHeader ? "header" : tokenFromCookie ? "cookie" : "none",
-          } : undefined
+          debug:
+            process.env.NODE_ENV === "development"
+              ? {
+                  message: errorMsg,
+                  tokenSource: tokenFromQuery
+                    ? "query"
+                    : authHeader
+                      ? "header"
+                      : tokenFromCookie
+                        ? "cookie"
+                        : "none",
+                }
+              : undefined,
         },
         { status: 401 },
       );
@@ -177,12 +203,13 @@ export async function GET(
     if (isUsingSessionCookie) {
       console.error(
         "[PillarAuth] Cannot redirect to pillar using session cookie. " +
-        "A fresh ID token is required. Please access pillar from the dashboard."
+          "A fresh ID token is required. Please access pillar from the dashboard.",
       );
       return NextResponse.json(
-        { 
-          error: "Authentication error. Please try accessing the pillar from the dashboard again.",
-          code: "SESSION_COOKIE_NOT_SUPPORTED"
+        {
+          error:
+            "Authentication error. Please try accessing the pillar from the dashboard again.",
+          code: "SESSION_COOKIE_NOT_SUPPORTED",
         },
         { status: 400 },
       );
