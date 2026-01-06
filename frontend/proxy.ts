@@ -2,9 +2,9 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 /**
- * Next.js Middleware for route protection and authentication
+ * Next.js Proxy for route protection and authentication
  *
- * NOTE: Firebase Admin SDK cannot be used in Edge Runtime (where middleware runs).
+ * NOTE: Firebase Admin SDK cannot be used in Edge Runtime (where proxy runs).
  * For production, consider one of these approaches:
  * 1. Use Firebase Auth REST API to verify tokens
  * 2. Implement session cookies with server-side verification
@@ -13,7 +13,7 @@ import type { NextRequest } from "next/server";
  * Current implementation provides basic client-side auth with server-side validation
  * of token presence. Full token verification happens in API routes.
  */
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Helper to determine the correct base URL
@@ -54,7 +54,7 @@ export function middleware(request: NextRequest) {
 }
 
 /**
- * Configure which routes the middleware should run on
+ * Configure which routes the proxy should run on
  */
 export const config = {
   matcher: [
