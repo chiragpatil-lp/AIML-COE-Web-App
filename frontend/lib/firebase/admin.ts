@@ -135,3 +135,18 @@ export async function isUserAdmin(userId: string): Promise<boolean> {
     return false;
   }
 }
+
+/**
+ * Creates a session cookie from a Firebase ID token
+ * @param idToken - The Firebase ID token to exchange for a session cookie
+ * @param expiresIn - The duration in milliseconds for the cookie to be valid
+ * @returns A promise that resolves to the session cookie string
+ */
+export async function createSessionCookie(
+  idToken: string,
+  expiresIn: number,
+): Promise<string> {
+  const app = getFirebaseAdminApp();
+  const auth = getAuth(app);
+  return auth.createSessionCookie(idToken, { expiresIn });
+}

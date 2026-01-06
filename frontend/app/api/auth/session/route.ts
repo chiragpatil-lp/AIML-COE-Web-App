@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { verifyIdToken } from "@/lib/firebase/admin";
+import { verifyIdToken, createSessionCookie } from "@/lib/firebase/admin";
 import { cookies } from "next/headers";
 
 // POST /api/auth/session - Create a session cookie
@@ -21,8 +21,12 @@ export async function POST(request: NextRequest) {
       // For this implementation, we'll match the standard session duration.
       const expiresIn = 60 * 60 * 24 * 5 * 1000; // 5 days
 
+      // Create a session cookie using Firebase Admin SDK
+      // This exchanges the short-lived ID token for a long-lived session cookie
+      const sessionCookie = await createSessionCookie(idToken, expiresIn);
+
       const cookieStore = await cookies();
-      cookieStore.set("firebase-token", idToken, {
+      cookieStore.set("firebase-token", sessionCookie, {
         maxAge: expiresIn,
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
