@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import Link from "next/link";
+import { getAssetUrl } from "@/lib/image-loader";
 type ProductTeaserCardProps = {
   dailyVolume?: string;
   dailyVolumeLabel?: string;
@@ -28,7 +29,7 @@ export const ProductTeaserCard = (props: ProductTeaserCardProps) => {
     subheadline = "To drive industrialized AI adoption that rewires business processes for measurable economic value, moving from ad-hoc experimentation to scalable, secure, and strategic outcomes.",
     description = "Trusted by fast-growing teams and enterprises, CoE powers smarter communication across 1,000+ organizations — with enterprise-grade security, multilingual analysis, and instant emotional detection.",
     videoSrc = "https://cdn.sanity.io/files/1t8iva7t/production/a2cbbed7c998cf93e7ecb6dae75bab42b13139c2.mp4",
-    posterSrc = "/hero.jpg",
+    posterSrc = getAssetUrl("/hero.jpg"),
     primaryButtonText = "Get Started",
     primaryButtonHref = "",
     secondaryButtonText = "View Docs",
@@ -166,7 +167,7 @@ export const ProductTeaserCard = (props: ProductTeaserCardProps) => {
             }}
             className="col-span-12 lg:col-span-6 bg-white rounded-[40px] flex justify-center items-center aspect-square overflow-hidden"
             style={{
-              backgroundImage: "url(/hero.jpg)",
+              backgroundImage: `url(${getAssetUrl("/hero.jpg")})`,
               backgroundSize: "cover",
               backgroundPosition: "center",
               backgroundRepeat: "no-repeat",
@@ -182,7 +183,7 @@ export const ProductTeaserCard = (props: ProductTeaserCardProps) => {
               poster={posterSrc}
               className="block w-full h-full object-cover"
               style={{
-                backgroundImage: "url(/hero.jpg)",
+                backgroundImage: `url(${getAssetUrl("/hero.jpg")})`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
                 backgroundRepeat: "no-repeat",

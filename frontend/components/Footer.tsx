@@ -1,6 +1,7 @@
 "use client";
 import { Github, Twitter, Linkedin, Mail } from "lucide-react";
 import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
 
 type FooterLink = {
   label: string;

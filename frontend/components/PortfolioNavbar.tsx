@@ -6,6 +6,7 @@ import { Menu, X } from "lucide-react";
 import Image from "next/image";
 import { useAuth } from "@/contexts/AuthContext";
 import Link from "next/link";
+import { getAssetUrl } from "@/lib/image-loader";
 const navigationLinks = [
   {
     name: "Features",
@@ -62,7 +63,7 @@ export const PortfolioNavbar = () => {
               className="flex items-center gap-3 text-2xl font-bold text-foreground hover:text-primary transition-colors duration-200"
             >
               <Image
-                src="/icon.svg"
+                src={getAssetUrl("/icon.svg")}
                 alt="CoE Logo"
                 width={20}
                 height={20}
