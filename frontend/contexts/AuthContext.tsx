@@ -9,7 +9,8 @@ import {
   onAuthStateChanged,
 } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
-import { auth, db } from "@/lib/firebase/config";
+import { httpsCallable } from "firebase/functions";
+import { auth, db, functions } from "@/lib/firebase/config";
 import type { AuthContextType, UserPermissions } from "@/lib/types/auth.types";
 import { toast } from "sonner";
 import { isValidUserPermissions, toDate } from "@/lib/firebase/permissions";
@@ -57,7 +58,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
 
     // Retry configuration for waiting on Cloud Function
-    const MAX_RETRIES = 5;
+    const MAX_RETRIES = 3; // Reduced since we have a fallback
     const RETRY_DELAY_MS = 2000; // 2 seconds
 
     for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
@@ -88,14 +89,44 @@ export function AuthProvider({ children }: AuthProviderProps) {
           return; // Success - exit retry loop
         }
 
-        // Permissions don't exist yet - wait for Cloud Function
+        // Permissions don't exist yet
         if (attempt < MAX_RETRIES) {
           console.log(
             `Waiting for user permissions (attempt ${attempt + 1}/${MAX_RETRIES})...`,
           );
           await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS));
         } else {
-          const errorMsg = "User permissions not found after retries.";
+          // Retries exhausted - try fallback
+          if (functions) {
+            console.log(
+              "Retries exhausted. Attempting to initialize user via callable function...",
+            );
+            try {
+              const initializeUser = httpsCallable(functions, "initializeUser");
+              await initializeUser();
+
+              // Try to fetch one last time immediately
+              const retrySnap = await getDoc(permissionsRef);
+              if (retrySnap.exists()) {
+                const data = retrySnap.data();
+                // Validate data
+                if (isValidUserPermissions(data)) {
+                  setPermissions({
+                    ...data,
+                    createdAt: toDate(data.createdAt),
+                    updatedAt: toDate(data.updatedAt),
+                  });
+                  setError(null);
+                  return;
+                }
+              }
+            } catch (fallbackError) {
+              console.error("Fallback initialization failed:", fallbackError);
+            }
+          }
+
+          const errorMsg =
+            "User permissions not found after retries and fallback.";
           console.error(errorMsg, { userId, userEmail });
           setError(errorMsg);
           toast.error(
@@ -125,11 +156,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
   useEffect(() => {
     // Check for auth initialization once mounted on client
     if (!auth) {
-      console.error(
-        "Firebase Auth is not initialized. Please check your environment variables.",
-      );
-      setError("Firebase Auth is not initialized. Please check your environment variables.");
-      setLoading(false);
+      setTimeout(() => {
+        console.error(
+          "Firebase Auth is not initialized. Please check your environment variables.",
+        );
+        setError(
+          "Firebase Auth is not initialized. Please check your environment variables.",
+        );
+        setLoading(false);
+      }, 0);
       return;
     }
 

@@ -79,11 +79,7 @@ export const Footer = ({
   },
   copyrightText,
 }: FooterProps) => {
-  const [currentYear, setCurrentYear] = useState(2025);
-
-  useEffect(() => {
-    setCurrentYear(new Date().getFullYear());
-  }, []);
+  const currentYear = new Date().getFullYear();
 
   const copyright =
     copyrightText || `© ${currentYear} ${companyName}. All rights reserved.`;
@@ -203,6 +199,7 @@ export const Footer = ({
         >
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p
+              suppressHydrationWarning
               className="text-sm text-[#666666]"
               style={{ fontFamily: "Plus Jakarta Sans" }}
             >

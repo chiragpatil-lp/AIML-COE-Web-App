@@ -1,111 +1,137 @@
-import { initializeApp, getApps, cert, type App } from "firebase-admin/app";
-import { getAuth, type Auth } from "firebase-admin/auth";
-import { getFirestore, type Firestore } from "firebase-admin/firestore";
-import { isValidUserPermissions, fromFirestore } from "./permissions";
+/**
+ * Server-side Firebase Admin SDK functions
+ * These functions run on the server and use Firebase Admin SDK for privileged operations
+ */
 
-let adminApp: App | undefined;
-let adminAuth: Auth | undefined;
-let adminDb: Firestore | undefined;
+import { initializeApp, getApps, cert, type App } from "firebase-admin/app";
+import { getAuth } from "firebase-admin/auth";
+import { getFirestore } from "firebase-admin/firestore";
+import type { UserPermissions } from "@/lib/types/auth.types";
 
 /**
  * Initialize Firebase Admin SDK
- * This should only be called server-side
- * @returns Admin app instance
+ * Uses Application Default Credentials in production (Cloud Run)
+ * Uses service account JSON in development
  */
-function initializeAdminApp(): App {
-  if (adminApp) {
-    return adminApp;
+function getFirebaseAdminApp(): App {
+  if (getApps().length > 0) {
+    return getApps()[0];
   }
 
-  const apps = getApps();
-  if (apps.length > 0) {
-    adminApp = apps[0];
-    return adminApp;
-  }
+  // Check if running in Cloud Run (Application Default Credentials available)
+  const isCloudRun = process.env.K_SERVICE !== undefined;
 
-  // Initialize with service account credentials from environment variables
-  // For production, use a service account JSON file
-  const serviceAccount = process.env.FIREBASE_SERVICE_ACCOUNT_KEY
-    ? JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY)
-    : undefined;
-
-  if (serviceAccount) {
-    adminApp = initializeApp({
-      credential: cert(serviceAccount),
-    });
-  } else {
-    // Fallback: Initialize with project ID for local development
-    // This requires setting up Application Default Credentials
-    const projectId = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
-    if (!projectId) {
-      throw new Error(
-        "Firebase Admin: Missing FIREBASE_SERVICE_ACCOUNT_KEY or NEXT_PUBLIC_FIREBASE_PROJECT_ID",
-      );
-    }
-
-    adminApp = initializeApp({
-      projectId,
+  if (isCloudRun) {
+    // Cloud Run: Use Application Default Credentials
+    return initializeApp({
+      projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
     });
   }
 
-  return adminApp;
-}
+  // Local development: Use service account key from environment variable
+  const serviceAccount = process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
 
-/**
- * Get Firebase Admin Auth instance
- * @returns Admin Auth instance
- */
-export function getAdminAuth(): Auth {
-  if (!adminAuth) {
-    const app = initializeAdminApp();
-    adminAuth = getAuth(app);
+  if (!serviceAccount) {
+    throw new Error(
+      "FIREBASE_SERVICE_ACCOUNT_KEY environment variable is not set. " +
+        "Please set it in your .env.local file for local development.",
+    );
   }
-  return adminAuth;
-}
 
-/**
- * Get Firebase Admin Firestore instance
- * @returns Admin Firestore instance
- */
-export function getAdminFirestore(): Firestore {
-  if (!adminDb) {
-    const app = initializeAdminApp();
-    adminDb = getFirestore(app, "aiml-coe-web-app");
+  let serviceAccountJson;
+  try {
+    serviceAccountJson = JSON.parse(serviceAccount);
+  } catch (error) {
+    throw new Error(
+      "Failed to parse FIREBASE_SERVICE_ACCOUNT_KEY. Ensure it is valid JSON.",
+    );
   }
-  return adminDb;
+
+  return initializeApp({
+    credential: cert(serviceAccountJson),
+    projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  });
 }
 
 /**
- * Verify Firebase ID token and return user
+ * Get Firestore instance configured for the aiml-coe-web-app database
+ */
+function getAdminFirestore() {
+  const app = getFirebaseAdminApp();
+  return getFirestore(app, "aiml-coe-web-app");
+}
+
+/**
+ * Verifies a Firebase ID token
  * @param token - Firebase ID token from client
- * @returns Decoded token with user info
+ * @returns Decoded token with user information
+ * @throws Error if token is invalid or expired
  */
 export async function verifyIdToken(token: string) {
-  const auth = getAdminAuth();
-  return await auth.verifyIdToken(token);
+  try {
+    const app = getFirebaseAdminApp();
+    const auth = getAuth(app);
+    return await auth.verifyIdToken(token);
+  } catch (error) {
+    console.error("Token verification failed:", error);
+    throw new Error("Invalid or expired token");
+  }
 }
 
 /**
- * Get user permissions from Firestore using Admin SDK
- * @param userId - Firebase user ID
+ * Gets user permissions from Firestore
+ * @param userId - Firebase Auth user ID
  * @returns User permissions or null if not found
- * @throws Error if permissions data is malformed
  */
-export async function getUserPermissions(userId: string) {
-  const db = getAdminFirestore();
-  const permissionsRef = db.collection("userPermissions").doc(userId);
-  const permissionsSnap = await permissionsRef.get();
+export async function getUserPermissions(
+  userId: string,
+): Promise<UserPermissions | null> {
+  try {
+    const db = getAdminFirestore();
+    const userDoc = await db.collection("userPermissions").doc(userId).get();
 
-  if (!permissionsSnap.exists) {
-    return null;
+    if (!userDoc.exists) {
+      console.warn(`User permissions not found for userId: ${userId}`);
+      return null;
+    }
+
+    const data = userDoc.data();
+    if (!data) {
+      return null;
+    }
+
+    return {
+      userId: userDoc.id,
+      email: data.email || "",
+      isAdmin: data.isAdmin || false,
+      pillars: {
+        pillar1: data.pillars?.pillar1 || false,
+        pillar2: data.pillars?.pillar2 || false,
+        pillar3: data.pillars?.pillar3 || false,
+        pillar4: data.pillars?.pillar4 || false,
+        pillar5: data.pillars?.pillar5 || false,
+        pillar6: data.pillars?.pillar6 || false,
+      },
+      createdAt: data.createdAt?.toDate() || new Date(),
+      updatedAt: data.updatedAt?.toDate() || new Date(),
+    };
+  } catch (error) {
+    console.error("Error fetching user permissions:", error);
+    throw error;
   }
+}
 
-  const data = permissionsSnap.data();
-
-  // Validate permissions structure before returning
-  if (!isValidUserPermissions(data)) {
-    throw new Error(`Invalid permissions structure for user ${userId}`);
+/**
+ * Checks if a user is an admin
+ * @param userId - Firebase Auth user ID
+ * @returns True if user is an admin
+ */
+export async function isUserAdmin(userId: string): Promise<boolean> {
+  try {
+    const permissions = await getUserPermissions(userId);
+    return permissions?.isAdmin === true;
+  } catch (error) {
+    console.error("Error checking admin status:", error);
+    return false;
   }
-
-  return fromFirestore(data);
 }
