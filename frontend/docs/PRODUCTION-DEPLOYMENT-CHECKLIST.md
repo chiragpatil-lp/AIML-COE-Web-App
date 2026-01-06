@@ -35,17 +35,26 @@ Create/verify these secrets:
 - [ ] `FIREBASE_MESSAGING_SENDER_ID` - Get from Firebase Console
 - [ ] `FIREBASE_APP_ID` - Get from Firebase Console
 
-#### Firebase Admin SDK
+#### Firebase Admin SDK (Choose ONE method)
 
+**Method A: Split Keys (Recommended for most cases)**
+- [ ] `FIREBASE_CLIENT_EMAIL` - From Service Account details
+- [ ] `FIREBASE_PRIVATE_KEY` - From Service Account details (PEM format)
+
+**Method B: Legacy JSON (Single variable)**
 - [ ] `FIREBASE_SERVICE_ACCOUNT_KEY` - Full JSON from Firebase Console → Project Settings → Service Accounts → Generate New Private Key
 
-**How to get it:**
+**Method C: Application Default Credentials (Cloud Run)**
+- If running on Cloud Run, the service account attached to the instance is used automatically if no other keys are provided. Ensure it has `firebase.admin` role.
+
+**How to get keys:**
 
 ```bash
 # Go to Firebase Console
 # Project Settings → Service Accounts → Generate New Private Key
-# Copy the entire JSON content
-# Paste as secret value (including the curly braces)
+# Open the JSON file
+# Use "client_email" for FIREBASE_CLIENT_EMAIL
+# Use "private_key" for FIREBASE_PRIVATE_KEY
 ```
 
 #### Google Cloud Configuration

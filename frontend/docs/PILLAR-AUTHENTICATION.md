@@ -668,8 +668,10 @@ Both main app and Pillar apps scale automatically with Cloud Run. Ensure:
 | `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET`      | Yes        | Firebase storage        | `project.appspot.com`      |
 | `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID` | Yes        | Firebase messaging ID   | `123456789`                |
 | `NEXT_PUBLIC_FIREBASE_APP_ID`              | Yes        | Firebase app ID         | `1:123:web:abc`            |
-| `FIREBASE_SERVICE_ACCOUNT_KEY`             | Yes (prod) | Firebase Admin SDK JSON | `{...}`                    |
-| `NEXT_PUBLIC_PILLAR_1_URL`                 | Yes        | Pillar 1 URL            | `https://pillar-1.run.app` |
+| `FIREBASE_SERVICE_ACCOUNT_KEY` | Optional   | Legacy: Full JSON for Admin SDK | `{...}`                    |
+| `FIREBASE_CLIENT_EMAIL`        | Optional   | Admin SDK Client Email          | `admin@project.iam...`     |
+| `FIREBASE_PRIVATE_KEY`         | Optional   | Admin SDK Private Key           | `-----BEGIN PRIVATE...`    |
+| `NEXT_PUBLIC_PILLAR_1_URL`     | Yes        | Pillar 1 URL                    | `https://pillar-1.run.app` |
 | `NEXT_PUBLIC_PILLAR_2_URL`                 | No         | Pillar 2 URL            | `https://pillar-2.run.app` |
 
 ### Pillar App

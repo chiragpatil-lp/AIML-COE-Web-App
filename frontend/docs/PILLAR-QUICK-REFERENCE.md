@@ -307,7 +307,9 @@ Document ID: {user_uid}
 **Main App** (must have `NEXT_PUBLIC_` prefix for client-side):
 
 - `NEXT_PUBLIC_PILLAR_1_URL` - Pillar 1 URL
-- `FIREBASE_SERVICE_ACCOUNT_KEY` - Server-side Firebase Admin SDK
+- `FIREBASE_CLIENT_EMAIL` - (Optional) Server-side Admin SDK Email
+- `FIREBASE_PRIVATE_KEY` - (Optional) Server-side Admin SDK Private Key
+- `FIREBASE_SERVICE_ACCOUNT_KEY` - (Legacy/Optional) Full JSON key
 
 **Pillar App**:
 
