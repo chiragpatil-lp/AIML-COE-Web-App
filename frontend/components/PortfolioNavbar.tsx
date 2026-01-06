@@ -68,6 +68,7 @@ export const PortfolioNavbar = () => {
                 width={20}
                 height={20}
                 className="h-5 w-auto"
+                priority
               />
               <span
                 className="mt-1"
