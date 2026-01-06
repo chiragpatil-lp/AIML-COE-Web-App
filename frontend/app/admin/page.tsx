@@ -124,14 +124,14 @@ export default function AdminDashboardPage() {
         <div className="max-w-7xl mx-auto px-8 py-8">
           {/* Back Button */}
           <button
-            onClick={() => router.push("/dashboard")}
+            onClick={() => router.back()}
             className="inline-flex items-center gap-2 text-[#146e96] hover:text-[#146e96]/80 transition-colors duration-200 mb-6"
             style={{
               fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
             }}
           >
             <ArrowLeft className="w-5 h-5" />
-            <span className="text-base font-medium">Back to Dashboard</span>
+            <span className="text-base font-medium">Back</span>
           </button>
 
           <div className="flex items-start justify-between">
