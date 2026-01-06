@@ -53,14 +53,11 @@ service cloud.firestore {
     
     // User permissions collection
     match /userPermissions/{userId} {
-      // Users can read their own permissions
-      allow read: if request.auth != null && request.auth.uid == userId;
-      
-      // Admins can read all permissions
-      allow read: if isAdmin();
+      // Users can read their own permissions, and admins can read all permissions
+      allow read: if (request.auth != null && request.auth.uid == userId) || isAdmin();
       
       // Admins can create/update/delete any permissions
-      allow write, update, delete, create: if isAdmin();
+      allow write: if isAdmin();
     }
   }
 }
@@ -85,9 +82,8 @@ service cloud.firestore {
     }
     
     match /userPermissions/{userId} {
-      allow read: if request.auth != null && request.auth.uid == userId;
-      allow read: if isAdmin();
-      allow write, update, delete, create: if isAdmin();
+      allow read: if (request.auth != null && request.auth.uid == userId) || isAdmin();
+      allow write: if isAdmin();
     }
   }
 }

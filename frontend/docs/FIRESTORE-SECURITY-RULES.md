@@ -18,17 +18,11 @@ service cloud.firestore {
 
     // User permissions collection
     match /userPermissions/{userId} {
-      // Users can read their own permissions
-      allow read: if request.auth != null && request.auth.uid == userId;
+      // Users can read their own permissions, and admins can read all permissions
+      allow read: if (request.auth != null && request.auth.uid == userId) || isAdmin();
 
-      // Admins can read all permissions (for admin dashboard)
-      allow read: if isAdmin();
-
-      // Admins can write/update any user permissions
-      allow write, update, delete: if isAdmin();
-
-      // Allow creation of new permission documents by admins
-      allow create: if isAdmin();
+      // Admins can write/update/delete any user permissions
+      allow write: if isAdmin();
     }
   }
 }

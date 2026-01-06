@@ -97,11 +97,6 @@ export default function AdminDashboardPage() {
     loadUsers();
   };
 
-  const getPillarAccessCount = (user: UserPermissions): number => {
-    if (user.isAdmin) return 6;
-    return Object.values(user.pillars).filter(Boolean).length;
-  };
-
   // Show loading state while checking auth
   if (loading || !user || !userIsAdmin) {
     return (
@@ -216,81 +211,52 @@ export default function AdminDashboardPage() {
             </p>
           </div>
 
-          <div className="bg-white border-2 border-gray-200 rounded-2xl p-6">
-            <p
-              className="text-sm text-[#111A4A] opacity-60 mb-3"
-              style={{
-                fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
-              }}
+          {[
+            [1, 2, 3],
+            [4, 5, 6],
+          ].map((pillars, index) => (
+            <div
+              key={index}
+              className="bg-white border-2 border-gray-200 rounded-2xl p-6"
             >
-              Pillar Access
-            </p>
-            <div className="space-y-1">
-              {[1, 2, 3].map((num) => (
-                <div
-                  key={num}
-                  className="flex items-center justify-between text-sm"
-                >
-                  <span
-                    className="text-[#111A4A] opacity-60"
-                    style={{
-                      fontFamily:
-                        "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
-                    }}
+              <p
+                className="text-sm text-[#111A4A] opacity-60 mb-3"
+                style={{
+                  fontFamily:
+                    "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
+                }}
+              >
+                Pillar Access
+              </p>
+              <div className="space-y-1">
+                {pillars.map((num) => (
+                  <div
+                    key={num}
+                    className="flex items-center justify-between text-sm"
                   >
-                    P{num}:
-                  </span>
-                  <span
-                    className="font-semibold text-[#111A4A]"
-                    style={{
-                      fontFamily:
-                        "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
-                    }}
-                  >
-                    {summary[`pillar${num}`] || 0}
-                  </span>
-                </div>
-              ))}
+                    <span
+                      className="text-[#111A4A] opacity-60"
+                      style={{
+                        fontFamily:
+                          "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
+                      }}
+                    >
+                      P{num}:
+                    </span>
+                    <span
+                      className="font-semibold text-[#111A4A]"
+                      style={{
+                        fontFamily:
+                          "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
+                      }}
+                    >
+                      {summary[`pillar${num}`] || 0}
+                    </span>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-
-          <div className="bg-white border-2 border-gray-200 rounded-2xl p-6">
-            <p
-              className="text-sm text-[#111A4A] opacity-60 mb-3"
-              style={{
-                fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
-              }}
-            >
-              Pillar Access
-            </p>
-            <div className="space-y-1">
-              {[4, 5, 6].map((num) => (
-                <div
-                  key={num}
-                  className="flex items-center justify-between text-sm"
-                >
-                  <span
-                    className="text-[#111A4A] opacity-60"
-                    style={{
-                      fontFamily:
-                        "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
-                    }}
-                  >
-                    P{num}:
-                  </span>
-                  <span
-                    className="font-semibold text-[#111A4A]"
-                    style={{
-                      fontFamily:
-                        "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
-                    }}
-                  >
-                    {summary[`pillar${num}`] || 0}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
+          ))}
         </div>
 
         {/* User Management Section */}

@@ -138,7 +138,7 @@ export async function createUserPermissions(
     // Note: We can't create a user by email alone in Firebase Auth
     // This function creates a permission document that will be linked
     // when the user first signs in with this email
-    const tempUserId = `pending_${email.replace(/[@.]/g, "_")}`;
+    const tempUserId = `pending_${btoa(email.toLowerCase())}`;
     const userRef = doc(db, "userPermissions", tempUserId);
 
     await setDoc(userRef, {

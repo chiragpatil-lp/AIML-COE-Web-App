@@ -286,8 +286,7 @@ frontend/
 - Firestore rules enforce write restrictions:
   ```javascript
   // Only admins can write to userPermissions
-  allow write: if request.auth != null &&
-                  request.auth.token.admin == true;
+  allow write: if isAdmin();
   ```
 
 ### 3. Data Validation

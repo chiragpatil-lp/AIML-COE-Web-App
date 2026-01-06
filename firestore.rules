@@ -4,23 +4,18 @@ service cloud.firestore {
     
     // Helper function to check if user is admin by reading their permissions document
     function isAdmin() {
-      let permissions = get(/databases/$(database)/documents/userPermissions/$(request.auth.uid)).data;
-      return request.auth != null && permissions != null && permissions.isAdmin == true;
+      return request.auth != null &&
+             exists(/databases/$(database)/documents/userPermissions/$(request.auth.uid)) &&
+             get(/databases/$(database)/documents/userPermissions/$(request.auth.uid)).data.isAdmin == true;
     }
-    
+
     // User permissions collection
     match /userPermissions/{userId} {
-      // Users can read their own permissions
-      allow read: if request.auth != null && request.auth.uid == userId;
-      
-      // Admins can read all permissions (for admin dashboard)
-      allow read: if isAdmin();
-      
-      // Admins can write/update/delete any user permissions
-      allow write, update, delete: if isAdmin();
-      
-      // Allow creation of new permission documents by admins
-      allow create: if isAdmin();
+      // Users can read their own permissions, and admins can read all permissions
+      allow read: if (request.auth != null && request.auth.uid == userId) || isAdmin();
+
+      // Admins can create/update/delete any user permissions
+      allow write: if isAdmin();
     }
   }
 }
