@@ -1,0 +1,11 @@
+{
+  "firestore": {
+    "rules": "firestore.rules",
+    "databases": {
+      "aiml-coe-web-app": {
+        "rules": "firestore.rules"
+      }
+    }
+  }
+}
+
