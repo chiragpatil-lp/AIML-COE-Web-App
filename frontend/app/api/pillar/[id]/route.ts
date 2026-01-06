@@ -168,14 +168,34 @@ export async function GET(
     // Log successful access (for audit purposes)
     console.info("Pillar access granted:", {
       userId: decodedToken.uid,
-      email: decodedToken.email,
+      // Email removed for privacy
       pillarNumber,
       isAdmin,
       timestamp: new Date().toISOString(),
     });
 
-    // Redirect to the pillar's verify endpoint with the token
-    return NextResponse.redirect(verifyUrl.toString(), { status: 302 });
+    // Security improvement: Use a self-submitting form to POST the token
+    // instead of passing it in the URL query parameters.
+    // This prevents the token from being logged in proxy/server logs.
+    const html = `
+      <!DOCTYPE html>
+      <html>
+        <body onload="document.forms[0].submit()">
+          <form action="${verifyUrl.toString().split("?")[0]}" method="POST">
+            <input type="hidden" name="token" value="${token}" />
+            <input type="hidden" name="pillar" value="${pillarNumber}" />
+            <noscript>
+              <p>Please click the button below to continue.</p>
+              <button type="submit">Continue to Pillar ${pillarNumber}</button>
+            </noscript>
+          </form>
+        </body>
+      </html>
+    `;
+
+    return new NextResponse(html, {
+      headers: { "Content-Type": "text/html" },
+    });
   } catch (error) {
     const errorMsg =
       error instanceof Error ? error.message : "Internal server error";

@@ -16,13 +16,9 @@ import type { NextRequest } from "next/server";
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Helper to determine the correct base URL, prioritizing X-Forwarded headers
+  // Helper to determine the correct base URL
   const getBaseUrl = () => {
-    const forwardedHost = request.headers.get("x-forwarded-host");
-    const forwardedProto = request.headers.get("x-forwarded-proto");
-    if (forwardedHost) {
-      return `${forwardedProto || "https"}://${forwardedHost}`;
-    }
+    // Use request.nextUrl.origin which is safer and handled by Next.js
     return request.nextUrl.origin;
   };
 

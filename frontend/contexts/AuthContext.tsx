@@ -127,7 +127,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
           const errorMsg =
             "User permissions not found after retries and fallback.";
-          console.error(errorMsg, { userId, userEmail });
+          // Removed userEmail from logs for privacy
+          console.error(errorMsg, { userId });
           setError(errorMsg);
           toast.error(
             "Failed to load permissions. Please try signing out and in again.",
@@ -185,20 +186,32 @@ export function AuthProvider({ children }: AuthProviderProps) {
           return;
         }
 
-        // Set authentication cookie for server-side verification
+        // Set authentication cookie via server-side API for HttpOnly security
         try {
           const token = await user.getIdToken();
-          document.cookie = `firebase-token=${token}; path=/; max-age=3600; secure; samesite=lax`;
+          await fetch("/api/auth/session", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ idToken: token }),
+          });
         } catch (error) {
-          console.error("Failed to set auth cookie:", error);
+          console.error("Failed to set auth session:", error);
         }
 
         await fetchPermissions(user.uid, user.email);
       } else {
         setPermissions(null);
         setError(null);
-        // Clear cookie on sign out
-        document.cookie = "firebase-token=; path=/; max-age=0";
+        // Clear cookie via server-side API
+        try {
+          await fetch("/api/auth/session", {
+            method: "DELETE",
+          });
+        } catch (error) {
+          console.error("Failed to clear auth session:", error);
+        }
       }
       if (mounted) setLoading(false);
     });
@@ -210,7 +223,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
         if (currentUser) {
           try {
             const token = await currentUser.getIdToken(true); // Force refresh
-            document.cookie = `firebase-token=${token}; path=/; max-age=3600; secure; samesite=lax`;
+            await fetch("/api/auth/session", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ idToken: token }),
+            });
           } catch (error) {
             console.error("Failed to refresh auth token:", error);
           }
@@ -265,8 +284,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
     try {
       await firebaseSignOut(auth);
-      // Clear authentication cookie
-      document.cookie = "firebase-token=; path=/; max-age=0";
+      // Clear authentication cookie via server-side API
+      await fetch("/api/auth/session", {
+        method: "DELETE",
+      });
       toast.success("Signed out successfully");
     } catch (error) {
       const errorMsg =
