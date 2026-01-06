@@ -103,7 +103,7 @@ export default function AdminDashboardPage() {
       <div className="min-h-screen flex items-center justify-center bg-white">
         <div className="flex flex-col items-center gap-4">
           <span className="loading loading-spinner loading-lg text-primary"></span>
-          <p className="text-[#404040]" style={{}}>
+          <p className="text-[#404040]">
             {loading ? "Verifying admin access..." : "Redirecting..."}
           </p>
         </div>
@@ -159,10 +159,10 @@ export default function AdminDashboardPage() {
             <div className="flex items-center justify-between mb-2">
               <Users className="w-8 h-8 opacity-80" />
             </div>
-            <p className="text-3xl font-bold mb-1" style={{}}>
+            <p className="text-3xl font-bold mb-1">
               {summary.totalUsers || 0}
             </p>
-            <p className="text-sm opacity-80" style={{}}>
+            <p className="text-sm opacity-80">
               Total Users
             </p>
           </div>
@@ -171,10 +171,10 @@ export default function AdminDashboardPage() {
             <div className="flex items-center justify-between mb-2">
               <Shield className="w-8 h-8 text-[#146e96]" />
             </div>
-            <p className="text-3xl font-bold text-[#111A4A] mb-1" style={{}}>
+            <p className="text-3xl font-bold text-[#111A4A] mb-1">
               {summary.admins || 0}
             </p>
-            <p className="text-sm text-[#111A4A] opacity-60" style={{}}>
+            <p className="text-sm text-[#111A4A] opacity-60">
               Administrators
             </p>
           </div>

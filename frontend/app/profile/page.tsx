@@ -24,7 +24,7 @@ export default function ProfilePage() {
       <div className="min-h-screen flex items-center justify-center bg-white">
         <div className="flex flex-col items-center gap-4">
           <span className="loading loading-spinner loading-lg text-primary"></span>
-          <p className="text-[#404040]" style={{}}>
+          <p className="text-[#404040]">
             {loading ? "Loading your profile..." : "Redirecting to sign in..."}
           </p>
         </div>
