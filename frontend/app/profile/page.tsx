@@ -24,12 +24,7 @@ export default function ProfilePage() {
       <div className="min-h-screen flex items-center justify-center bg-white">
         <div className="flex flex-col items-center gap-4">
           <span className="loading loading-spinner loading-lg text-primary"></span>
-          <p
-            className="text-[#404040]"
-            style={{
-              fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
-            }}
-          >
+          <p className="text-[#404040]" style={{}}>
             {loading ? "Loading your profile..." : "Redirecting to sign in..."}
           </p>
         </div>
@@ -73,9 +68,7 @@ export default function ProfilePage() {
           <button
             onClick={() => router.back()}
             className="inline-flex items-center gap-2 text-[#146e96] hover:text-[#146e96]/80 transition-colors duration-200 mb-6"
-            style={{
-              fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
-            }}
+            style={{}}
           >
             <ArrowLeft className="w-5 h-5" />
             <span className="text-base font-medium">Back</span>
@@ -139,40 +132,24 @@ export default function ProfilePage() {
                 <h2
                   className="text-[32px] font-normal leading-tight tracking-tight text-[#111A4A] mb-2"
                   style={{
-                    fontFamily:
-                      "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
                     fontWeight: "400",
                   }}
                 >
                   {user.displayName || "User"}
                 </h2>
-                <p
-                  className="text-lg leading-6 text-[#111A4A] opacity-60"
-                  style={{
-                    fontFamily:
-                      "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
-                  }}
-                >
+                <p className="text-lg leading-6 text-[#111A4A] opacity-60">
                   {user.email}
                 </p>
               </div>
 
               {/* Access Level */}
               <div>
-                <label
-                  className="text-sm font-medium text-[#111A4A] opacity-60 uppercase tracking-wider mb-3 block"
-                  style={{
-                    fontFamily:
-                      "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
-                  }}
-                >
+                <label className="text-sm font-medium text-[#111A4A] opacity-60 uppercase tracking-wider mb-3 block">
                   Access Level
                 </label>
                 <span
                   className="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-[#146e96]/10 text-[#146e96] border border-[#146e96]/20"
                   style={{
-                    fontFamily:
-                      "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
                     fontWeight: "500",
                   }}
                 >
@@ -183,13 +160,7 @@ export default function ProfilePage() {
               {/* Pillar Access Details */}
               {!permissions?.isAdmin && (
                 <div>
-                  <label
-                    className="text-sm font-medium text-[#111A4A] opacity-60 uppercase tracking-wider mb-4 block"
-                    style={{
-                      fontFamily:
-                        "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
-                    }}
-                  >
+                  <label className="text-sm font-medium text-[#111A4A] opacity-60 uppercase tracking-wider mb-4 block">
                     Pillar Access
                   </label>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -224,8 +195,6 @@ export default function ProfilePage() {
                                   : "text-[#111A4A] opacity-60"
                               }`}
                               style={{
-                                fontFamily:
-                                  "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
                                 fontWeight: "500",
                               }}
                             >
@@ -249,20 +218,12 @@ export default function ProfilePage() {
               <h3
                 className="text-2xl font-normal leading-tight tracking-tight text-[#111A4A] mb-2"
                 style={{
-                  fontFamily:
-                    "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
                   fontWeight: "400",
                 }}
               >
                 Need More Access?
               </h3>
-              <p
-                className="text-base leading-6 text-[#111A4A] opacity-60"
-                style={{
-                  fontFamily:
-                    "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
-                }}
-              >
+              <p className="text-base leading-6 text-[#111A4A] opacity-60">
                 Request access to additional pillars or features. Your
                 administrator will review your request.
               </p>
@@ -271,7 +232,6 @@ export default function ProfilePage() {
               disabled
               className="border border-[#146e96] text-[#146e96] px-[18px] py-[15px] rounded-full text-base leading-4 font-semibold transition-all duration-200 cursor-not-allowed opacity-50"
               style={{
-                fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
                 fontWeight: "500",
               }}
               title="This feature is coming soon"
@@ -286,7 +246,6 @@ export default function ProfilePage() {
           <h3
             className="text-2xl font-normal leading-tight tracking-tight text-[#111A4A] mb-8"
             style={{
-              fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
               fontWeight: "400",
             }}
           >
@@ -294,13 +253,7 @@ export default function ProfilePage() {
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div>
-              <label
-                className="text-sm font-medium text-[#111A4A] opacity-60 uppercase tracking-wider mb-3 block"
-                style={{
-                  fontFamily:
-                    "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
-                }}
-              >
+              <label className="text-sm font-medium text-[#111A4A] opacity-60 uppercase tracking-wider mb-3 block">
                 User ID
               </label>
               <p
@@ -313,22 +266,10 @@ export default function ProfilePage() {
               </p>
             </div>
             <div>
-              <label
-                className="text-sm font-medium text-[#111A4A] opacity-60 uppercase tracking-wider mb-3 block"
-                style={{
-                  fontFamily:
-                    "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
-                }}
-              >
+              <label className="text-sm font-medium text-[#111A4A] opacity-60 uppercase tracking-wider mb-3 block">
                 Account Created
               </label>
-              <p
-                className="text-[#111A4A] bg-gray-50 border border-gray-100 px-4 py-3 rounded-xl"
-                style={{
-                  fontFamily:
-                    "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
-                }}
-              >
+              <p className="text-[#111A4A] bg-gray-50 border border-gray-100 px-4 py-3 rounded-xl">
                 {permissions?.createdAt
                   ? new Date(permissions.createdAt).toLocaleDateString(
                       "en-US",
