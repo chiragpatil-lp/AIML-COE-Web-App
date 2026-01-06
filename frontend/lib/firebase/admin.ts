@@ -18,14 +18,10 @@ function getFirebaseAdminApp(): App {
     return getApps()[0];
   }
 
-  // Check if running in Cloud Run (Application Default Credentials available)
-  const isCloudRun = process.env.K_SERVICE !== undefined;
-
   const projectId = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
   const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
   const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n");
   const storageBucket = process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET;
-  const apiKey = process.env.NEXT_PUBLIC_FIREBASE_API_KEY;
 
   if (clientEmail && privateKey) {
     return initializeApp({
@@ -34,6 +30,24 @@ function getFirebaseAdminApp(): App {
         clientEmail,
         privateKey,
       }),
+      projectId,
+      storageBucket,
+    });
+  }
+
+  // Fallback to legacy service account key from environment variable
+  const serviceAccount = process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
+  if (serviceAccount) {
+    let serviceAccountJson;
+    try {
+      serviceAccountJson = JSON.parse(serviceAccount);
+    } catch (error) {
+      throw new Error(
+        "Failed to parse FIREBASE_SERVICE_ACCOUNT_KEY. Ensure it is valid JSON.",
+      );
+    }
+    return initializeApp({
+      credential: cert(serviceAccountJson),
       projectId,
       storageBucket,
     });

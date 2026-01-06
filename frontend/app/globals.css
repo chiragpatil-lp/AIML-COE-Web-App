@@ -160,8 +160,9 @@
       var(--font-plus-jakarta-sans), "Plus Jakarta Sans", system-ui, sans-serif;
     font-optical-sizing: auto;
   }
-  a,
-  button {
+  a[href],
+  button,
+  [role="button"] {
     @apply cursor-pointer;
   }
 }
