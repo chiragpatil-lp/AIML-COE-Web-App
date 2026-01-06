@@ -126,7 +126,7 @@ The admin dashboard follows the existing AIML COE design system:
 ### Navigation
 
 - **From Dashboard**: Click "Admin Panel" button (visible only to admins)
-- **Back Navigation**: "Back to Dashboard" button in header
+- **Back Navigation**: "Back" button in header
 - **URL**: `/admin`
 
 ---
