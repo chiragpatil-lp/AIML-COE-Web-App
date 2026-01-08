@@ -164,21 +164,34 @@ git commit -m "docs: update README with deployment instructions"
 ```
 frontend/
 ├── app/                    # Next.js App Router
+│   ├── api/               # API Routes (Backend Logic)
+│   │   ├── admin/         # Admin operations
+│   │   └── auth/          # Auth operations
 │   ├── layout.tsx         # Root layout
-│   ├── page.tsx           # Home page
 │   └── ...                # Other routes
 ├── components/            # React components
 │   ├── ui/               # Reusable UI components
 │   └── ...               # Feature-specific components
-├── public/               # Static assets
-│   ├── images/
-│   └── icons/
-├── styles/               # Global styles
-├── lib/                  # Utility functions and helpers
-├── hooks/                # Custom React hooks
-├── types/                # TypeScript type definitions
+├── lib/                  # Utility functions
+│   ├── firebase/         # Firebase SDK wrappers
+│   └── ...
+├── functions/            # Firebase Cloud Functions (Triggers only)
 └── docs/                 # Documentation
 ```
+
+### Backend Architecture: Hybrid Approach
+
+We use a hybrid approach for backend logic to optimize for performance and cost:
+
+1.  **Next.js API Routes (`frontend/app/api/*`)**
+    *   **Use Case:** User-initiated actions (e.g., clicking "Delete User", "Update Permissions").
+    *   **Reason:** Eliminates "Cold Start" latency, avoids CORS issues, and shares the Next.js environment.
+    *   **Security:** Validates Firebase ID tokens and Admin privileges server-side.
+
+2.  **Cloud Functions (`functions/*`)**
+    *   **Use Case:** Background event triggers (e.g., `onUserCreate`).
+    *   **Reason:** Logic that *must* run automatically in response to Firebase events (like user signup) and cannot be triggered by the client.
+    *   **Current Functions:** Only `onUserCreate` (assigns default permissions) is active. All other callable functions have been deprecated.
 
 ### Key Technologies
 

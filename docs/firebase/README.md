@@ -89,6 +89,8 @@ This document contains:
 - ✅ **Protected Routes**: Dashboard requires authentication
 - ✅ **Self-Registration**: Users can create their own default permissions document
 - ✅ **Security Rules**: Firestore rules prevent unauthorized access
+- ✅ **Pending Permissions**: Admins can pre-authorize users before they sign up (handled by `onUserCreate` trigger)
+- ✅ **User Deletion**: Admins can permanently delete users and their permissions
 
 ### Tech Stack
 

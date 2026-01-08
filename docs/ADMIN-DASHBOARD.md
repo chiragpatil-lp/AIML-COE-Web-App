@@ -52,7 +52,9 @@ A comprehensive table showing:
   - Blue circle with number = Access granted
   - Gray circle with number = Access denied
 - **Last Updated**: Date when permissions were last modified
-- **Actions**: "Edit" button to modify user permissions
+- **Actions**:
+  - "Edit" button to modify user permissions
+  - "Delete" button to permanently remove a user
 
 ### 3. Search and Filter
 
@@ -72,6 +74,15 @@ A modal dialog for editing user permissions with:
   - Color-coded numbered badges (1-6)
   - Toggles automatically disabled when user is an admin
 - **Save/Cancel Actions**: Persistent changes to Firestore
+
+### 5. User Deletion Dialog
+
+A safety-focused dialog for permanently deleting users:
+
+- **Identity Verification**: Shows user email and admin status
+- **Safety Lock**: Requires typing "DELETE" to enable the confirm button
+- **Self-Protection**: "Delete" button is disabled for your own account
+- **Impact Warning**: Clearly lists that Auth account and permissions will be removed
 
 ---
 
@@ -140,13 +151,20 @@ frontend/
 ├── app/
 │   └── admin/
 │       └── page.tsx                 # Main admin dashboard page
+├── app/
+│   └── api/
+│       └── admin/                   # Admin API Routes
+│           ├── delete-user/         # User deletion endpoint
+│           ├── set-admin-claim/     # Admin role endpoint
+│           └── update-permissions/  # Pillar permissions endpoint
 ├── components/
 │   └── admin/
-│       └── EditUserPermissionsDialog.tsx  # Permission editor modal
+│       ├── EditUserPermissionsDialog.tsx  # Permission editor modal
+│       └── DeleteUserDialog.tsx           # User deletion modal
 ├── lib/
 │   └── firebase/
 │       ├── admin.ts                 # Server-side Firebase Admin SDK functions
-│       └── user-management.ts       # Client-side Firestore functions
+│       └── user-management.ts       # Client-side functions & API wrappers
 └── docs/
     └── ADMIN-DASHBOARD.md          # This file
 ```
@@ -163,15 +181,18 @@ frontend/
 - `filteredUsers`: Filtered array based on search query
 - `searchQuery`: Current search input
 - `loadingUsers`: Loading state for data fetch
-- `selectedUser`: Currently selected user for editing
-- `editDialogOpen`: Dialog open/close state
+- `selectedUser`: Currently selected user for editing/deleting
+- `editDialogOpen`: Edit dialog open/close state
+- `deleteDialogOpen`: Delete dialog open/close state
 - `summary`: Pillar access statistics
 
 **Key Functions**:
 
 - `loadUsers()`: Fetches all users and statistics from Firestore
 - `handleEditUser(user)`: Opens edit dialog for selected user
+- `handleDeleteUser(user)`: Opens delete dialog for selected user
 - `handleEditSuccess()`: Reloads user list after successful update
+- `handleDeleteSuccess()`: Reloads user list after successful deletion
 
 #### 2. `/components/admin/EditUserPermissionsDialog.tsx`
 
@@ -193,32 +214,30 @@ frontend/
 **Key Functions**:
 
 - `handlePillarToggle(pillarKey)`: Toggles individual pillar access
-- `handleSave()`: Saves changes to Firestore and triggers success callback
+- `handleSave()`: Calls `/api/admin/update-permissions` or `/api/admin/set-admin-claim`
 
-#### 3. `/lib/firebase/admin.ts` (Server-Side)
+#### 3. `/components/admin/DeleteUserDialog.tsx`
 
-**Purpose**: Firebase Admin SDK functions for server-side operations
+**Purpose**: Modal dialog for confirming user deletion
 
-**Functions**:
+**Props**:
 
-- `getFirebaseAdminApp()`: Initializes Firebase Admin SDK
-  - Uses Application Default Credentials in Cloud Run
-  - Uses service account JSON in development
-- `verifyIdToken(token)`: Verifies Firebase ID tokens
-- `getUserPermissions(userId)`: Fetches user permissions from Firestore
-- `isUserAdmin(userId)`: Checks if user is an admin
+- `user`: UserPermissions object to delete
+- `open`: Dialog visibility state
+- `onOpenChange`: Callback to change dialog state
+- `onSuccess`: Callback after successful deletion
 
-#### 4. `/lib/firebase/user-management.ts` (Client-Side)
+**Key Logic**:
+- Requires typing "DELETE" (case-sensitive) to enable the confirmation button.
+- Calls `/api/admin/delete-user` on confirmation.
 
-**Purpose**: Client-side Firestore functions for admin operations
+#### 4. `/app/api/admin/...` (API Routes)
 
-**Functions**:
+**Purpose**: Secure server-side endpoints for admin actions.
 
-- `getAllUserPermissions()`: Fetches all users from Firestore
-- `updateUserPermissions(userId, updates)`: Updates user permissions
-- `createUserPermissions(email, permissions)`: Creates pre-authorized user
-- `isUserAdmin(userId)`: Client-side admin check
-- `getPillarAccessSummary()`: Calculates access statistics
+- `delete-user/route.ts`: Deletes user from Auth and Firestore. Checks for admin privileges and prevents self-deletion.
+- `update-permissions/route.ts`: Updates pillar access.
+- `set-admin-claim/route.ts`: Promotes/demotes admins.
 
 ---
 
@@ -256,6 +275,17 @@ frontend/
 5. Wait for success confirmation toast
 6. User list automatically refreshes with updated permissions
 
+#### Deleting a User
+
+1. Find the user in the table.
+2. Click the red **Delete** button (trash icon).
+   - *Note: You cannot delete your own account. The button will be disabled.*
+3. In the confirmation dialog:
+   - Review the user's email and details.
+   - Type **DELETE** in the confirmation box (must be uppercase).
+   - Click the **Delete User** button.
+4. The user is permanently removed from Authentication and Firestore.
+
 #### Understanding the Visual Indicators
 
 **Role Badges**:
@@ -277,17 +307,13 @@ frontend/
 
 - Admin dashboard is protected by client-side authentication check
 - Non-admin users are immediately redirected to regular dashboard
-- Firestore security rules prevent unauthorized data access
+- "Delete" button is visually disabled for the current user
 
-### 2. Server-Side Security
+### 2. Server-Side Security (API Routes)
 
-- All sensitive operations use Firebase Admin SDK
-- Token verification happens server-side
-- Firestore rules enforce write restrictions:
-  ```javascript
-  // Only admins can write to userPermissions
-  allow write: if isAdmin();
-  ```
+- All API routes (`/api/admin/...`) verify the caller's ID token.
+- Explicitly checks `isAdmin: true` in Firestore before performing any action.
+- **Self-Deletion Prevention**: The delete endpoint rejects requests where `targetUserId === currentUserId`.
 
 ### 3. Data Validation
 
@@ -297,9 +323,12 @@ frontend/
 
 ### 4. Audit Trail
 
-- `updatedAt` timestamp tracks when permissions were last changed
-- Console logs capture permission modification events
-- Future enhancement: Add audit log collection
+- **Deletions**: All user deletions are logged to the `adminAuditLog` collection in Firestore with:
+  - Performed by (Admin Email/ID)
+  - Target User (Email/ID)
+  - Timestamp
+  - Action Type (`user_deleted`)
+- **Updates**: Currently tracked via `updatedAt` timestamps.
 
 ---
 
