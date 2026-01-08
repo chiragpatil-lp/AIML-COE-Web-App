@@ -1,6 +1,6 @@
 "use strict";
 /**
- * Firebase Cloud Functions for AIML COE Web App
+ * Firebase Cloud Functions for AIML COE Web App (Gen 2)
  *
  * These functions handle server-side operations that require elevated privileges:
  * - User creation with default permissions
@@ -42,18 +42,24 @@ var __importStar = (this && this.__importStar) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.initializeUser = exports.getUserPermissions = exports.updateUserPermissions = exports.setAdminClaim = exports.onUserCreate = void 0;
-const functions = __importStar(require("firebase-functions"));
+const https_1 = require("firebase-functions/v2/https");
+const identity_1 = require("firebase-functions/v2/identity");
 const admin = __importStar(require("firebase-admin"));
 const firestore_1 = require("firebase-admin/firestore");
 // Initialize Firebase Admin SDK
 admin.initializeApp();
-// Initialize Firestore with the specific database ID
-const db = process.env.FIRESTORE_DB_ID ? (0, firestore_1.getFirestore)(process.env.FIRESTORE_DB_ID) : (0, firestore_1.getFirestore)('aiml-coe-web-app');
+// Initialize Firestore with named database
+const db = (0, firestore_1.getFirestore)(admin.app(), 'aiml-coe-web-app');
 /**
  * Triggered when a new user signs up
  * Creates default user permissions in Firestore
  */
-exports.onUserCreate = functions.auth.user().onCreate(async (user) => {
+exports.onUserCreate = (0, identity_1.beforeUserCreated)(async (event) => {
+    const user = event.data;
+    if (!user) {
+        console.error('User data not available');
+        return;
+    }
     const { uid, email } = user;
     if (!email) {
         console.error('User created without email:', uid);
@@ -116,11 +122,16 @@ exports.onUserCreate = functions.auth.user().onCreate(async (user) => {
  * Callable function to set admin custom claim
  * Can only be called by existing admins
  */
-exports.setAdminClaim = functions.https.onCall(async (data, context) => {
+exports.setAdminClaim = (0, https_1.onCall)({
+    cors: true,
+    region: 'us-central1',
+}, async (request) => {
     var _a;
+    const data = request.data;
+    const context = request;
     // Verify caller is authenticated
     if (!context.auth) {
-        throw new functions.https.HttpsError('unauthenticated', 'User must be authenticated');
+        throw new https_1.HttpsError('unauthenticated', 'User must be authenticated');
     }
     // Verify caller is admin
     // Check Firestore for admin status as a fallback or primary source
@@ -134,14 +145,14 @@ exports.setAdminClaim = functions.https.onCall(async (data, context) => {
         }
     }
     if (!hasAdminPrivileges) {
-        throw new functions.https.HttpsError('permission-denied', 'Only admins can set admin claims');
+        throw new https_1.HttpsError('permission-denied', 'Only admins can set admin claims');
     }
     const { userId, isAdmin } = data;
     if (!userId || typeof userId !== 'string') {
-        throw new functions.https.HttpsError('invalid-argument', 'userId must be a string');
+        throw new https_1.HttpsError('invalid-argument', 'userId must be a string');
     }
     if (typeof isAdmin !== 'boolean') {
-        throw new functions.https.HttpsError('invalid-argument', 'isAdmin must be a boolean');
+        throw new https_1.HttpsError('invalid-argument', 'isAdmin must be a boolean');
     }
     try {
         // Set custom claim
@@ -177,18 +188,23 @@ exports.setAdminClaim = functions.https.onCall(async (data, context) => {
     }
     catch (error) {
         console.error('Error setting admin claim:', error);
-        throw new functions.https.HttpsError('internal', 'Failed to set admin claim');
+        throw new https_1.HttpsError('internal', 'Failed to set admin claim');
     }
 });
 /**
  * Callable function to update user pillar permissions
  * Can only be called by admins
  */
-exports.updateUserPermissions = functions.https.onCall(async (data, context) => {
+exports.updateUserPermissions = (0, https_1.onCall)({
+    cors: true,
+    region: 'us-central1',
+}, async (request) => {
     var _a;
+    const data = request.data;
+    const context = request;
     // Verify caller is authenticated
     if (!context.auth) {
-        throw new functions.https.HttpsError('unauthenticated', 'User must be authenticated');
+        throw new https_1.HttpsError('unauthenticated', 'User must be authenticated');
     }
     // Verify caller is admin
     // Check Firestore for admin status as a fallback or primary source
@@ -201,23 +217,23 @@ exports.updateUserPermissions = functions.https.onCall(async (data, context) => 
         }
     }
     if (!hasAdminPrivileges) {
-        throw new functions.https.HttpsError('permission-denied', 'Only admins can update user permissions');
+        throw new https_1.HttpsError('permission-denied', 'Only admins can update user permissions');
     }
     const { userId, pillars } = data;
     if (!userId || typeof userId !== 'string') {
-        throw new functions.https.HttpsError('invalid-argument', 'userId must be a string');
+        throw new https_1.HttpsError('invalid-argument', 'userId must be a string');
     }
     if (!pillars || typeof pillars !== 'object') {
-        throw new functions.https.HttpsError('invalid-argument', 'pillars must be an object');
+        throw new https_1.HttpsError('invalid-argument', 'pillars must be an object');
     }
     // Validate pillars object structure
     const validPillarKeys = ['pillar1', 'pillar2', 'pillar3', 'pillar4', 'pillar5', 'pillar6'];
     for (const key of Object.keys(pillars)) {
         if (!validPillarKeys.includes(key)) {
-            throw new functions.https.HttpsError('invalid-argument', `Invalid pillar key: ${key}`);
+            throw new https_1.HttpsError('invalid-argument', `Invalid pillar key: ${key}`);
         }
         if (typeof pillars[key] !== 'boolean') {
-            throw new functions.https.HttpsError('invalid-argument', `Pillar value must be boolean: ${key}`);
+            throw new https_1.HttpsError('invalid-argument', `Pillar value must be boolean: ${key}`);
         }
     }
     try {
@@ -252,18 +268,23 @@ exports.updateUserPermissions = functions.https.onCall(async (data, context) => 
     }
     catch (error) {
         console.error('Error updating user permissions:', error);
-        throw new functions.https.HttpsError('internal', 'Failed to update user permissions');
+        throw new https_1.HttpsError('internal', 'Failed to update user permissions');
     }
 });
 /**
  * Callable function to get user permissions
  * Users can get their own permissions, admins can get any user's permissions
  */
-exports.getUserPermissions = functions.https.onCall(async (data, context) => {
+exports.getUserPermissions = (0, https_1.onCall)({
+    cors: true,
+    region: 'us-central1',
+}, async (request) => {
     var _a;
+    const data = request.data;
+    const context = request;
     // Verify caller is authenticated
     if (!context.auth) {
-        throw new functions.https.HttpsError('unauthenticated', 'User must be authenticated');
+        throw new https_1.HttpsError('unauthenticated', 'User must be authenticated');
     }
     const { userId } = data;
     const requestedUserId = userId || context.auth.uid;
@@ -281,7 +302,7 @@ exports.getUserPermissions = functions.https.onCall(async (data, context) => {
         }
     }
     if (!isOwnPermissions && !isAdmin) {
-        throw new functions.https.HttpsError('permission-denied', 'Users can only view their own permissions');
+        throw new https_1.HttpsError('permission-denied', 'Users can only view their own permissions');
     }
     try {
         const permissionsDoc = await db
@@ -289,7 +310,7 @@ exports.getUserPermissions = functions.https.onCall(async (data, context) => {
             .doc(requestedUserId)
             .get();
         if (!permissionsDoc.exists) {
-            throw new functions.https.HttpsError('not-found', 'User permissions not found');
+            throw new https_1.HttpsError('not-found', 'User permissions not found');
         }
         return {
             success: true,
@@ -298,21 +319,25 @@ exports.getUserPermissions = functions.https.onCall(async (data, context) => {
     }
     catch (error) {
         console.error('Error getting user permissions:', error);
-        throw new functions.https.HttpsError('internal', 'Failed to get user permissions');
+        throw new https_1.HttpsError('internal', 'Failed to get user permissions');
     }
 });
 /**
  * Callable function to manually initialize user permissions
  * Use this as a fallback if the onCreate trigger fails
  */
-exports.initializeUser = functions.https.onCall(async (data, context) => {
+exports.initializeUser = (0, https_1.onCall)({
+    cors: true,
+    region: 'us-central1',
+}, async (request) => {
+    const context = request;
     // Verify caller is authenticated
     if (!context.auth) {
-        throw new functions.https.HttpsError('unauthenticated', 'User must be authenticated');
+        throw new https_1.HttpsError('unauthenticated', 'User must be authenticated');
     }
     const { uid, email } = context.auth.token;
     if (!email) {
-        throw new functions.https.HttpsError('failed-precondition', 'User must have an email');
+        throw new https_1.HttpsError('failed-precondition', 'User must have an email');
     }
     const userRef = db.collection('userPermissions').doc(uid);
     try {
@@ -361,7 +386,7 @@ exports.initializeUser = functions.https.onCall(async (data, context) => {
     }
     catch (error) {
         console.error('Error initializing user:', error);
-        throw new functions.https.HttpsError('internal', 'Failed to initialize user');
+        throw new https_1.HttpsError('internal', 'Failed to initialize user');
     }
 });
 //# sourceMappingURL=index.js.map
