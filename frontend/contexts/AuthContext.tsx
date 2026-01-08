@@ -9,8 +9,7 @@ import {
   onAuthStateChanged,
 } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
-import { httpsCallable } from "firebase/functions";
-import { auth, db, functions } from "@/lib/firebase/config";
+import { auth, db } from "@/lib/firebase/config";
 import type { AuthContextType, UserPermissions } from "@/lib/types/auth.types";
 import { toast } from "sonner";
 import { isValidUserPermissions, toDate } from "@/lib/firebase/permissions";
@@ -96,33 +95,36 @@ export function AuthProvider({ children }: AuthProviderProps) {
           );
           await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS));
         } else {
-          // Retries exhausted - try fallback
-          if (functions) {
-            console.log(
-              "Retries exhausted. Attempting to initialize user via callable function...",
-            );
-            try {
-              const initializeUser = httpsCallable(functions, "initializeUser");
-              await initializeUser();
+          // Retries exhausted - try fallback via API route
+          console.log(
+            "Retries exhausted. Attempting to initialize user via API...",
+          );
+          try {
+            const response = await fetch("/api/auth/initialize-user", {
+              method: "POST",
+            });
 
-              // Try to fetch one last time immediately
-              const retrySnap = await getDoc(permissionsRef);
-              if (retrySnap.exists()) {
-                const data = retrySnap.data();
-                // Validate data
-                if (isValidUserPermissions(data)) {
-                  setPermissions({
-                    ...data,
-                    createdAt: toDate(data.createdAt),
-                    updatedAt: toDate(data.updatedAt),
-                  });
-                  setError(null);
-                  return;
-                }
-              }
-            } catch (fallbackError) {
-              console.error("Fallback initialization failed:", fallbackError);
+            if (!response.ok) {
+              throw new Error("Failed to initialize user");
             }
+
+            // Try to fetch one last time immediately
+            const retrySnap = await getDoc(permissionsRef);
+            if (retrySnap.exists()) {
+              const data = retrySnap.data();
+              // Validate data
+              if (isValidUserPermissions(data)) {
+                setPermissions({
+                  ...data,
+                  createdAt: toDate(data.createdAt),
+                  updatedAt: toDate(data.updatedAt),
+                });
+                setError(null);
+                return;
+              }
+            }
+          } catch (fallbackError) {
+            console.error("Fallback initialization failed:", fallbackError);
           }
 
           const errorMsg =

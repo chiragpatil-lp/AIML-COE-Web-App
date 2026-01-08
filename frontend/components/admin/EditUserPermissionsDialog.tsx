@@ -157,7 +157,13 @@ export function EditUserPermissionsDialog({
 
           {/* Admin Access */}
           <div className="space-y-3">
-            <div className="flex items-center justify-between p-4 bg-gradient-to-r from-[#146e96]/5 to-transparent border border-[#146e96]/10 rounded-lg">
+            <div
+              className={`flex items-center justify-between p-4 rounded-lg border transition-all duration-200 ${
+                isAdmin
+                  ? "bg-[#146e96]/10 border-[#146e96] shadow-sm"
+                  : "bg-gray-50 border-gray-200 hover:border-gray-300"
+              }`}
+            >
               <div className="flex-1">
                 <label
                   htmlFor="admin-toggle"
@@ -213,15 +219,18 @@ export function EditUserPermissionsDialog({
               {Object.entries(PILLAR_NAMES).map(([key, name]) => {
                 const pillarKey = key as keyof typeof pillars;
                 const pillarNumber = parseInt(key.replace("pillar", ""));
-                const isEnabled = isAdmin || pillars[pillarKey];
+                const isSelected = pillars[pillarKey];
+                const isEnabled = isAdmin || isSelected;
 
                 return (
                   <div
                     key={key}
-                    className={`flex items-center justify-between p-3 rounded-lg border transition-all ${
+                    className={`flex items-center justify-between p-3 rounded-lg border transition-all duration-200 ${
                       isAdmin
                         ? "bg-gray-50 border-gray-200 opacity-60"
-                        : "bg-white border-gray-200 hover:border-[#146e96]/30"
+                        : isSelected
+                          ? "bg-[#146e96]/5 border-[#146e96]/30 shadow-sm"
+                          : "bg-white border-gray-200 hover:border-gray-300"
                     }`}
                   >
                     <div className="flex items-center gap-3 flex-1">

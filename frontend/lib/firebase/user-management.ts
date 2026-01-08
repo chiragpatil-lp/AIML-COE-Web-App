@@ -6,8 +6,7 @@ import {
   getDoc,
   Timestamp,
 } from "firebase/firestore";
-import { httpsCallable } from "firebase/functions";
-import { db, functions } from "@/lib/firebase/config";
+import { db } from "@/lib/firebase/config";
 import type { UserPermissions } from "@/lib/types/auth.types";
 
 /**
@@ -69,7 +68,7 @@ export async function getAllUserPermissions(): Promise<UserPermissions[]> {
 }
 
 /**
- * Updates user permissions via Cloud Functions
+ * Updates user permissions via Next.js API routes
  * Admin-only function
  * @param userId - Firebase Auth user ID
  * @param updates - Partial UserPermissions to update
@@ -79,32 +78,78 @@ export async function updateUserPermissions(
   userId: string,
   updates: Partial<Omit<UserPermissions, "userId" | "createdAt">>,
 ): Promise<void> {
-  if (!functions) {
-    throw new Error("Cloud Functions are not initialized");
-  }
-
   try {
-    // Use Cloud Functions to ensure audit logging and custom claim synchronization
+    // Use Next.js API routes to ensure audit logging and custom claim synchronization
+    // This avoids CORS issues by calling server-side endpoints
     const promises = [];
 
     if (updates.isAdmin !== undefined) {
-      const setAdminClaim = httpsCallable(functions, "setAdminClaim");
-      promises.push(setAdminClaim({ userId, isAdmin: updates.isAdmin }));
+      const response = await fetch("/api/admin/set-admin-claim", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userId, isAdmin: updates.isAdmin }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "Failed to set admin claim");
+      }
+
+      promises.push(response.json());
     }
 
     if (updates.pillars !== undefined) {
-      const updatePermissionsFunc = httpsCallable(
-        functions,
-        "updateUserPermissions",
-      );
-      promises.push(
-        updatePermissionsFunc({ userId, pillars: updates.pillars }),
-      );
+      const response = await fetch("/api/admin/update-permissions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userId, pillars: updates.pillars }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "Failed to update permissions");
+      }
+
+      promises.push(response.json());
     }
 
     await Promise.all(promises);
   } catch (error) {
     console.error("Error updating user permissions:", error);
+    throw error;
+  }
+}
+
+/**
+ * Permanently deletes a user from both Firebase Auth and Firestore
+ * Admin-only function - this is a destructive operation that cannot be undone
+ * @param userId - Firebase Auth user ID
+ * @returns Promise that resolves when user is deleted
+ * @throws Error if deletion fails or if trying to delete own account
+ */
+export async function deleteUser(userId: string): Promise<void> {
+  try {
+    const response = await fetch("/api/admin/delete-user", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ userId }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || "Failed to delete user");
+    }
+
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error("Error deleting user:", error);
     throw error;
   }
 }

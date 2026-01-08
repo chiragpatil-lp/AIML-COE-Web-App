@@ -3,7 +3,7 @@
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { ArrowLeft, Shield, Users, Search, Edit } from "lucide-react";
+import { ArrowLeft, Shield, Users, Search, Edit, Trash2 } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/table";
 import { EditUserPermissionsDialog } from "@/components/admin/EditUserPermissionsDialog";
 import { AddUserDialog } from "@/components/admin/AddUserDialog";
+import { DeleteUserDialog } from "@/components/admin/DeleteUserDialog";
 import { DebugAdminStatus } from "@/components/admin/DebugAdminStatus";
 import {
   getAllUserPermissions,
@@ -34,6 +35,10 @@ export default function AdminDashboardPage() {
   );
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [addUserDialogOpen, setAddUserDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [userToDelete, setUserToDelete] = useState<UserPermissions | null>(
+    null,
+  );
   const [summary, setSummary] = useState<{ [key: string]: number }>({});
 
   const userIsAdmin = permissions?.isAdmin === true;
@@ -93,7 +98,16 @@ export default function AdminDashboardPage() {
     setEditDialogOpen(true);
   };
 
+  const handleDeleteUser = (user: UserPermissions) => {
+    setUserToDelete(user);
+    setDeleteDialogOpen(true);
+  };
+
   const handleEditSuccess = () => {
+    loadUsers();
+  };
+
+  const handleDeleteSuccess = () => {
     loadUsers();
   };
 
@@ -432,17 +446,36 @@ export default function AdminDashboardPage() {
                         </span>
                       </TableCell>
                       <TableCell className="text-right">
-                        <button
-                          onClick={() => handleEditUser(userData)}
-                          className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-[#146e96] hover:bg-[#146e96]/5 rounded-lg transition-colors"
-                          style={{
-                            fontFamily:
-                              "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
-                          }}
-                        >
-                          <Edit className="w-4 h-4" />
-                          Edit
-                        </button>
+                        <div className="flex items-center justify-end gap-2">
+                          <button
+                            onClick={() => handleEditUser(userData)}
+                            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-[#146e96] hover:bg-[#146e96]/5 rounded-lg transition-colors"
+                            style={{
+                              fontFamily:
+                                "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
+                            }}
+                          >
+                            <Edit className="w-4 h-4" />
+                            Edit
+                          </button>
+                          <button
+                            onClick={() => handleDeleteUser(userData)}
+                            disabled={userData.userId === user?.uid}
+                            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent"
+                            style={{
+                              fontFamily:
+                                "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
+                            }}
+                            title={
+                              userData.userId === user?.uid
+                                ? "Cannot delete your own account"
+                                : "Delete user"
+                            }
+                          >
+                            <Trash2 className="w-4 h-4" />
+                            Delete
+                          </button>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -466,6 +499,14 @@ export default function AdminDashboardPage() {
         open={addUserDialogOpen}
         onOpenChange={setAddUserDialogOpen}
         onSuccess={handleEditSuccess}
+      />
+
+      {/* Delete User Dialog */}
+      <DeleteUserDialog
+        user={userToDelete}
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        onSuccess={handleDeleteSuccess}
       />
     </div>
   );

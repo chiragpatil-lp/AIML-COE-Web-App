@@ -1,5 +1,5 @@
 /**
- * Firebase Cloud Functions for AIML COE Web App
+ * Firebase Cloud Functions for AIML COE Web App (Gen 2)
  *
  * These functions handle server-side operations that require elevated privileges:
  * - User creation with default permissions
@@ -7,7 +7,8 @@
  * - Custom claims management
  */
 
-import * as functions from 'firebase-functions';
+import { onCall, HttpsError } from 'firebase-functions/v2/https';
+import { beforeUserCreated } from 'firebase-functions/v2/identity';
 import * as admin from 'firebase-admin';
 import { getFirestore } from 'firebase-admin/firestore';
 
@@ -37,7 +38,14 @@ interface UserPermissions {
  * Triggered when a new user signs up
  * Creates default user permissions in Firestore
  */
-export const onUserCreate = functions.auth.user().onCreate(async (user) => {
+export const onUserCreate = beforeUserCreated(async (event) => {
+  const user = event.data;
+  
+  if (!user) {
+    console.error('User data not available');
+    return;
+  }
+
   const { uid, email } = user;
 
   if (!email) {
@@ -108,11 +116,19 @@ export const onUserCreate = functions.auth.user().onCreate(async (user) => {
  * Callable function to set admin custom claim
  * Can only be called by existing admins
  */
-export const setAdminClaim = functions.https.onCall(async (data, context) => {
-  // Verify caller is authenticated
-  if (!context.auth) {
-    throw new functions.https.HttpsError('unauthenticated', 'User must be authenticated');
-  }
+export const setAdminClaim = onCall(
+  {
+    cors: true,
+    region: 'us-central1',
+  },
+  async (request) => {
+    const data = request.data;
+    const context = request;
+
+    // Verify caller is authenticated
+    if (!context.auth) {
+      throw new HttpsError('unauthenticated', 'User must be authenticated');
+    }
 
   // Verify caller is admin
   // Check Firestore for admin status as a fallback or primary source
@@ -128,7 +144,7 @@ export const setAdminClaim = functions.https.onCall(async (data, context) => {
   }
 
   if (!hasAdminPrivileges) {
-    throw new functions.https.HttpsError(
+    throw new HttpsError(
       'permission-denied',
       'Only admins can set admin claims'
     );
@@ -137,11 +153,11 @@ export const setAdminClaim = functions.https.onCall(async (data, context) => {
   const { userId, isAdmin } = data;
 
   if (!userId || typeof userId !== 'string') {
-    throw new functions.https.HttpsError('invalid-argument', 'userId must be a string');
+    throw new HttpsError('invalid-argument', 'userId must be a string');
   }
 
   if (typeof isAdmin !== 'boolean') {
-    throw new functions.https.HttpsError('invalid-argument', 'isAdmin must be a boolean');
+    throw new HttpsError('invalid-argument', 'isAdmin must be a boolean');
   }
 
   try {
@@ -181,7 +197,7 @@ export const setAdminClaim = functions.https.onCall(async (data, context) => {
     };
   } catch (error) {
     console.error('Error setting admin claim:', error);
-    throw new functions.https.HttpsError('internal', 'Failed to set admin claim');
+    throw new HttpsError('internal', 'Failed to set admin claim');
   }
 });
 
@@ -189,11 +205,19 @@ export const setAdminClaim = functions.https.onCall(async (data, context) => {
  * Callable function to update user pillar permissions
  * Can only be called by admins
  */
-export const updateUserPermissions = functions.https.onCall(async (data, context) => {
-  // Verify caller is authenticated
-  if (!context.auth) {
-    throw new functions.https.HttpsError('unauthenticated', 'User must be authenticated');
-  }
+export const updateUserPermissions = onCall(
+  {
+    cors: true,
+    region: 'us-central1',
+  },
+  async (request) => {
+    const data = request.data;
+    const context = request;
+
+    // Verify caller is authenticated
+    if (!context.auth) {
+      throw new HttpsError('unauthenticated', 'User must be authenticated');
+    }
 
   // Verify caller is admin
   // Check Firestore for admin status as a fallback or primary source
@@ -208,7 +232,7 @@ export const updateUserPermissions = functions.https.onCall(async (data, context
   }
 
   if (!hasAdminPrivileges) {
-    throw new functions.https.HttpsError(
+    throw new HttpsError(
       'permission-denied',
       'Only admins can update user permissions'
     );
@@ -217,21 +241,21 @@ export const updateUserPermissions = functions.https.onCall(async (data, context
   const { userId, pillars } = data;
 
   if (!userId || typeof userId !== 'string') {
-    throw new functions.https.HttpsError('invalid-argument', 'userId must be a string');
+    throw new HttpsError('invalid-argument', 'userId must be a string');
   }
 
   if (!pillars || typeof pillars !== 'object') {
-    throw new functions.https.HttpsError('invalid-argument', 'pillars must be an object');
+    throw new HttpsError('invalid-argument', 'pillars must be an object');
   }
 
   // Validate pillars object structure
   const validPillarKeys = ['pillar1', 'pillar2', 'pillar3', 'pillar4', 'pillar5', 'pillar6'];
   for (const key of Object.keys(pillars)) {
     if (!validPillarKeys.includes(key)) {
-      throw new functions.https.HttpsError('invalid-argument', `Invalid pillar key: ${key}`);
+      throw new HttpsError('invalid-argument', `Invalid pillar key: ${key}`);
     }
     if (typeof pillars[key] !== 'boolean') {
-      throw new functions.https.HttpsError(
+      throw new HttpsError(
         'invalid-argument',
         `Pillar value must be boolean: ${key}`
       );
@@ -272,7 +296,7 @@ export const updateUserPermissions = functions.https.onCall(async (data, context
     };
   } catch (error) {
     console.error('Error updating user permissions:', error);
-    throw new functions.https.HttpsError('internal', 'Failed to update user permissions');
+    throw new HttpsError('internal', 'Failed to update user permissions');
   }
 });
 
@@ -280,11 +304,19 @@ export const updateUserPermissions = functions.https.onCall(async (data, context
  * Callable function to get user permissions
  * Users can get their own permissions, admins can get any user's permissions
  */
-export const getUserPermissions = functions.https.onCall(async (data, context) => {
-  // Verify caller is authenticated
-  if (!context.auth) {
-    throw new functions.https.HttpsError('unauthenticated', 'User must be authenticated');
-  }
+export const getUserPermissions = onCall(
+  {
+    cors: true,
+    region: 'us-central1',
+  },
+  async (request) => {
+    const data = request.data;
+    const context = request;
+
+    // Verify caller is authenticated
+    if (!context.auth) {
+      throw new HttpsError('unauthenticated', 'User must be authenticated');
+    }
 
   const { userId } = data;
   const requestedUserId = userId || context.auth.uid;
@@ -305,7 +337,7 @@ export const getUserPermissions = functions.https.onCall(async (data, context) =
   }
 
   if (!isOwnPermissions && !isAdmin) {
-    throw new functions.https.HttpsError(
+    throw new HttpsError(
       'permission-denied',
       'Users can only view their own permissions'
     );
@@ -318,7 +350,7 @@ export const getUserPermissions = functions.https.onCall(async (data, context) =
       .get();
 
     if (!permissionsDoc.exists) {
-      throw new functions.https.HttpsError('not-found', 'User permissions not found');
+      throw new HttpsError('not-found', 'User permissions not found');
     }
 
     return {
@@ -327,7 +359,7 @@ export const getUserPermissions = functions.https.onCall(async (data, context) =
     };
   } catch (error) {
     console.error('Error getting user permissions:', error);
-    throw new functions.https.HttpsError('internal', 'Failed to get user permissions');
+    throw new HttpsError('internal', 'Failed to get user permissions');
   }
 });
 
@@ -335,17 +367,24 @@ export const getUserPermissions = functions.https.onCall(async (data, context) =
  * Callable function to manually initialize user permissions
  * Use this as a fallback if the onCreate trigger fails
  */
-export const initializeUser = functions.https.onCall(async (data, context) => {
-  // Verify caller is authenticated
-  if (!context.auth) {
-    throw new functions.https.HttpsError('unauthenticated', 'User must be authenticated');
-  }
+export const initializeUser = onCall(
+  {
+    cors: true,
+    region: 'us-central1',
+  },
+  async (request) => {
+    const context = request;
 
-  const { uid, email } = context.auth.token;
+    // Verify caller is authenticated
+    if (!context.auth) {
+      throw new HttpsError('unauthenticated', 'User must be authenticated');
+    }
 
-  if (!email) {
-     throw new functions.https.HttpsError('failed-precondition', 'User must have an email');
-  }
+    const { uid, email } = context.auth.token;
+
+    if (!email) {
+      throw new HttpsError('failed-precondition', 'User must have an email');
+    }
 
   const userRef = db.collection('userPermissions').doc(uid);
 
@@ -403,6 +442,6 @@ export const initializeUser = functions.https.onCall(async (data, context) => {
 
   } catch (error) {
     console.error('Error initializing user:', error);
-    throw new functions.https.HttpsError('internal', 'Failed to initialize user');
+    throw new HttpsError('internal', 'Failed to initialize user');
   }
 });
