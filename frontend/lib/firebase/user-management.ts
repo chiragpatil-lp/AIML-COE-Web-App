@@ -125,6 +125,36 @@ export async function updateUserPermissions(
 }
 
 /**
+ * Permanently deletes a user from both Firebase Auth and Firestore
+ * Admin-only function - this is a destructive operation that cannot be undone
+ * @param userId - Firebase Auth user ID
+ * @returns Promise that resolves when user is deleted
+ * @throws Error if deletion fails or if trying to delete own account
+ */
+export async function deleteUser(userId: string): Promise<void> {
+  try {
+    const response = await fetch("/api/admin/delete-user", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ userId }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || "Failed to delete user");
+    }
+
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    throw error;
+  }
+}
+
+/**
  * Creates a new user permission document
  * Admin-only function - used to manually add users by email
  * @param email - User's email address
