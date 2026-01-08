@@ -46,13 +46,13 @@ function getFirebaseAdminApp() {
 
 /**
  * DELETE /api/admin/delete-user
- * 
+ *
  * Permanently deletes a user from both Firebase Authentication and Firestore.
  * This is a destructive operation that:
  * - Removes user from Firebase Auth (cannot sign in anymore)
  * - Deletes user permissions document from Firestore
  * - Logs the action in the audit trail
- * 
+ *
  * Admin-only endpoint
  */
 export async function DELETE(request: NextRequest) {
@@ -62,19 +62,13 @@ export async function DELETE(request: NextRequest) {
     const sessionCookie = cookieStore.get("firebase-token")?.value;
 
     if (!sessionCookie) {
-      return NextResponse.json(
-        { error: "Not authenticated" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
     }
 
     const decodedClaims = await verifySessionCookie(sessionCookie);
 
     if (!decodedClaims) {
-      return NextResponse.json(
-        { error: "Invalid session" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Invalid session" }, { status: 401 });
     }
 
     // Verify admin privileges
@@ -83,7 +77,7 @@ export async function DELETE(request: NextRequest) {
     if (!callerIsAdmin) {
       return NextResponse.json(
         { error: "Unauthorized - Admin access required" },
-        { status: 403 }
+        { status: 403 },
       );
     }
 
@@ -95,7 +89,7 @@ export async function DELETE(request: NextRequest) {
     if (!userId || typeof userId !== "string") {
       return NextResponse.json(
         { error: "userId is required and must be a string" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -103,7 +97,7 @@ export async function DELETE(request: NextRequest) {
     if (userId === decodedClaims.uid) {
       return NextResponse.json(
         { error: "Cannot delete your own account" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -115,7 +109,7 @@ export async function DELETE(request: NextRequest) {
     // Get user information before deletion (for audit log)
     let userEmail = "unknown";
     let userWasAdmin = false;
-    
+
     try {
       const userRecord = await auth.getUser(userId);
       userEmail = userRecord.email || "unknown";
@@ -128,7 +122,7 @@ export async function DELETE(request: NextRequest) {
         .collection("userPermissions")
         .doc(userId)
         .get();
-      
+
       if (permissionsDoc.exists) {
         const data = permissionsDoc.data();
         userWasAdmin = data?.isAdmin || false;
@@ -146,7 +140,9 @@ export async function DELETE(request: NextRequest) {
       if (error.code !== "auth/user-not-found") {
         throw error;
       }
-      console.log(`User ${userId} not found in Auth, continuing with Firestore deletion`);
+      console.log(
+        `User ${userId} not found in Auth, continuing with Firestore deletion`,
+      );
     }
 
     // Step 2: Delete from Firestore
@@ -191,7 +187,7 @@ export async function DELETE(request: NextRequest) {
         error: "Failed to delete user",
         details: errorMessage,
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

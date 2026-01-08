@@ -48,7 +48,7 @@ export function DeleteUserDialog({
       await deleteUser(user.userId);
 
       toast.success(
-        `User ${user.email} has been permanently deleted from the system`
+        `User ${user.email} has been permanently deleted from the system`,
       );
 
       // Reset form
@@ -74,10 +74,7 @@ export function DeleteUserDialog({
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent
-        className="max-w-md"
-        showCloseButton={!isDeleting}
-      >
+      <DialogContent className="max-w-md" showCloseButton={!isDeleting}>
         <DialogHeader>
           <DialogTitle
             className="text-2xl text-red-600"
@@ -150,7 +147,8 @@ export function DeleteUserDialog({
               <div
                 className="text-sm text-red-900"
                 style={{
-                  fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
+                  fontFamily:
+                    "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
                 }}
               >
                 <p className="font-semibold mb-1">This will:</p>
@@ -169,7 +167,8 @@ export function DeleteUserDialog({
                 htmlFor="confirmation-input"
                 className="text-sm font-medium text-gray-900 block"
                 style={{
-                  fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
+                  fontFamily:
+                    "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
                 }}
               >
                 Type <span className="font-bold text-red-600">DELETE</span> to
@@ -183,7 +182,8 @@ export function DeleteUserDialog({
                 onChange={(e) => setConfirmationText(e.target.value)}
                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
                 style={{
-                  fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
+                  fontFamily:
+                    "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
                 }}
                 disabled={isDeleting}
                 autoComplete="off"

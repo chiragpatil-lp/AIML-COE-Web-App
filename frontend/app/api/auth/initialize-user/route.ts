@@ -56,7 +56,7 @@ interface UserPermissions {
 
 /**
  * POST /api/auth/initialize-user
- * 
+ *
  * Manually initializes user permissions (fallback if onCreate trigger fails)
  * Authenticated users can initialize their own permissions
  */
@@ -69,16 +69,16 @@ export async function POST(request: NextRequest) {
     if (!sessionCookie) {
       return NextResponse.json(
         { error: "Unauthorized - No session cookie" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
     const decodedClaims = await verifySessionCookie(sessionCookie);
-    
+
     if (!decodedClaims) {
       return NextResponse.json(
         { error: "Unauthorized - Invalid session" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -88,7 +88,7 @@ export async function POST(request: NextRequest) {
     if (!userEmail) {
       return NextResponse.json(
         { error: "User must have an email" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -99,7 +99,7 @@ export async function POST(request: NextRequest) {
 
     // Check if already initialized
     const existingDoc = await userRef.get();
-    
+
     if (existingDoc.exists) {
       return NextResponse.json({
         success: true,
@@ -118,7 +118,7 @@ export async function POST(request: NextRequest) {
     if (!pendingQuery.empty) {
       const pendingDoc = pendingQuery.docs[0];
       const pendingData = pendingDoc.data();
-      
+
       const permissionsFromPending: UserPermissions = {
         userId,
         email: userEmail,
@@ -162,13 +162,13 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error("Error initializing user:", error);
-    
+
     return NextResponse.json(
       {
         error: "Failed to initialize user",
         details: error instanceof Error ? error.message : "Unknown error",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

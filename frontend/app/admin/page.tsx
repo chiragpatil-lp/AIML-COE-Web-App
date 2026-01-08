@@ -36,7 +36,9 @@ export default function AdminDashboardPage() {
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [addUserDialogOpen, setAddUserDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [userToDelete, setUserToDelete] = useState<UserPermissions | null>(null);
+  const [userToDelete, setUserToDelete] = useState<UserPermissions | null>(
+    null,
+  );
   const [summary, setSummary] = useState<{ [key: string]: number }>({});
 
   const userIsAdmin = permissions?.isAdmin === true;

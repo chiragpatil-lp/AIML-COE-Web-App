@@ -55,10 +55,7 @@ export async function POST(request: NextRequest) {
     const sessionCookie = cookieStore.get("firebase-token")?.value;
 
     if (!sessionCookie) {
-      return NextResponse.json(
-        { error: "Not authenticated" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
     }
 
     // Verify session and check if caller is admin
@@ -68,7 +65,7 @@ export async function POST(request: NextRequest) {
     if (!callerIsAdmin) {
       return NextResponse.json(
         { error: "Only admins can update user permissions" },
-        { status: 403 }
+        { status: 403 },
       );
     }
 
@@ -79,14 +76,14 @@ export async function POST(request: NextRequest) {
     if (!userId || typeof userId !== "string") {
       return NextResponse.json(
         { error: "userId must be a string" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     if (!pillars || typeof pillars !== "object") {
       return NextResponse.json(
         { error: "pillars must be an object" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -104,13 +101,13 @@ export async function POST(request: NextRequest) {
       if (!validPillarKeys.includes(key)) {
         return NextResponse.json(
           { error: `Invalid pillar key: ${key}` },
-          { status: 400 }
+          { status: 400 },
         );
       }
       if (typeof pillars[key] !== "boolean") {
         return NextResponse.json(
           { error: `Pillar value must be boolean: ${key}` },
-          { status: 400 }
+          { status: 400 },
         );
       }
     }
@@ -152,7 +149,7 @@ export async function POST(request: NextRequest) {
         error: "Failed to update user permissions",
         details: error instanceof Error ? error.message : "Unknown error",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

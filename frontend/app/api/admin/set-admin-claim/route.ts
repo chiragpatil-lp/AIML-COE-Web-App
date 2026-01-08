@@ -56,10 +56,7 @@ export async function POST(request: NextRequest) {
     const sessionCookie = cookieStore.get("firebase-token")?.value;
 
     if (!sessionCookie) {
-      return NextResponse.json(
-        { error: "Not authenticated" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
     }
 
     // Verify session and check if caller is admin
@@ -69,7 +66,7 @@ export async function POST(request: NextRequest) {
     if (!callerIsAdmin) {
       return NextResponse.json(
         { error: "Only admins can set admin claims" },
-        { status: 403 }
+        { status: 403 },
       );
     }
 
@@ -80,14 +77,14 @@ export async function POST(request: NextRequest) {
     if (!userId || typeof userId !== "string") {
       return NextResponse.json(
         { error: "userId must be a string" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     if (typeof isAdmin !== "boolean") {
       return NextResponse.json(
         { error: "isAdmin must be a boolean" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -132,7 +129,7 @@ export async function POST(request: NextRequest) {
         error: "Failed to set admin claim",
         details: error instanceof Error ? error.message : "Unknown error",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
