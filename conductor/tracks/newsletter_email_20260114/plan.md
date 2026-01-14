@@ -5,7 +5,7 @@ This plan outlines the steps to implement a GCP-native automated email notificat
 ## Phase 1: Environment Setup & Secret Management
 Configure the necessary GCP resources and secure credentials.
 
-- [ ] **Task 1: Create SMTP Secret in Google Secret Manager**
+- [~] **Task 1: Create SMTP Secret in Google Secret Manager**
     - [ ] Create a secret named `SMTP_APP_PASSWORD` in the GCP project.
     - [ ] Store the App Password for `chirag.patil@onixnet.com` securely.
     - [ ] Grant the Cloud Functions service account `roles/secretmanager.secretAccessor` permission for this secret.
