@@ -28,7 +28,9 @@ export const SubscribeCard = () => {
 
     // Simulate API call (actual implementation will come later)
     setTimeout(() => {
-      toast.success("Thanks for subscribing! Check your inbox for confirmation.");
+      toast.success(
+        "Thanks for subscribing! Check your inbox for confirmation.",
+      );
       setEmail("");
       setName("");
       setIsSubmitting(false);

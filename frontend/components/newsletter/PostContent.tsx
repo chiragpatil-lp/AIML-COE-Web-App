@@ -249,7 +249,11 @@ export const PostContent = ({ post, relatedPosts = [] }: PostContentProps) => {
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {relatedPosts.map((relatedPost, index) => (
-                <PostCard key={relatedPost.id} post={relatedPost} index={index} />
+                <PostCard
+                  key={relatedPost.id}
+                  post={relatedPost}
+                  index={index}
+                />
               ))}
             </div>
           </div>

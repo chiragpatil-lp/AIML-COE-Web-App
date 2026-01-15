@@ -20,7 +20,7 @@ export default function NewsletterPage() {
 
   const featuredPosts = getFeaturedPosts();
   const filteredPosts = getPostsByCategory(
-    selectedCategory === "All Posts" ? "all" : selectedCategory
+    selectedCategory === "All Posts" ? "all" : selectedCategory,
   );
 
   // Exclude featured posts from the regular posts grid
@@ -47,8 +47,7 @@ export default function NewsletterPage() {
             <h2
               className="text-3xl font-medium text-[#202020] mb-6"
               style={{
-                fontFamily:
-                  "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
+                fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
                 fontWeight: "500",
               }}
             >

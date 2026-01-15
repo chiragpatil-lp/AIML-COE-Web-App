@@ -238,7 +238,7 @@ const caseStudies: CaseStudy[] = [
     ),
     title:
       "Market alignment, AI trends, and amplification of COE achievements.",
-    features: ["Market Insights", "AI Trends", "COE Showcase"],
+    features: ["Market Insights", "Success Stories", "COE Showcase"],
     quote:
       "Strategic communication and market intelligence keep the COE aligned with industry trends and showcase our impact.",
     attribution: "Strategic Pillar 6",
