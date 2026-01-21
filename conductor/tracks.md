@@ -9,5 +9,5 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-## [~] Track: Update newsletter content with Staples.com success story and limit to two articles.
+## [x] Track: Update newsletter content with Staples.com success story and limit to two articles.
 *Link: [./tracks/newsletter-content_20260121/](./tracks/newsletter-content_20260121/)*
