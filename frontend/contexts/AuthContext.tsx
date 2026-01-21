@@ -181,7 +181,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
         // Validate email exists (Google OAuth should always provide it)
         if (!user.email) {
           const errorMsg = "User authenticated but email is missing";
-          console.error(errorMsg, { uid: user.uid });
+          // PII: Commented out to prevent logging user UID
+          // console.error(errorMsg, { uid: user.uid });
+          console.error(errorMsg);
           setError(errorMsg);
           toast.error("Authentication error: Missing email. Please try again.");
           if (mounted) setLoading(false);

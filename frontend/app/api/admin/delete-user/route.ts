@@ -134,21 +134,27 @@ export async function DELETE(request: NextRequest) {
     // Step 1: Delete from Firebase Authentication
     try {
       await auth.deleteUser(userId);
-      console.log(`Deleted user from Firebase Auth: ${userId}`);
+      console.log(`User deleted from Firebase Auth successfully`);
+      // PII: User ID commented out
+      // console.log(`Deleted user from Firebase Auth: ${userId}`);
     } catch (error: any) {
       // If user doesn't exist in Auth, that's okay - continue with Firestore deletion
       if (error.code !== "auth/user-not-found") {
         throw error;
       }
       console.log(
-        `User ${userId} not found in Auth, continuing with Firestore deletion`,
+        `User not found in Auth, continuing with Firestore deletion`,
       );
+      // PII: User ID commented out
+      // console.log(`User ${userId} not found in Auth, continuing with Firestore deletion`);
     }
 
     // Step 2: Delete from Firestore
     try {
       await db.collection("userPermissions").doc(userId).delete();
-      console.log(`Deleted user permissions from Firestore: ${userId}`);
+      console.log(`User permissions deleted from Firestore successfully`);
+      // PII: User ID commented out
+      // console.log(`Deleted user permissions from Firestore: ${userId}`);
     } catch (error) {
       console.error(`Error deleting user permissions for ${userId}:`, error);
       // Continue - we want to log the audit even if deletion partially failed

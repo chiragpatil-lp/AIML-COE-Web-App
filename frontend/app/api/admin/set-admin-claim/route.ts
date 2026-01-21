@@ -112,11 +112,15 @@ export async function POST(request: NextRequest) {
       timestamp: FieldValue.serverTimestamp(),
     });
 
-    console.log("Admin claim set:", {
-      targetUserId: userId,
+    console.log("Admin claim set successfully", {
       isAdmin,
-      performedBy: decodedToken.uid,
     });
+    // PII: User IDs commented out - check audit logs for details
+    // console.log("Admin claim set:", {
+    //   targetUserId: userId,
+    //   isAdmin,
+    //   performedBy: decodedToken.uid,
+    // });
 
     return NextResponse.json({
       success: true,
