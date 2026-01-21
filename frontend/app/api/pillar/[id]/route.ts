@@ -142,7 +142,8 @@ export async function GET(
             : tokenFromCookie
               ? "cookie"
               : "none",
-        tokenPreview: token ? token.substring(0, 50) + "..." : "no token",
+        // PII: Token preview commented out for security
+        // tokenPreview: token ? token.substring(0, 50) + "..." : "no token",
       });
       return NextResponse.json(
         {
@@ -191,7 +192,8 @@ export async function GET(
 
     if (!hasAccess) {
       console.warn("Access denied:", {
-        userId: decodedToken.uid,
+        // PII: userId commented out for privacy
+        // userId: decodedToken.uid,
         pillarNumber,
         isAdmin,
         pillarAccess: permissions.pillars?.[pillarKey],

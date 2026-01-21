@@ -114,7 +114,9 @@ export async function DELETE(request: NextRequest) {
       const userRecord = await auth.getUser(userId);
       userEmail = userRecord.email || "unknown";
     } catch (error) {
-      console.warn(`Could not fetch user record for ${userId}:`, error);
+      console.warn(`Could not fetch user record:`, error);
+      // PII: userId commented out for privacy
+      // console.warn(`Could not fetch user record for ${userId}:`, error);
     }
 
     try {
@@ -128,7 +130,9 @@ export async function DELETE(request: NextRequest) {
         userWasAdmin = data?.isAdmin || false;
       }
     } catch (error) {
-      console.warn(`Could not fetch permissions for ${userId}:`, error);
+      console.warn(`Could not fetch permissions:`, error);
+      // PII: userId commented out for privacy
+      // console.warn(`Could not fetch permissions for ${userId}:`, error);
     }
 
     // Step 1: Delete from Firebase Authentication
@@ -154,7 +158,9 @@ export async function DELETE(request: NextRequest) {
       // PII: User ID commented out
       // console.log(`Deleted user permissions from Firestore: ${userId}`);
     } catch (error) {
-      console.error(`Error deleting user permissions for ${userId}:`, error);
+      console.error(`Error deleting user permissions:`, error);
+      // PII: userId commented out for privacy
+      // console.error(`Error deleting user permissions for ${userId}:`, error);
       // Continue - we want to log the audit even if deletion partially failed
     }
 

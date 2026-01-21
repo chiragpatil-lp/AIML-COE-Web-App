@@ -129,8 +129,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
           const errorMsg =
             "User permissions not found after retries and fallback.";
-          // Removed userEmail from logs for privacy
-          console.error(errorMsg, { userId });
+          // PII: Removed userEmail and userId from logs for privacy
+          console.error(errorMsg);
+          // console.error(errorMsg, { userId });
           setError(errorMsg);
           toast.error(
             "Failed to load permissions. Please try signing out and in again.",
