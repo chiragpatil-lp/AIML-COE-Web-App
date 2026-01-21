@@ -1,5 +1,8 @@
 # Firebase Authentication Implementation Guide
 
+**Last Updated**: January 21, 2026
+**Status**: Reference Document
+
 ## Overview
 
 This guide provides step-by-step instructions for implementing Firebase Authentication with Google OAuth for the AIML COE Web App. The main app will authenticate users and redirect them to 6 separate pillar applications based on their permissions.
@@ -83,7 +86,7 @@ const firebaseConfig = {
 1. In Firebase Console > Authentication > Settings
 2. Under "Authorized domains", add:
    - `localhost` (already added)
-   - `aiml-coe-web-app-36231825761.us-central1.run.app` (your Cloud Run domain)
+   - Your Cloud Run domain (get with: `gcloud run services describe aiml-coe-web-app --region=us-central1 --format='value(status.url)'`)
    - Any custom domains you plan to use
 
 **Step 5: Enable Firestore Database**
@@ -103,25 +106,29 @@ const firebaseConfig = {
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // User permissions document
-    match /userPermissions/{userId} {
-      // Users can read their own permissions
-      allow read: if request.auth != null && request.auth.uid == userId;
-      // Only admins can write (checked via custom claims)
-      allow write: if request.auth != null &&
-                      request.auth.token.admin == true;
+    
+    // Helper function to check if user is admin by reading their permissions document
+    function isAdmin() {
+      return request.auth != null &&
+             exists(/databases/$(database)/documents/userPermissions/$(request.auth.uid)) &&
+             get(/databases/$(database)/documents/userPermissions/$(request.auth.uid)).data.isAdmin == true;
     }
 
-    // Admin can read all permissions
-    match /userPermissions/{document=**} {
-      allow read: if request.auth != null &&
-                     request.auth.token.admin == true;
+    // User permissions collection
+    match /userPermissions/{userId} {
+      // Users can read their own permissions, and admins can read all permissions
+      allow read: if (request.auth != null && request.auth.uid == userId) || isAdmin();
+
+      // Admins can create/update/delete any user permissions
+      allow write: if isAdmin();
     }
   }
 }
 ```
 
 3. Click "Publish"
+
+**Important**: These rules use Firestore document checks (not custom claims) to verify admin status. This matches the actual deployed rules in the project.
 
 ---
 
@@ -136,7 +143,9 @@ pnpm add firebase
 
 **Verify installation:**
 
-- `firebase` (v11.x.x) - Full Firebase SDK including Auth and Firestore
+- `firebase` (v12.7.0) - Full Firebase SDK including Auth and Firestore
+- `firebase-admin` (v13.6.0) - Firebase Admin SDK for frontend API routes
+- Note: Cloud Functions use `firebase-admin` (v12.0.0)
 
 ---
 

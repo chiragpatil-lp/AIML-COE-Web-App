@@ -1,6 +1,6 @@
 # Production Deployment Checklist
 
-**Last Updated**: December 30, 2024
+**Last Updated**: January 21, 2026
 
 This checklist ensures proper deployment of the AIML COE Web App and Pillar applications to production.
 
@@ -35,29 +35,19 @@ Create/verify these secrets:
 - [ ] `FIREBASE_MESSAGING_SENDER_ID` - Get from Firebase Console
 - [ ] `FIREBASE_APP_ID` - Get from Firebase Console
 
-#### Firebase Admin SDK (Choose ONE method)
-
-**Method A: Split Keys (Recommended for most cases)**
-
-- [ ] `FIREBASE_CLIENT_EMAIL` - From Service Account details
-- [ ] `FIREBASE_PRIVATE_KEY` - From Service Account details (PEM format)
-
-**Method B: Legacy JSON (Single variable)**
+#### Firebase Admin SDK
 
 - [ ] `FIREBASE_SERVICE_ACCOUNT_KEY` - Full JSON from Firebase Console → Project Settings → Service Accounts → Generate New Private Key
 
-**Method C: Application Default Credentials (Cloud Run)**
+**Note**: In production on Cloud Run, if this variable is not provided, the service will use Application Default Credentials (the service account attached to the Cloud Run instance). Ensure the Cloud Run service account has the `roles/firebase.admin` role.
 
-- If running on Cloud Run, the service account attached to the instance is used automatically if no other keys are provided. Ensure it has `firebase.admin` role.
-
-**How to get keys:**
+**How to get the key:**
 
 ```bash
 # Go to Firebase Console
 # Project Settings → Service Accounts → Generate New Private Key
-# Open the JSON file
-# Use "client_email" for FIREBASE_CLIENT_EMAIL
-# Use "private_key" for FIREBASE_PRIVATE_KEY
+# Download the JSON file
+# Copy the entire JSON content into FIREBASE_SERVICE_ACCOUNT_KEY secret
 ```
 
 #### Google Cloud Configuration
@@ -65,6 +55,7 @@ Create/verify these secrets:
 - [ ] `GCP_WORKLOAD_IDENTITY_PROVIDER` - From Terraform output
 - [ ] `GCP_SERVICE_ACCOUNT` - Should be `github-ci-cd@search-ahmed.iam.gserviceaccount.com`
 - [ ] `GCP_PROJECT_ID` - Should be `search-ahmed`
+- [ ] `DOCKER_IMAGE_NAME` - Docker image name (e.g., `aiml-coe-web-app`)
 
 #### Pillar URLs
 
@@ -84,7 +75,7 @@ Create/verify these secrets:
 ### 3. Deploy Main App
 
 ```bash
-cd /home/lordpatil/AIML-COE-Web-App/frontend
+cd AIML-COE-Web-App/frontend
 
 # Ensure all changes are committed
 git status
@@ -169,7 +160,7 @@ Go to: https://github.com/[YOUR_ORG]/aiml-coe-pillar-strategy-value-dashboard/se
 ### 5. Deploy Pillar App
 
 ```bash
-cd /home/lordpatil/aiml-coe-pillar-strategy-value-dashboard/frontend
+cd aiml-coe-pillar-strategy-value-dashboard/frontend
 
 # Ensure all changes are committed
 git status
@@ -196,7 +187,7 @@ git push origin main
 - [ ] Update `PILLAR_1_URL` with the Pillar URL
 - [ ] Redeploy main app:
   ```bash
-  cd /home/lordpatil/AIML-COE-Web-App/frontend
+  cd AIML-COE-Web-App/frontend
   git commit --allow-empty -m "chore: trigger redeploy with updated Pillar URL"
   git push origin main
   ```
@@ -231,34 +222,30 @@ Go to: Firebase Console → Firestore Database → Rules
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /userPermissions/{userId} {
-      // Users can read their own permissions
-      allow read: if request.auth != null && request.auth.uid == userId;
-
-      // Users can CREATE their own document on first sign-in
-      // BUT cannot give themselves admin or pillar access
-      allow create: if request.auth != null &&
-                       request.auth.uid == userId &&
-                       request.resource.data.isAdmin == false &&
-                       request.resource.data.pillars.pillar1 == false &&
-                       request.resource.data.pillars.pillar2 == false &&
-                       request.resource.data.pillars.pillar3 == false &&
-                       request.resource.data.pillars.pillar4 == false &&
-                       request.resource.data.pillars.pillar5 == false &&
-                       request.resource.data.pillars.pillar6 == false;
-
-      // Only admins can update permissions
-      allow update, delete: if false;  // Manual updates only via Firebase Console
+    
+    // Helper function to check if user is admin by reading their permissions document
+    function isAdmin() {
+      return request.auth != null &&
+             exists(/databases/$(database)/documents/userPermissions/$(request.auth.uid)) &&
+             get(/databases/$(database)/documents/userPermissions/$(request.auth.uid)).data.isAdmin == true;
     }
 
-    // Admins can read all user permissions (for future admin dashboard)
-    match /userPermissions/{document=**} {
-      allow read: if request.auth != null &&
-                     request.auth.token.admin == true;
+    // User permissions collection
+    match /userPermissions/{userId} {
+      // Users can read their own permissions, and admins can read all permissions
+      allow read: if (request.auth != null && request.auth.uid == userId) || isAdmin();
+
+      // Admins can create/update/delete any user permissions
+      allow write: if isAdmin();
     }
   }
 }
 ```
+
+**Important Notes:**
+- Users can only read their own permissions
+- Admins (users with `isAdmin: true` in their `userPermissions` document) can read and modify all user permissions
+- This enables the Admin Dashboard functionality for managing user permissions
 
 - [ ] Rules configured
 - [ ] Rules published
@@ -272,6 +259,7 @@ service cloud.firestore {
 - [ ] Manually set `isAdmin: true` in Firebase Console
 - [ ] Sign out and sign in again
 - [ ] Verify you have access to all pillars
+- [ ] Access the Admin Dashboard at `/admin` to manage other users
 
 ### 4. Set Up Firestore Backups
 
@@ -298,6 +286,8 @@ gcloud firestore backups schedules create \
 - [ ] All 6 pillar cards visible
 - [ ] Pillar cards show correct access state (enabled/disabled based on permissions)
 - [ ] Profile page works
+- [ ] Admin Dashboard (`/admin`) accessible for admin users
+- [ ] Admin Dashboard can manage user permissions
 - [ ] Sign out works
 - [ ] Mobile responsive design works
 - [ ] No console errors

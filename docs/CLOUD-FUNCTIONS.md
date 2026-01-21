@@ -1,6 +1,6 @@
 # Cloud Functions Architecture
 
-**Last Updated:** January 8, 2026
+**Last Updated:** January 21, 2026
 **Status:** ✅ Active Strategy
 
 ---
@@ -99,6 +99,6 @@ API routes are deployed automatically with the Next.js frontend to Cloud Run. No
 - **Trigger Security:** Runs with internal privileges tied to the Firebase Auth event.
 
 ### API Routes
-- **Authentication:** Verifies the Firebase ID Token passed in the `Authorization` header.
+- **Authentication:** Verifies the Firebase Session Cookie (`firebase-token`) passed in the request.
 - **Authorization:** Checks `isAdmin` status in Firestore before allowing any modification.
 - **Audit Trail:** Critical actions (like `deleteUser`) are logged to the `adminAuditLog` collection in Firestore.

@@ -8,7 +8,7 @@ This folder contains all documentation related to Firebase Authentication implem
 
 ### 1. **[FIREBASE-AUTH-COMPLETE-SETUP.md](./FIREBASE-AUTH-COMPLETE-SETUP.md)** ⭐ **START HERE**
 
-**Complete implementation and setup guide** (23KB)
+**Complete implementation and setup guide**
 
 This is your primary reference for everything Firebase Authentication. It includes:
 
@@ -16,7 +16,7 @@ This is your primary reference for everything Firebase Authentication. It includ
 - ✅ Actual Firebase configuration (`search-ahmed` project)
 - ✅ Firestore database setup (`aiml-coe-web-app` named database)
 - ✅ Step-by-step Firebase Console configuration
-- ✅ Updated Firestore security rules (with user self-registration)
+- ✅ Firestore security rules (admin-only write access)
 - ✅ Local development setup
 - ✅ Testing procedures (validated)
 - ✅ Making your first admin user
@@ -25,7 +25,7 @@ This is your primary reference for everything Firebase Authentication. It includ
 - ✅ Architecture & technical details
 - ✅ Phase 2 roadmap
 
-**Status**: ✅ Complete, tested, and production-ready (Dec 26, 2024)
+**Status**: ✅ Complete, tested, and production-ready (Jan 21, 2026)
 
 ---
 
@@ -64,9 +64,19 @@ This document contains:
 
 ### For Administrators
 
-**Granting User Permissions**:
+**Granting User Permissions** (Two Options):
 
-1. User signs in once (creates Firestore document automatically)
+**Option 1: Via Admin Panel (Recommended)**
+1. Sign in as admin
+2. Navigate to `/admin`
+3. Search for user by email
+4. Click "Edit" button
+5. Toggle admin status or pillar permissions
+6. Save changes
+7. User must sign out and back in to see changes
+
+**Option 2: Via Firebase Console**
+1. User signs in once (Cloud Function creates Firestore document automatically)
 2. Go to Firebase Console → Firestore → `userPermissions` collection
 3. Find user's document (by email or UID)
 4. Edit permissions:
@@ -82,15 +92,18 @@ This document contains:
 
 ### What's Working
 
-- ✅ **Google OAuth Sign-In**: Popup-based authentication
+- ✅ **Google OAuth Sign-In**: Popup-based authentication with auto-redirect to dashboard
 - ✅ **Firestore Permissions**: User permissions stored in `aiml-coe-web-app` database
 - ✅ **6 Strategic Pillars**: Individual access control per pillar
 - ✅ **Admin Role**: Full access to all pillars
-- ✅ **Protected Routes**: Dashboard requires authentication
-- ✅ **Self-Registration**: Users can create their own default permissions document
-- ✅ **Security Rules**: Firestore rules prevent unauthorized access
+- ✅ **Admin Panel**: Full user management UI at `/admin` (add, edit, delete users)
+- ✅ **Protected Routes**: Dashboard and admin panel require authentication
+- ✅ **Cloud Functions**: Auto-creates permissions on signup via `onUserCreate` trigger
+- ✅ **Security Rules**: Admin-only write access (no self-registration)
 - ✅ **Pending Permissions**: Admins can pre-authorize users before they sign up (handled by `onUserCreate` trigger)
-- ✅ **User Deletion**: Admins can permanently delete users and their permissions
+- ✅ **User Deletion**: Admins can permanently delete users and their permissions via admin panel
+- ✅ **Session Management**: Secure HttpOnly cookies with automatic token refresh
+- ✅ **Pillar SSO**: Token-based authentication flow for pillar applications
 
 ### Tech Stack
 
@@ -150,9 +163,10 @@ pnpm dev
 | Issue                                 | Solution                                        |
 | ------------------------------------- | ----------------------------------------------- |
 | "Missing or insufficient permissions" | Check Firestore security rules are published    |
-| Sign-in works but no redirect         | Manually go to `/dashboard`                     |
+| Sign-in redirects to dashboard        | This is expected behavior (auto-redirect)       |
 | Popup blocked                         | Allow popups for localhost:3000                 |
 | Build fails                           | Code is SSR-safe, should build without env vars |
+| Admin panel shows access denied       | Verify `isAdmin: true` in Firestore             |
 
 **Full Troubleshooting Guide**: [FIREBASE-AUTH-COMPLETE-SETUP.md](./FIREBASE-AUTH-COMPLETE-SETUP.md#troubleshooting)
 
@@ -213,18 +227,24 @@ Include:
 
 ## 🔮 Future Enhancements (Phase 2)
 
+Implemented:
+
+- [x] Admin panel for user management (`/admin`)
+- [x] Auto-redirect after sign-in
+- [x] Cloud Functions for user initialization and admin custom claims
+
 Planned features:
 
-- [ ] Admin panel for user management (`/app/admin/users`)
-- [ ] Auto-redirect after sign-in
-- [ ] Cloud Functions for admin custom claims
 - [ ] Email notifications for permission changes
 - [ ] Enhanced permissions (time-based, approval workflow)
 - [ ] Permission groups/roles
+- [ ] Audit log viewer UI in admin panel
+- [ ] Sub-permissions within pillars
+- [ ] Permission expiration dates
 
 ---
 
-**Last Updated**: December 26, 2024
-**Status**: ✅ Production Ready
-**Branch**: `feat/firebase-auth-implementation`
+**Last Updated**: January 21, 2026
+**Status**: ✅ Production Ready (Deployed)
+**Branch**: `main`
 **Maintained By**: AIML COE Team

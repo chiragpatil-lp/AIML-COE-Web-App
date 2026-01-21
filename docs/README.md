@@ -12,12 +12,12 @@ Welcome to the documentation for the AIML COE Web Application. This directory co
    - GitHub Secrets configuration
    - **Status**: ⚠️ **ACTION REQUIRED** - Complete this before deployment will work
 
-### 🔐 Authentication & Pillar Access (NEW)
+### 🔐 Authentication & Pillar Access
 
 2. **[Firebase Authentication](./firebase/)** - **START HERE FOR AUTH**
 
-   - ✅ **Complete implementation** (Dec 26, 2024)
-   - ✅ **Pillar SSO authentication** (Dec 30, 2024)
+   - ✅ **Complete implementation**
+   - ✅ **Pillar SSO authentication**
    - Google OAuth sign-in with Firestore permissions
    - 6 strategic pillar access control with SSO
    - **Status**: ✅ **IMPLEMENTED AND TESTED**
@@ -27,12 +27,34 @@ Welcome to the documentation for the AIML COE Web Application. This directory co
    - [Complete Setup Guide](./firebase/FIREBASE-AUTH-COMPLETE-SETUP.md) ⭐ Main reference
    - [Implementation Details](./firebase/FIREBASE-AUTH-IMPLEMENTATION.md)
    - [Firebase Folder README](./firebase/README.md)
-   - [Pillar Authentication Guide](./PILLAR-AUTHENTICATION.md) ⭐ **NEW** - Pillar SSO flow
-   - [Production Deployment Checklist](./PRODUCTION-DEPLOYMENT-CHECKLIST.md) ⭐ **NEW**
+   - [Pillar Authentication Guide](./PILLAR-AUTHENTICATION.md) ⭐ Pillar SSO flow
+   - [Pillar Quick Reference](./PILLAR-QUICK-REFERENCE.md) - Quick commands and common operations
+   - [Production Deployment Checklist](./PRODUCTION-DEPLOYMENT-CHECKLIST.md) ⭐ Step-by-step checklist
+   - [Production Deployment Guide](./PRODUCTION-DEPLOYMENT-GUIDE.md) - Detailed deployment guide
+
+### 👥 Admin & User Management
+
+3. **[Admin Dashboard](./ADMIN-DASHBOARD.md)**
+   - User permission management UI
+   - Add, edit, and remove user permissions
+   - Admin role management
+   - **Status**: ✅ **IMPLEMENTED**
+
+4. **[Firestore Security Rules](./FIRESTORE-SECURITY-RULES.md)**
+   - Database security configuration
+   - Admin authorization approach
+   - Current deployed rules
+   - **Status**: ✅ **ACTIVE**
+
+5. **[Cloud Functions](./CLOUD-FUNCTIONS.md)**
+   - Backend function architecture
+   - Active vs deprecated functions
+   - Migration to Next.js API routes
+   - **Status**: ✅ **HYBRID ARCHITECTURE**
 
 ### 💻 Development
 
-3. **[Development Guide](./DEVELOPMENT.md)**
+6. **[Development Guide](./DEVELOPMENT.md)**
    - Local development setup
    - Development workflow
    - Code conventions and best practices
@@ -40,7 +62,7 @@ Welcome to the documentation for the AIML COE Web Application. This directory co
 
 ### 🔄 Deployment
 
-4. **[Deployment Guide](./DEPLOYMENT.md)**
+7. **[Deployment Guide](./DEPLOYMENT.md)**
    - CI/CD pipeline architecture
    - Automated deployment process
    - Monitoring and logging
@@ -90,12 +112,14 @@ Welcome to the documentation for the AIML COE Web Application. This directory co
 
 ### ⚠️ Pending Actions
 
-- [ ] **Create GCP Service Account** → [Instructions](./GCP-SETUP.md#step-1-create-service-account)
-- [ ] **Download Service Account JSON key** → [Instructions](./GCP-SETUP.md#step-2-download-service-account-key)
+- [ ] **Configure Workload Identity Federation** → [Instructions](./GCP-SETUP.md#workload-identity-federation)
 - [ ] **Configure GitHub Secrets** → [Instructions](./GCP-SETUP.md#step-3-configure-github-secrets)
-  - [ ] `GCP_SA_KEY`
+  - [ ] `GCP_WORKLOAD_IDENTITY_PROVIDER`
+  - [ ] `GCP_SERVICE_ACCOUNT`
   - [ ] `GCP_PROJECT_ID`
   - [ ] `DOCKER_IMAGE_NAME`
+  - [ ] `FIREBASE_API_KEY` through `FIREBASE_APP_ID`
+  - [ ] `PILLAR_1_URL` through `PILLAR_6_URL`
 - [ ] **Test first deployment** → [Instructions](./GCP-SETUP.md#step-4-test-the-setup)
 
 ## Project Information
@@ -120,7 +144,7 @@ Welcome to the documentation for the AIML COE Web Application. This directory co
 - **Package Manager**: pnpm
 - **Infrastructure**: Google Cloud Run
 - **CI/CD**: GitHub Actions
-- **Container**: Docker with Node.js 18.17.0
+- **Container**: Docker with Node.js 20 Alpine
 
 ## Architecture Overview
 
@@ -163,26 +187,50 @@ Welcome to the documentation for the AIML COE Web Application. This directory co
 ## File Structure
 
 ```
-frontend/
+AIML-COE-Web-App/                   # Monorepo root
 ├── .github/
 │   └── workflows/
-│       └── cloud-run-deploy.yml    # CI/CD workflow
+│       ├── cloud-run-deploy.yml    # CI/CD workflow for main app
+│       └── ci-validation.yml       # Linting and validation
 ├── docs/
 │   ├── README.md                   # This file
 │   ├── firebase/                   # 🔐 Firebase Auth docs
 │   │   ├── README.md              # Firebase docs index
 │   │   ├── FIREBASE-AUTH-COMPLETE-SETUP.md  # ⭐ Main guide
 │   │   └── FIREBASE-AUTH-IMPLEMENTATION.md  # Reference
-│   ├── GCP-SETUP.md               # ⚠️ Required setup
-│   ├── DEVELOPMENT.md             # Dev guide
-│   └── DEPLOYMENT.md              # Deployment guide
-├── components/                     # React components
-├── app/                           # Next.js app directory
-├── public/                        # Static assets
-├── Dockerfile                     # Container configuration
-├── package.json                   # Dependencies
-├── pnpm-lock.yaml                # Lock file
-└── README.md                      # Project README
+│   ├── ADMIN-DASHBOARD.md         # Admin UI documentation
+│   ├── CLOUD-FUNCTIONS.md         # Backend functions architecture
+│   ├── FIRESTORE-SECURITY-RULES.md # Database security
+│   ├── PILLAR-AUTHENTICATION.md   # ⭐ Pillar SSO guide
+│   ├── PILLAR-QUICK-REFERENCE.md  # Quick reference
+│   ├── GCP-SETUP.md              # ⚠️ Required setup
+│   ├── DEVELOPMENT.md            # Dev guide
+│   ├── DEPLOYMENT.md             # Deployment guide
+│   ├── PRODUCTION-DEPLOYMENT-CHECKLIST.md
+│   └── PRODUCTION-DEPLOYMENT-GUIDE.md
+├── frontend/                      # Main web application
+│   ├── app/                      # Next.js app directory
+│   ├── components/               # React components
+│   ├── contexts/                 # React contexts
+│   ├── lib/                      # Utilities and helpers
+│   ├── public/                   # Static assets
+│   ├── terraform/                # Infrastructure as code
+│   ├── Dockerfile               # Container configuration
+│   ├── package.json             # Dependencies
+│   └── pnpm-lock.yaml          # Lock file
+├── functions/                    # Firebase Cloud Functions
+│   ├── src/
+│   │   ├── index.ts            # Functions entry point
+│   │   └── index.clean.ts      # Clean version
+│   ├── package.json
+│   └── deploy.sh               # Deployment script
+├── scripts/                      # Utility scripts
+│   ├── check-admin.js
+│   ├── check-user-by-uid.js
+│   └── ...
+├── package.json                  # Root package.json
+├── pnpm-workspace.yaml          # pnpm workspace config
+└── README.md                     # Project README
 ```
 
 ## Common Tasks
@@ -288,4 +336,4 @@ When updating these docs:
 
 ---
 
-_Last Updated: 2024-12-26_ (Added Firebase Authentication documentation)
+_Last Updated: January 21, 2026_
