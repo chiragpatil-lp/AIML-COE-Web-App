@@ -1,12 +1,12 @@
 import { BlogPost, Category } from "@/lib/types/newsletter.types";
 
 export const mockCategories: Category[] = [
+  { id: "6", name: "Customer Success Story", slug: "customer-success-story", postCount: 1 },
   { id: "1", name: "AI/ML", slug: "ai-ml", postCount: 1 },
   { id: "2", name: "Cloud Computing", slug: "cloud-computing", postCount: 1 },
   { id: "3", name: "DevOps", slug: "devops", postCount: 0 },
   { id: "4", name: "Data Science", slug: "data-science", postCount: 0 },
   { id: "5", name: "Security", slug: "security", postCount: 0 },
-  { id: "6", name: "Customer Success Story", slug: "customer-success-story", postCount: 1 },
 ];
 
 export const mockPosts: BlogPost[] = [
@@ -74,7 +74,7 @@ export const mockPosts: BlogPost[] = [
       **Location:** United States
       **Products:** BigQuery / BigQuery ML, Vertex AI, Vertex Pipelines, CI/CD automation, Model monitoring and observability
     `,
-    coverImage: "https://images.unsplash.com/photo-1667372393119-c81c0cda0a29?auto=format&fit=crop&q=80&w=2000",
+    coverImage: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=2000",
     categories: ["Customer Success Story", "AI/ML"],
     author: {
       name: "Staples Engineering",
