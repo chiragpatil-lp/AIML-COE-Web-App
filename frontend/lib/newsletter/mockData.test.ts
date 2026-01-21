@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { mockPosts, mockCategories, getPostsByCategory } from './mockData';
+import { mockPosts, mockCategories, getPostsByCategory, getPostBySlug, getRelatedPosts } from './mockData';
 
 describe('Newsletter Mock Data', () => {
   it('should have exactly 2 posts', () => {
@@ -23,5 +23,28 @@ describe('Newsletter Mock Data', () => {
     const posts = getPostsByCategory('Customer Success Story');
     expect(posts.length).toBe(1);
     expect(posts[0].title).toContain('Turning manual model releases');
+  });
+
+  it('should get post by slug', () => {
+      const staplesPost = mockPosts.find(p => p.title.includes('Turning manual model releases'));
+      if(staplesPost) {
+        const post = getPostBySlug(staplesPost.slug);
+        expect(post).toBeDefined();
+        expect(post?.id).toBe(staplesPost.id);
+      }
+  });
+
+  it('should return undefined for non-existent slug', () => {
+      const post = getPostBySlug('non-existent-slug');
+      expect(post).toBeUndefined();
+  });
+
+  it('should get related posts', () => {
+      const staplesPost = mockPosts.find(p => p.title.includes('Turning manual model releases'));
+      if(staplesPost) {
+        const related = getRelatedPosts(staplesPost.id, 2);
+        expect(related.length).toBeGreaterThan(0);
+        expect(related.find(p => p.id === staplesPost.id)).toBeUndefined();
+      }
   });
 });
