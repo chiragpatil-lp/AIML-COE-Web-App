@@ -142,9 +142,7 @@ export async function DELETE(request: NextRequest) {
       if (error.code !== "auth/user-not-found") {
         throw error;
       }
-      console.log(
-        `User not found in Auth, continuing with Firestore deletion`,
-      );
+      console.log(`User not found in Auth, continuing with Firestore deletion`);
       // PII: User ID commented out
       // console.log(`User ${userId} not found in Auth, continuing with Firestore deletion`);
     }

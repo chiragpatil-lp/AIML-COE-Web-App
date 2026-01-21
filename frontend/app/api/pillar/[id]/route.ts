@@ -292,11 +292,9 @@ export async function GET(
     // });
 
     // Log successful access (for audit purposes)
-    console.info("Pillar access granted:",
-      {
-        timestamp: new Date().toISOString(),
-      }
-     );
+    console.info("Pillar access granted:", {
+      timestamp: new Date().toISOString(),
+    });
     // PII: User ID commented out - use audit logs for tracking
     // console.info("Pillar access granted:", {
     //   userId: decodedToken.uid,

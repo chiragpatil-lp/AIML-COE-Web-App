@@ -133,7 +133,7 @@ export async function POST(request: NextRequest) {
     });
 
     console.log("User permissions updated successfully", {
-      pillarCount: Object.keys(pillars).filter(k => pillars[k]).length,
+      pillarCount: Object.keys(pillars).filter((k) => pillars[k]).length,
     });
     // PII: User IDs commented out - check audit logs for details
     // console.log("User permissions updated:", {

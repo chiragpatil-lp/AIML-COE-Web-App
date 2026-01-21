@@ -20,7 +20,10 @@ export function DebugAdminStatus() {
       */
       console.log("=== ADMIN DEBUG INFO ===");
       console.log("Is Admin:", permissions.isAdmin);
-      console.log("Pillars Access:", Object.values(permissions.pillars).filter(Boolean).length);
+      console.log(
+        "Pillars Access:",
+        Object.values(permissions.pillars).filter(Boolean).length,
+      );
       console.log("======================");
     }
   }, [user, permissions]);
