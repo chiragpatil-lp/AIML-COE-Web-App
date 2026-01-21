@@ -63,13 +63,11 @@ pnpm install
 
 This will install all dependencies for both workspaces using the lockfiles to ensure consistent versions.
 
-**Note**: The frontend uses pnpm, while functions uses npm. The workspace handles both package managers.
-
 Alternatively, install for specific workspaces:
 
 ```bash
-cd frontend && pnpm install  # Frontend only (uses pnpm)
-cd functions && npm install   # Functions only (uses npm)
+cd frontend && pnpm install  # Frontend only
+cd functions && pnpm install # Functions only
 ```
 
 ### 3. Environment Configuration
@@ -156,14 +154,14 @@ Emulator ports:
 
    ```bash
    pnpm lint
-   pnpm format
+   pnpm --filter frontend format
    ```
 
 4. **Build and test production build**
 
    ```bash
    pnpm build
-   pnpm start
+   pnpm --filter frontend start
    ```
 
 5. **Commit changes**
@@ -410,14 +408,11 @@ pnpm add -D <package-name>
 **For functions:**
 
 ```bash
-# Functions use npm (not pnpm)
 # From functions directory
 cd functions
-npm install <package-name>
-npm install -D <package-name>
+pnpm add <package-name>
+pnpm add -D <package-name>
 ```
-
-**Note**: The functions package uses npm and has its own package-lock.json. Do not use pnpm for functions.
 
 ### Updating Dependencies
 
@@ -452,11 +447,11 @@ pnpm dev              # Start frontend dev server
 pnpm build            # Build frontend for production
 pnpm lint             # Run ESLint on frontend
 pnpm deploy:frontend  # Deploy frontend (via Cloud Run workflow)
-pnpm deploy:functions # Deploy Cloud Functions (cd functions && npm run deploy)
+pnpm deploy:functions # Deploy Cloud Functions (cd functions && pnpm run deploy)
 pnpm fix-admin        # Run admin fix script
 ```
 
-**Note**: The `deploy:functions` script changes to the functions directory and runs `npm run deploy`, as functions use npm for package management.
+**Note**: The `deploy:functions` script changes to the functions directory and runs deployment.
 
 **Frontend-specific (from frontend/ directory):**
 

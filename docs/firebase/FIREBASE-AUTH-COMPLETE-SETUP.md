@@ -126,10 +126,10 @@ functions/
         ├── setAdminClaim                          # Set admin custom claim (deprecated)
         ├── updateUserPermissions                  # Update permissions (deprecated)
         ├── getUserPermissions                     # Get permissions (deprecated)
-        └── initializeUser                         # Manual user init (fallback)
+        └── initializeUser                         # Manual user init (deprecated)
 ```
 
-**Note**: Most Cloud Functions are deprecated in favor of Next.js API routes for better integration and performance. Only `onUserCreate` (identity trigger) and `initializeUser` (fallback) are actively used.
+**Note**: Most Cloud Functions are deprecated in favor of Next.js API routes for better integration and performance. Only `onUserCreate` (identity trigger) is actively used by the system as a background process.
 
 ### 📦 Dependencies
 
@@ -294,7 +294,7 @@ Cloud Functions are required for automatic user initialization on first sign-in.
 
 **Deployed Functions**:
 - `onUserCreate` - Creates default permissions for new users (identity trigger)
-- `initializeUser` - Fallback for manual user initialization (callable)
+- ~~`initializeUser`~~ - Deprecated (use Next.js API route)
 - ~~`setAdminClaim`~~ - Deprecated (use Next.js API route)
 - ~~`updateUserPermissions`~~ - Deprecated (use Next.js API route)
 - ~~`getUserPermissions`~~ - Deprecated (use Next.js API route)
@@ -485,7 +485,7 @@ After setting `isAdmin: true`:
 
 - When `isAdmin: true`, user has access to ALL pillars automatically
 - Individual pillar permissions (`pillar1`, `pillar2`, etc.) are only checked for non-admin users
-- See [AuthContext.tsx#L313-L318](../frontend/contexts/AuthContext.tsx) for the `hasAccessToPillar` function
+- See [AuthContext.tsx#L313-L318](../../frontend/contexts/AuthContext.tsx) for the `hasAccessToPillar` function
 
 ---
 

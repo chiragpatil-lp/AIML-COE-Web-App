@@ -81,6 +81,14 @@ Name: FIREBASE_APP_ID
 Value: [Your app ID from Firebase Console]
 ```
 
+#### Secret 7-12: PILLAR_URLS
+Add secrets for each pillar application URL (Required for integration):
+```
+Name: PILLAR_1_URL
+Value: [URL for Pillar 1]
+```
+Repeat for `PILLAR_2_URL` through `PILLAR_6_URL`.
+
 ### 1.4 Verify Secrets
 
 After adding all secrets, you should see:

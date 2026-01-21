@@ -66,7 +66,6 @@ The application will be available at [http://localhost:3000](http://localhost:30
 pnpm dev              # Start frontend development server
 pnpm build            # Build frontend for production
 pnpm lint             # Run frontend ESLint
-pnpm deploy:frontend  # Deploy frontend to Cloud Run
 pnpm deploy:functions # Deploy Cloud Functions to Firebase
 pnpm fix-admin        # Run admin fix script
 ```

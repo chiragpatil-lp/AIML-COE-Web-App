@@ -329,12 +329,10 @@ frontend/
 
 ### 4. Audit Trail
 
-- **Deletions**: All user deletions are logged to the `adminAuditLog` collection in Firestore with:
-  - Performed by (Admin Email/ID)
-  - Target User (Email/ID)
-  - Timestamp
-  - Action Type (`user_deleted`)
-- **Updates**: Currently tracked via `updatedAt` timestamps.
+- **Deletions**: Logged to `adminAuditLog` collection with action `user_deleted`.
+- **Permission Updates**: Logged to `adminAuditLog` collection with action `permissions_updated`.
+- **Admin Role Changes**: Logged to `adminAuditLog` collection with action `admin_claim_set`.
+- **Timestamps**: The `updatedAt` field on the user document is also updated on every change.
 
 ---
 
@@ -382,10 +380,10 @@ frontend/
    - Select multiple users for batch permission updates
    - Import/export user permissions via CSV
 
-2. **Enhanced Audit Logs**
+2. **Audit Log Viewer**
 
-   - Track all permission changes (edits) in `adminAuditLog` (currently only deletions are fully logged).
-   - Export audit logs for compliance
+   - Create a UI in the admin panel to view the `adminAuditLog` collection.
+   - Filter logs by admin, target user, or action type.
 
 3. **Email Notifications**
 
