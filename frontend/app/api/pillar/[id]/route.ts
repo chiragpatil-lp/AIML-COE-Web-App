@@ -77,15 +77,18 @@ export async function GET(
         console.log(
           "[PillarAuth] Verifying fresh ID token from query parameter",
         );
-        console.log(
-          "[PillarAuth] Token preview:",
-          token.substring(0, 50) + "...",
-        );
+        // PII: Token preview commented out for security
+        // console.log(
+        //   "[PillarAuth] Token preview:",
+        //   token.substring(0, 50) + "...",
+        // );
         decodedToken = await verifyIdToken(token);
-        console.log("[PillarAuth] ID token verified successfully", {
-          uid: decodedToken.uid,
-          email: decodedToken.email,
-        });
+        console.log("[PillarAuth] ID token verified successfully");
+        // PII: User details commented out
+        // console.log("[PillarAuth] ID token verified successfully", {
+        //   uid: decodedToken.uid,
+        //   email: decodedToken.email,
+        // });
       } else if (authHeader) {
         // ID token from Authorization header
         token = authHeader.replace("Bearer ", "");
@@ -93,25 +96,30 @@ export async function GET(
           "[PillarAuth] Verifying ID token from Authorization header",
         );
         decodedToken = await verifyIdToken(token);
-        console.log("[PillarAuth] ID token verified successfully", {
-          uid: decodedToken.uid,
-          email: decodedToken.email,
-        });
+        console.log("[PillarAuth] ID token verified successfully");
+        // PII: User details commented out
+        // console.log("[PillarAuth] ID token verified successfully", {
+        //   uid: decodedToken.uid,
+        //   email: decodedToken.email,
+        // });
       } else if (tokenFromCookie) {
         // Session cookie from main app authentication
         // This is valid for same-domain requests but cannot be forwarded to pillar apps
         token = tokenFromCookie;
         console.log("[PillarAuth] Verifying session cookie from cookie store");
-        console.log(
-          "[PillarAuth] Cookie preview:",
-          token.substring(0, 50) + "...",
-        );
+        // PII: Cookie preview commented out for security
+        // console.log(
+        //   "[PillarAuth] Cookie preview:",
+        //   token.substring(0, 50) + "...",
+        // );
         decodedToken = await verifySessionCookie(token);
         isUsingSessionCookie = true;
-        console.log("[PillarAuth] Session cookie verified successfully", {
-          uid: decodedToken.uid,
-          email: decodedToken.email,
-        });
+        console.log("[PillarAuth] Session cookie verified successfully");
+        // PII: User details commented out
+        // console.log("[PillarAuth] Session cookie verified successfully", {
+        //   uid: decodedToken.uid,
+        //   email: decodedToken.email,
+        // });
 
         console.warn(
           "[PillarAuth] Using session cookie instead of fresh ID token. " +
@@ -134,7 +142,8 @@ export async function GET(
             : tokenFromCookie
               ? "cookie"
               : "none",
-        tokenPreview: token ? token.substring(0, 50) + "..." : "no token",
+        // PII: Token preview commented out for security
+        // tokenPreview: token ? token.substring(0, 50) + "..." : "no token",
       });
       return NextResponse.json(
         {
@@ -183,7 +192,8 @@ export async function GET(
 
     if (!hasAccess) {
       console.warn("Access denied:", {
-        userId: decodedToken.uid,
+        // PII: userId commented out for privacy
+        // userId: decodedToken.uid,
         pillarNumber,
         isAdmin,
         pillarAccess: permissions.pillars?.[pillarKey],
@@ -276,18 +286,25 @@ export async function GET(
 
     console.log(`[PillarAuth] Redirecting to Pillar ${id}`, {
       verifyUrl: verifyUrl.toString().split("?")[0], // Log URL without token for security
-      userId: decodedToken.uid,
-      email: decodedToken.email,
     });
+    // PII: User details commented out
+    // console.log(`[PillarAuth] User context:`, {
+    //   userId: decodedToken.uid,
+    //   email: decodedToken.email,
+    // });
 
     // Log successful access (for audit purposes)
     console.info("Pillar access granted:", {
-      userId: decodedToken.uid,
-      email: decodedToken.email,
-      pillarNumber,
-      isAdmin,
       timestamp: new Date().toISOString(),
     });
+    // PII: User ID commented out - use audit logs for tracking
+    // console.info("Pillar access granted:", {
+    //   userId: decodedToken.uid,
+    //  email: decodedToken.email,
+    //  pillarNumber,
+    //  isAdmin,
+    //  timestamp: new Date().toISOString(),
+    //});
 
     // Redirect to pillar's /auth/verify endpoint with token and pillar number as query parameters
     // The pillar app expects GET requests with query parameters, not POST

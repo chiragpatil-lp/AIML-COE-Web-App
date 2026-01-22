@@ -49,7 +49,9 @@ export const onUserCreate = beforeUserCreated(async (event) => {
   const { uid, email } = user;
 
   if (!email) {
-    console.error('User created without email:', uid);
+    console.error('User created without email - skipping permission creation');
+    // PII: User ID commented out
+    // console.error('User created without email:', uid);
     return;
   }
 
@@ -76,11 +78,16 @@ export const onUserCreate = beforeUserCreated(async (event) => {
       await db.collection('userPermissions').doc(uid).set(defaultPermissions);
       await pendingDoc.ref.delete(); // Clean up pending document
       
-      console.log('Created user permissions from pending record:', {
-        uid,
-        email,
+      console.log('Created user permissions from pending record successfully', {
+        source: 'pending',
         originalPendingId: pendingDoc.id
       });
+      // PII: User ID and email commented out
+      // console.log('Created user permissions from pending record:', {
+      //   uid,
+      //   email,
+      //   originalPendingId: pendingDoc.id
+      // });
       return;
     }
 
@@ -102,10 +109,12 @@ export const onUserCreate = beforeUserCreated(async (event) => {
 
     await db.collection('userPermissions').doc(uid).set(defaultPermissions);
 
-    console.log('Created default permissions for user:', {
-      uid,
-      email,
-    });
+    console.log('Created default permissions for new user successfully');
+    // PII: User ID and email commented out
+    // console.log('Created default permissions for user:', {
+    //   uid,
+    //   email,
+    // });
   } catch (error) {
     console.error('Error creating user permissions:', error);
     throw error;
@@ -185,11 +194,15 @@ export const setAdminClaim = onCall(
         timestamp: admin.firestore.FieldValue.serverTimestamp(),
       });
 
-    console.log('Admin claim set:', {
-      targetUserId: userId,
+    console.log('Admin claim set successfully:', {
       isAdmin,
-      performedBy: context.auth.uid,
     });
+    // PII: User IDs commented out - check audit logs for tracking
+    // console.log('Admin claim set:', {
+    //   targetUserId: userId,
+    //   isAdmin,
+    //   performedBy: context.auth.uid,
+    // });
 
     return {
       success: true,
@@ -284,11 +297,15 @@ export const updateUserPermissions = onCall(
         timestamp: admin.firestore.FieldValue.serverTimestamp(),
       });
 
-    console.log('User permissions updated:', {
-      targetUserId: userId,
-      pillars,
-      performedBy: context.auth.uid,
+    console.log('User permissions updated successfully:', {
+      pillarCount: Object.keys(pillars).filter(k => pillars[k]).length,
     });
+    // PII: User IDs commented out - check audit logs for tracking
+    // console.log('User permissions updated:', {
+    //   targetUserId: userId,
+    //   pillars,
+    //   performedBy: context.auth.uid,
+    // });
 
     return {
       success: true,

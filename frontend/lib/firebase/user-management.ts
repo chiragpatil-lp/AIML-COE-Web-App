@@ -31,7 +31,7 @@ export async function getAllUserPermissions(): Promise<UserPermissions[]> {
     const users: UserPermissions[] = [];
     snapshot.forEach((docSnapshot) => {
       const data = docSnapshot.data();
-      console.log(`[Admin] Processing user document:`, docSnapshot.id, data);
+      // console.log(`[Admin] Processing user document:`, docSnapshot.id, data);
 
       users.push({
         userId: docSnapshot.id,

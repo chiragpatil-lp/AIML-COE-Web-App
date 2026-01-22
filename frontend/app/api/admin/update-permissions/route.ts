@@ -132,11 +132,15 @@ export async function POST(request: NextRequest) {
       timestamp: FieldValue.serverTimestamp(),
     });
 
-    console.log("User permissions updated:", {
-      targetUserId: userId,
-      pillars,
-      performedBy: decodedToken.uid,
+    console.log("User permissions updated successfully", {
+      pillarCount: Object.keys(pillars).filter((k) => pillars[k]).length,
     });
+    // PII: User IDs commented out - check audit logs for details
+    // console.log("User permissions updated:", {
+    //   targetUserId: userId,
+    //   pillars,
+    //   performedBy: decodedToken.uid,
+    // });
 
     return NextResponse.json({
       success: true,

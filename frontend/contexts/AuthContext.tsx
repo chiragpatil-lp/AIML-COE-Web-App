@@ -129,8 +129,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
           const errorMsg =
             "User permissions not found after retries and fallback.";
-          // Removed userEmail from logs for privacy
-          console.error(errorMsg, { userId });
+          // PII: Removed userEmail and userId from logs for privacy
+          console.error(errorMsg);
+          // console.error(errorMsg, { userId });
           setError(errorMsg);
           toast.error(
             "Failed to load permissions. Please try signing out and in again.",
@@ -181,7 +182,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
         // Validate email exists (Google OAuth should always provide it)
         if (!user.email) {
           const errorMsg = "User authenticated but email is missing";
-          console.error(errorMsg, { uid: user.uid });
+          // PII: Commented out to prevent logging user UID
+          // console.error(errorMsg, { uid: user.uid });
+          console.error(errorMsg);
           setError(errorMsg);
           toast.error("Authentication error: Missing email. Please try again.");
           if (mounted) setLoading(false);
