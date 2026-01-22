@@ -56,3 +56,13 @@ export function getPostsByCategory(category: string): BlogPost[] {
   }
   return mockPosts.filter((post) => post.categories.includes(category));
 }
+
+export function getPostBySlug(slug: string): BlogPost | undefined {
+  return mockPosts.find((post) => post.slug === slug);
+}
+
+export function getRelatedPosts(currentPostId: string, limit: number = 3): BlogPost[] {
+  return mockPosts
+    .filter((post) => post.id !== currentPostId)
+    .slice(0, limit);
+}
