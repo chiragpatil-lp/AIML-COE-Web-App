@@ -1,8 +1,0 @@
-{
-  "track_id": "newsletter_email_20260114",
-  "type": "feature",
-  "status": "new",
-  "created_at": "2026-01-14T14:30:00Z",
-  "updated_at": "2026-01-14T14:30:00Z",
-  "description": "Implement GCP-native automated email notifications for published newsletter blogs using Firebase Cloud Functions and Nodemailer via chirag.patil@onixnet.com."
-}

@@ -1,5 +1,6 @@
 "use client";
 
+import ReactMarkdown from "react-markdown";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
@@ -7,7 +8,6 @@ import { Clock, Calendar, ArrowLeft, Share2 } from "lucide-react";
 import type { BlogPost } from "@/lib/types/newsletter.types";
 import { formatDate } from "@/lib/newsletter/utils";
 import { PostCard } from "./PostCard";
-import { SubscribeCard } from "./SubscribeCard";
 
 interface PostContentProps {
   post: BlogPost;
@@ -155,18 +155,12 @@ export const PostContent = ({ post, relatedPosts = [] }: PostContentProps) => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="prose prose-lg max-w-none mb-12"
+          className="prose prose-lg max-w-none mb-12 prose-headings:font-medium prose-a:text-[#146e96]"
           style={{
             fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
           }}
         >
-          {/* Render markdown/HTML content */}
-          <div
-            className="text-[#202020] leading-relaxed"
-            dangerouslySetInnerHTML={{
-              __html: post.content.replace(/\n/g, "<br />"),
-            }}
-          />
+          <ReactMarkdown>{post.content}</ReactMarkdown>
         </motion.article>
 
         {/* Tags */}
@@ -258,11 +252,6 @@ export const PostContent = ({ post, relatedPosts = [] }: PostContentProps) => {
             </div>
           </div>
         )}
-
-        {/* Subscribe CTA */}
-        <div className="mb-12">
-          <SubscribeCard />
-        </div>
       </div>
     </div>
   );

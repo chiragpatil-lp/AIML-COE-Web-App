@@ -1,16 +1,20 @@
-"use client";
-
-import { useParams } from "next/navigation";
-import Link from "next/link";
 import { PortfolioNavbar } from "@/components/PortfolioNavbar";
 import { PostContent } from "@/components/newsletter/PostContent";
 import { Footer } from "@/components/Footer";
-import { getPostBySlug, getRelatedPosts } from "@/lib/newsletter/mockData";
+import { getPostBySlug, getRelatedPosts, getPostSlugs } from "@/lib/newsletter/content";
+import Link from "next/link";
+import { notFound } from "next/navigation";
 
-export default function BlogPostPage() {
-  const params = useParams();
-  const slug = params.slug as string;
+// Generate static params for all posts
+export async function generateStaticParams() {
+  const posts = getPostSlugs();
+  return posts.map((post) => ({
+    slug: post.replace(/\.md$/, ''),
+  }));
+}
 
+export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
   const post = getPostBySlug(slug);
 
   if (!post) {
