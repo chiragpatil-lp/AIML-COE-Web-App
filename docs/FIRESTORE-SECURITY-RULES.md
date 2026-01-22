@@ -161,9 +161,10 @@ The application code uses **both approaches**:
    - Custom claims are available in `request.auth.token.admin`
    - Could switch to custom claims in rules for better performance
 
-4. **⚠️ Missing Security Rule: adminAuditLog Collection**
+4. **⚠️ CRITICAL: Missing Security Rule for adminAuditLog**
    - The application writes audit logs to `adminAuditLog` collection
-   - **No security rules currently protect this collection**
+   - **No security rules currently protect this collection**, leaving it vulnerable to unauthorized access/modifications.
+   - **Recommendation**: Create a high-priority follow-up ticket to apply the suggested fix immediately.
    - **Recommended fix**: Add the following to `firestore.rules`:
      ```javascript
      match /adminAuditLog/{logId} {

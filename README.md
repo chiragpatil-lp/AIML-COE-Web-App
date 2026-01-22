@@ -28,6 +28,8 @@ This is a full-stack application for the AIML COE platform, featuring:
 - **Admin SDK**: 
   - Frontend API Routes: firebase-admin 13.6.0
   - Cloud Functions: firebase-admin 12.0.0
+  > **Note**: Different versions of `firebase-admin` are currently used for the frontend and Cloud Functions. Unifying these versions is recommended for better maintainability and to prevent potential compatibility issues.
+
 
 ### Deployment
 - **Frontend Hosting**: Google Cloud Run

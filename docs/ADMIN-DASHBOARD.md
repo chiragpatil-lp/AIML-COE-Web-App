@@ -247,6 +247,25 @@ frontend/
 **Additional API Route:**
 - `/app/api/auth/initialize-user/route.ts`: Fallback endpoint to manually initialize user permissions if `onUserCreate` trigger fails. Checks for pending permissions by email.
 
+## Understanding the Visual Indicators
+
+The dashboard uses visual cues to help you quickly assess user status and permissions:
+
+### 1. Role Badges
+- **Admin Badge** (`Shield Icon` + Blue Background): Indicates the user has full system access.
+- **User Badge** (Gray Background): Indicates a standard user with restricted access.
+
+### 2. Pillar Access Circles
+For non-admin users, access to specific pillars is shown via numbered circles (1-6):
+- **Blue Circle**: Access is **GRANTED** for this pillar.
+- **Gray Circle**: Access is **DENIED** for this pillar.
+- **"All Pillars (6/6)"**: Automatically shown for Admins since they have full access.
+
+### 3. Action Buttons
+- **Edit (Pencil)**: Open the permissions dialog.
+- **Delete (Trash)**: Remove the user.
+  - *Note*: The delete button is disabled (greyed out) for your own account to prevent accidental lockout.
+
 ---
 
 ## Usage Guide
