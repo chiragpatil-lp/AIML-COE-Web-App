@@ -14,13 +14,16 @@ interface NewsletterClientProps {
 
 const POSTS_PER_PAGE = 6;
 
-export function NewsletterClient({ initialPosts, categories }: NewsletterClientProps) {
+export function NewsletterClient({
+  initialPosts,
+  categories,
+}: NewsletterClientProps) {
   const [selectedCategory, setSelectedCategory] = useState("All Posts");
   const [visibleCount, setVisibleCount] = useState(POSTS_PER_PAGE);
 
   // Filter functions adapted for client-side usage with props
   const getFeaturedPosts = () => initialPosts.filter((post) => post.featured);
-  
+
   const getPostsByCategory = (category: string) => {
     if (category === "all" || category === "All Posts") {
       return initialPosts;

@@ -6,6 +6,7 @@ import { Menu, X } from "lucide-react";
 import Image from "next/image";
 import { useAuth } from "@/contexts/AuthContext";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { getAssetUrl } from "@/lib/image-loader";
 const navigationLinks = [
   {
@@ -24,6 +25,7 @@ const navigationLinks = [
 
 // @component: PortfolioNavbar
 export const PortfolioNavbar = () => {
+  const router = useRouter();
   const { user } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -44,7 +46,7 @@ export const PortfolioNavbar = () => {
     closeMobileMenu();
     // If it's a page route (starts with /), navigate to it
     if (href.startsWith("/")) {
-      window.location.href = href;
+      router.push(href);
       return;
     }
     // Otherwise, treat as anchor link

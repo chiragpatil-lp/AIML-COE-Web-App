@@ -6,19 +6,22 @@ import { NewsletterClient } from "@/components/newsletter/NewsletterClient";
 
 export default function NewsletterPage() {
   const posts = getAllPosts();
-  // We can calculate dynamic counts for categories if we want, 
+  // We can calculate dynamic counts for categories if we want,
   // but for now we'll pass the static categories.
   // Ideally, we should compute post counts per category here.
-  
-  const categoriesWithCounts = CATEGORIES.map(cat => ({
+
+  const categoriesWithCounts = CATEGORIES.map((cat) => ({
     ...cat,
-    postCount: posts.filter(p => p.categories.includes(cat.name)).length
+    postCount: posts.filter((p) => p.categories.includes(cat.name)).length,
   }));
 
   return (
     <>
       <PortfolioNavbar />
-      <NewsletterClient initialPosts={posts} categories={categoriesWithCounts} />
+      <NewsletterClient
+        initialPosts={posts}
+        categories={categoriesWithCounts}
+      />
       <Footer />
     </>
   );
