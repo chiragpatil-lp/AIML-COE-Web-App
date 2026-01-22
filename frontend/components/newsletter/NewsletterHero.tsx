@@ -80,8 +80,7 @@ export const NewsletterHero = () => {
               fontWeight: "500",
             }}
           >
-            AI/ML CoE{" "}
-            <span className="text-[#146e96]">Newsletter</span>
+            AI/ML CoE <span className="text-[#146e96]">Newsletter</span>
           </motion.h1>
 
           <motion.p
@@ -127,7 +126,9 @@ export const NewsletterHero = () => {
               >
                 Weekly
               </div>
-              <p className="text-sm text-[#666666]">Expert insights delivered to your inbox</p>
+              <p className="text-sm text-[#666666]">
+                Expert insights delivered to your inbox
+              </p>
             </div>
             <div className="text-center">
               <div
@@ -139,7 +140,9 @@ export const NewsletterHero = () => {
               >
                 Curated
               </div>
-              <p className="text-sm text-[#666666]">Hand-picked content from AI experts</p>
+              <p className="text-sm text-[#666666]">
+                Hand-picked content from AI experts
+              </p>
             </div>
             <div className="text-center">
               <div
@@ -151,7 +154,9 @@ export const NewsletterHero = () => {
               >
                 Actionable
               </div>
-              <p className="text-sm text-[#666666]">Practical insights you can implement</p>
+              <p className="text-sm text-[#666666]">
+                Practical insights you can implement
+              </p>
             </div>
           </motion.div>
         </div>

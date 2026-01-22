@@ -43,7 +43,7 @@ export const PortfolioNavbar = () => {
   const handleLinkClick = (href: string) => {
     closeMobileMenu();
     // If it's a page route (starts with /), navigate to it
-    if (href.startsWith('/')) {
+    if (href.startsWith("/")) {
       window.location.href = href;
       return;
     }
