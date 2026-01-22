@@ -35,11 +35,6 @@ export default function NewsletterPage() {
 
       <div className="w-full bg-[#fafafa]">
         <div className="max-w-7xl mx-auto px-8 py-16">
-          {/* Subscribe Card */}
-          <div className="mb-16">
-            <SubscribeCard />
-          </div>
-
           {/* Featured Posts */}
           {featuredPosts.length > 0 && (
             <div className="mb-16">
@@ -105,6 +100,11 @@ export default function NewsletterPage() {
               </button>
             </div>
           )}
+
+          {/* Subscribe Card */}
+          <div className="mt-20">
+            <SubscribeCard />
+          </div>
         </div>
       </div>
 
