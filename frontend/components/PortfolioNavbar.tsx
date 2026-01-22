@@ -9,8 +9,8 @@ import Link from "next/link";
 import { getAssetUrl } from "@/lib/image-loader";
 const navigationLinks = [
   {
-    name: "Features",
-    href: "#features",
+    name: "Newsletter",
+    href: "/newsletter",
   },
   {
     name: "Solutions",
@@ -42,6 +42,12 @@ export const PortfolioNavbar = () => {
   };
   const handleLinkClick = (href: string) => {
     closeMobileMenu();
+    // If it's a page route (starts with /), navigate to it
+    if (href.startsWith('/')) {
+      window.location.href = href;
+      return;
+    }
+    // Otherwise, treat as anchor link
     const element = document.querySelector(href);
     if (element) {
       element.scrollIntoView({
