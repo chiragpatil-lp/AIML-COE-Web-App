@@ -1,6 +1,7 @@
 # Pillar Authentication - Quick Reference
 
-**Last Updated**: December 30, 2024
+**Last Updated**: January 22, 2026
+**Status**: ✅ Production Ready
 
 This is a quick reference guide for the most common operations related to Pillar authentication.
 
@@ -16,7 +17,7 @@ gcloud auth application-default login
 
 ### 2. Configure Main App
 
-Create `/home/lordpatil/AIML-COE-Web-App/frontend/.env.local`:
+Create `frontend/.env.local` in the main app directory:
 
 ```env
 NEXT_PUBLIC_PILLAR_1_URL=http://localhost:3001
@@ -42,11 +43,11 @@ Firebase Console → Firestore → `aiml-coe-web-app` → `userPermissions` → 
 
 ```bash
 # Terminal 1 - Main App
-cd /home/lordpatil/AIML-COE-Web-App/frontend
+cd AIML-COE-Web-App/frontend
 pnpm dev
 
 # Terminal 2 - Pillar 1
-cd /home/lordpatil/aiml-coe-pillar-strategy-value-dashboard/frontend
+cd aiml-coe-pillar-strategy-value-dashboard/frontend
 pnpm dev --port 3001
 ```
 
@@ -231,7 +232,7 @@ pnpm build  # Ensure no breaking changes
 - `/.env.local` - Local environment (gitignored)
 - `/docs/PILLAR-AUTHENTICATION.md` - Complete guide
 
-### Pillar App
+### Pillar App (in separate pillar repositories)
 
 - `/app/auth/verify/route.ts` - Token verification endpoint
 - `/middleware.ts` - Route protection
@@ -306,10 +307,14 @@ Document ID: {user_uid}
 
 **Main App** (must have `NEXT_PUBLIC_` prefix for client-side):
 
-- `NEXT_PUBLIC_PILLAR_1_URL` - Pillar 1 URL
-- `FIREBASE_CLIENT_EMAIL` - (Optional) Server-side Admin SDK Email
-- `FIREBASE_PRIVATE_KEY` - (Optional) Server-side Admin SDK Private Key
-- `FIREBASE_SERVICE_ACCOUNT_KEY` - (Legacy/Optional) Full JSON key
+- `NEXT_PUBLIC_FIREBASE_API_KEY` - Firebase client API key
+- `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN` - Firebase auth domain
+- `NEXT_PUBLIC_FIREBASE_PROJECT_ID` - Firebase project ID
+- `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET` - Firebase storage bucket
+- `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID` - Firebase messaging sender ID
+- `NEXT_PUBLIC_FIREBASE_APP_ID` - Firebase app ID
+- `FIREBASE_SERVICE_ACCOUNT_KEY` - (Server-side) Full JSON service account key
+- `NEXT_PUBLIC_PILLAR_1_URL` through `NEXT_PUBLIC_PILLAR_6_URL` - Pillar URLs
 
 **Pillar App**:
 

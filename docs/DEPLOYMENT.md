@@ -1,5 +1,8 @@
 # Deployment Guide
 
+**Last Updated**: January 22, 2026
+**Status**: ✅ Production Ready
+
 This guide covers the CI/CD pipeline and deployment process for the AIML COE Web Application to Google Cloud Run.
 
 ## Table of Contents
@@ -46,6 +49,13 @@ Before deployment works, you must complete the GCP setup. See [GCP Setup Guide](
   - [x] `GCP_SERVICE_ACCOUNT`
   - [x] `GCP_PROJECT_ID`
   - [x] `DOCKER_IMAGE_NAME`
+  - [x] `FIREBASE_API_KEY`
+  - [x] `FIREBASE_AUTH_DOMAIN`
+  - [x] `FIREBASE_PROJECT_ID`
+  - [x] `FIREBASE_STORAGE_BUCKET`
+  - [x] `FIREBASE_MESSAGING_SENDER_ID`
+  - [x] `FIREBASE_APP_ID`
+  - [x] `PILLAR_1_URL` through `PILLAR_6_URL`
 - [x] **Application LIVE**: https://aiml-coe-web-app-36231825761.us-central1.run.app
 
 ## CI/CD Pipeline
@@ -94,21 +104,27 @@ Before deployment works, you must complete the GCP setup. See [GCP Setup Guide](
 └─────────────────┘
 ```
 
-### Workflow File
+### Workflow Files
 
-Location: `.github/workflows/cloud-run-deploy.yml` (repository root, not frontend/.github)
+**Cloud Run Deployment**: `.github/workflows/cloud-run-deploy.yml`
+- Triggers on push to `main` branch
+- Builds and deploys to Cloud Run
+- Uses Workload Identity Federation for authentication
 
-Key configuration:
+**CI Validation**: `.github/workflows/ci-validation.yml`
+- Triggers on pull requests to `main` branch
+- Runs formatting checks, linting, and builds
+- Does not deploy
+
+Key deployment configuration:
 
 ```yaml
 env:
   SERVICE_NAME: aiml-coe-web-app
+  REGION: us-central1
 
 on:
   push:
-    branches:
-      - main
-  pull_request:
     branches:
       - main
 ```
@@ -121,11 +137,13 @@ The Dockerfile is optimized for pnpm and includes:
 
 - **Node.js 20 Alpine base image** (required for Next.js 16)
 - pnpm package manager
-- Multi-stage build for efficiency
 - Port 8080 configuration (Cloud Run default)
-- Production-optimized build
+- Production-optimized build with `pnpm build`
+- Build arguments for Firebase configuration (NEXT_PUBLIC_FIREBASE_*)
+- Build arguments for Pillar URLs (NEXT_PUBLIC_PILLAR_1_URL through NEXT_PUBLIC_PILLAR_6_URL)
+- Environment variables set at build time for Next.js static optimization
 
-**Important**: The workflow runs `cd frontend` before building the Docker image since the Dockerfile is in the frontend directory.
+**Important**: The workflow uses Docker Buildx with `context: ./frontend` to build from the frontend directory. Build arguments are passed from GitHub Secrets during the build process.
 
 ## Deployment Process
 
@@ -154,7 +172,7 @@ Every push to `main` automatically triggers deployment:
 
 ### Manual Deployment (if needed)
 
-If you need to deploy manually:
+**Option 1: Manual Docker Build and Deploy**
 
 ```bash
 # Authenticate with GCP
@@ -164,8 +182,21 @@ gcloud config set project search-ahmed
 # Navigate to frontend directory
 cd frontend
 
-# Build Docker image
-docker build -t gcr.io/search-ahmed/aiml-coe-web-app:latest .
+# Build Docker image with build args
+docker build \
+  --build-arg NEXT_PUBLIC_FIREBASE_API_KEY="your-key" \
+  --build-arg NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN="your-domain" \
+  --build-arg NEXT_PUBLIC_FIREBASE_PROJECT_ID="search-ahmed" \
+  --build-arg NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET="your-bucket" \
+  --build-arg NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID="your-id" \
+  --build-arg NEXT_PUBLIC_FIREBASE_APP_ID="your-app-id" \
+  --build-arg NEXT_PUBLIC_PILLAR_1_URL="pillar1-url" \
+  --build-arg NEXT_PUBLIC_PILLAR_2_URL="pillar2-url" \
+  --build-arg NEXT_PUBLIC_PILLAR_3_URL="pillar3-url" \
+  --build-arg NEXT_PUBLIC_PILLAR_4_URL="pillar4-url" \
+  --build-arg NEXT_PUBLIC_PILLAR_5_URL="pillar5-url" \
+  --build-arg NEXT_PUBLIC_PILLAR_6_URL="pillar6-url" \
+  -t gcr.io/search-ahmed/aiml-coe-web-app:latest .
 
 # Push to GCR
 docker push gcr.io/search-ahmed/aiml-coe-web-app:latest
@@ -175,12 +206,42 @@ gcloud run deploy aiml-coe-web-app \
   --image gcr.io/search-ahmed/aiml-coe-web-app:latest \
   --platform managed \
   --region us-central1 \
-  --allow-unauthenticated
+  --allow-unauthenticated \
+  --memory=512Mi \
+  --cpu=1 \
+  --max-instances=10
 ```
+
+**Option 2: Infrastructure Setup with Terraform**
+
+The project includes Terraform configuration for initial GCP infrastructure setup:
+
+```bash
+cd frontend/terraform
+terraform init
+terraform plan
+terraform apply
+```
+
+This sets up:
+- Service accounts
+- Workload Identity Pool and Provider
+- Required GCP APIs
+- IAM permissions
+
+**Note**: Terraform is for infrastructure setup only, not for application deployment.
 
 ### First-Time Deployment
 
 **Important**: For the very first deployment, the service doesn't exist yet. The workflow will automatically create it with the name `aiml-coe-web-app`.
+
+### Revision Management
+
+The workflow automatically:
+- Creates a revision suffix based on git commit SHA
+- Tags each revision with `commit-<SHA>` for easy identification
+- Tags the latest successful deployment with `latest` tag
+- Cleans up old revisions (keeps only the last 10 to manage storage)
 
 ## Monitoring
 
@@ -246,6 +307,59 @@ git push origin main
 # This will trigger a new deployment with the reverted code
 ```
 
+## Cloud Functions Deployment
+
+### Overview
+
+The project uses a **Hybrid Architecture** for backend operations:
+
+**Active Function (Identity Trigger)**:
+- `onUserCreate` - Automatically creates user permissions when new user signs up (beforeUserCreated trigger)
+  - **Status**: ✅ ACTIVE - This is the only function actively used in production
+  - **Purpose**: Handles "Pending Permissions" workflow and initializes default user permissions
+
+**Deprecated Callable Functions** (kept for backup/compatibility):
+- `setAdminClaim` - ❌ Replaced by `/api/admin/set-admin-claim`
+- `updateUserPermissions` - ❌ Replaced by `/api/admin/update-permissions`
+- `getUserPermissions` - ❌ Replaced by direct Firestore reads
+- `initializeUser` - ❌ Replaced by `/api/auth/initialize-user`
+
+**Note**: Admin operations now use Next.js API routes instead of callable Cloud Functions for better performance and to avoid CORS issues. See [CLOUD-FUNCTIONS.md](./CLOUD-FUNCTIONS.md) for details.
+
+**Configuration**:
+- Runtime: Node.js 20
+- Region: us-central1
+- Project: search-ahmed
+- Database: aiml-coe-web-app (named Firestore database)
+
+### Deployment Process
+
+Only the `onUserCreate` trigger needs to be deployed:
+
+```bash
+cd functions
+npm run build
+firebase deploy --only functions:onUserCreate
+```
+
+The deployment script (`deploy.sh`) can deploy all functions if needed:
+
+```bash
+cd functions
+./deploy.sh
+```
+
+The deployment script:
+1. Builds TypeScript source with `npm run build` (compiles to `lib/` directory)
+2. Deploys each function individually to GCP Cloud Functions Gen 2
+3. Configures HTTP triggers for callable functions
+4. Sets resource limits (256MB memory, 60s timeout, 10 max instances)
+
+**Note**: 
+- Functions must be built locally with `npm run build` (in functions/ directory) before deploying
+- Cloud Functions deployment is NOT automated in CI/CD and must be done manually when function code changes
+- For most admin operations, use Next.js API routes which deploy automatically with the frontend
+
 ## Configuration
 
 ### Environment Variables
@@ -268,7 +382,7 @@ gcloud run services update aiml-coe-web-app \
 ```
 
 **Via Workflow:**
-Add to `.github/workflows/cloud-run-deploy.yml`:
+The current workflow deploys with these settings:
 
 ```yaml
 - name: Deploy to Cloud Run
@@ -278,8 +392,18 @@ Add to `.github/workflows/cloud-run-deploy.yml`:
       --platform managed \
       --region us-central1 \
       --allow-unauthenticated \
-      --set-env-vars "NODE_ENV=production,API_URL=https://api.example.com"
+      --memory=512Mi \
+      --cpu=1 \
+      --max-instances=10 \
+      --min-instances=0 \
+      --concurrency=80 \
+      --timeout=300s \
+      --revision-suffix=$COMMIT_SHA \
+      --tag=commit-$COMMIT_SHA \
+      --set-env-vars "NEXT_PUBLIC_FIREBASE_API_KEY=...,NEXT_PUBLIC_PILLAR_1_URL=..."
 ```
+
+**Note**: Environment variables include all Firebase configuration and Pillar URLs. Both `NEXT_PUBLIC_*` and non-prefixed versions are set for runtime access.
 
 ### Resource Limits
 
@@ -352,8 +476,13 @@ gcloud run services update aiml-coe-web-app \
 
 1. **Check workflow location**: Must be in repository root `.github/workflows/`, NOT `frontend/.github/workflows/`
 2. Verify YAML syntax is correct
-3. Ensure push is to `main` branch
-4. Check repository Actions are enabled in Settings → Actions
+3. Ensure push is to `main` branch for deployment (Cloud Run deploy)
+4. Ensure PR is to `main` branch for validation (CI validation workflow)
+5. Check repository Actions are enabled in Settings → Actions
+
+**Note**: The project has two workflows:
+- `cloud-run-deploy.yml` - Deploys on push to main
+- `ci-validation.yml` - Validates on pull requests to main
 
 ### Image Push Fails
 

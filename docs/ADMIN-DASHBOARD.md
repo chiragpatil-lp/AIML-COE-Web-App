@@ -1,7 +1,7 @@
 # Admin Dashboard - User Permission Management
 
-**Last Updated**: January 5, 2026
-**Status**: ✅ Implemented and Ready for Testing
+**Last Updated**: January 22, 2026
+**Status**: ✅ Production Ready
 
 ---
 
@@ -25,8 +25,10 @@ The Admin Dashboard provides a centralized interface for administrators to manag
 ### Key Capabilities
 
 - **View All Users**: See a comprehensive list of all users with their current access levels
+- **Add New Users**: Pre-authorize users by email before they sign in (Pending Invitations)
 - **Edit Permissions**: Grant or revoke access to specific pillars for individual users
 - **Manage Admin Roles**: Promote users to administrators or revoke admin privileges
+- **Delete Users**: Permanently remove users and their access
 - **Access Statistics**: View real-time statistics on user distribution and pillar access
 - **Search Functionality**: Quickly find users by email or user ID
 
@@ -56,14 +58,22 @@ A comprehensive table showing:
   - "Edit" button to modify user permissions
   - "Delete" button to permanently remove a user
 
-### 3. Search and Filter
+### 3. Add User (Pre-authorization)
+
+Allows admins to add a user by email before they have registered:
+
+- **Pending Status**: Creates a "pending" permission record linked to the email.
+- **Auto-Association**: When the user signs in for the first time with that email, the system automatically detects the pending record and applies the pre-configured permissions (Admin role, Pillar access).
+- **No Email Notification**: Currently does not send an email; admins must share the link manually.
+
+### 4. Search and Filter
 
 - Real-time search by email address or user ID
 - Instant filtering of user list as you type
 
-### 4. Permission Editor Dialog
+### 5. Permission Editor Dialog
 
-A modal dialog for editing user permissions with:
+A modal dialog for editing existing user permissions with:
 
 - **User Information**: Displays email and user ID
 - **Admin Access Toggle**: Single switch to grant/revoke administrator privileges
@@ -75,7 +85,7 @@ A modal dialog for editing user permissions with:
   - Toggles automatically disabled when user is an admin
 - **Save/Cancel Actions**: Persistent changes to Firestore
 
-### 5. User Deletion Dialog
+### 6. User Deletion Dialog
 
 A safety-focused dialog for permanently deleting users:
 
@@ -149,21 +159,29 @@ The admin dashboard follows the existing AIML COE design system:
 ```
 frontend/
 ├── app/
-│   └── admin/
-│       └── page.tsx                 # Main admin dashboard page
-├── app/
+│   ├── admin/
+│   │   └── page.tsx                 # Main admin dashboard page
 │   └── api/
-│       └── admin/                   # Admin API Routes
-│           ├── delete-user/         # User deletion endpoint
-│           ├── set-admin-claim/     # Admin role endpoint
-│           └── update-permissions/  # Pillar permissions endpoint
+│       ├── admin/                   # Admin API Routes
+│       │   ├── delete-user/
+│       │   │   └── route.ts         # User deletion endpoint
+│       │   ├── set-admin-claim/
+│       │   │   └── route.ts         # Admin role endpoint
+│       │   └── update-permissions/
+│       │       └── route.ts         # Pillar permissions endpoint
+│       └── auth/
+│           └── initialize-user/
+│               └── route.ts         # Endpoint to apply pending permissions
 ├── components/
 │   └── admin/
-│       ├── EditUserPermissionsDialog.tsx  # Permission editor modal
-│       └── DeleteUserDialog.tsx           # User deletion modal
+│       ├── AddUserDialog.tsx              # Add new user modal
+│       ├── DebugAdminStatus.tsx           # Admin status debug component
+│       ├── DeleteUserDialog.tsx           # User deletion modal
+│       └── EditUserPermissionsDialog.tsx  # Permission editor modal
 ├── lib/
 │   └── firebase/
 │       ├── admin.ts                 # Server-side Firebase Admin SDK functions
+│       ├── permissions.ts           # Permission validation utilities
 │       └── user-management.ts       # Client-side functions & API wrappers
 └── docs/
     └── ADMIN-DASHBOARD.md          # This file
@@ -182,8 +200,7 @@ frontend/
 - `searchQuery`: Current search input
 - `loadingUsers`: Loading state for data fetch
 - `selectedUser`: Currently selected user for editing/deleting
-- `editDialogOpen`: Edit dialog open/close state
-- `deleteDialogOpen`: Delete dialog open/close state
+- `editDialogOpen`, `addUserDialogOpen`, `deleteDialogOpen`: Dialog visibility states
 - `summary`: Pillar access statistics
 
 **Key Functions**:
@@ -191,53 +208,63 @@ frontend/
 - `loadUsers()`: Fetches all users and statistics from Firestore
 - `handleEditUser(user)`: Opens edit dialog for selected user
 - `handleDeleteUser(user)`: Opens delete dialog for selected user
-- `handleEditSuccess()`: Reloads user list after successful update
-- `handleDeleteSuccess()`: Reloads user list after successful deletion
+- `setAddUserDialogOpen(true)`: Opens add user dialog
 
-#### 2. `/components/admin/EditUserPermissionsDialog.tsx`
+#### 2. `/components/admin/AddUserDialog.tsx`
+
+**Purpose**: Modal dialog to pre-authorize a new user.
+
+**Functionality**:
+- Accepts Email, Admin Status, and Pillar Permissions.
+- Calls `createUserPermissions` to create a Firestore document with `isPending: true`.
+- Does NOT interact with Firebase Auth (user creates their own account later).
+
+#### 3. `/components/admin/EditUserPermissionsDialog.tsx`
 
 **Purpose**: Modal dialog for editing user permissions
-
-**Props**:
-
-- `user`: UserPermissions object to edit
-- `open`: Dialog visibility state
-- `onOpenChange`: Callback to change dialog state
-- `onSuccess`: Callback after successful save
-
-**State Management**:
-
-- `isAdmin`: Local state for admin toggle
-- `pillars`: Local state for pillar access toggles
-- `isSaving`: Loading state during save operation
 
 **Key Functions**:
 
 - `handlePillarToggle(pillarKey)`: Toggles individual pillar access
 - `handleSave()`: Calls `/api/admin/update-permissions` or `/api/admin/set-admin-claim`
 
-#### 3. `/components/admin/DeleteUserDialog.tsx`
+#### 4. `/components/admin/DeleteUserDialog.tsx`
 
 **Purpose**: Modal dialog for confirming user deletion
-
-**Props**:
-
-- `user`: UserPermissions object to delete
-- `open`: Dialog visibility state
-- `onOpenChange`: Callback to change dialog state
-- `onSuccess`: Callback after successful deletion
 
 **Key Logic**:
 - Requires typing "DELETE" (case-sensitive) to enable the confirmation button.
 - Calls `/api/admin/delete-user` on confirmation.
 
-#### 4. `/app/api/admin/...` (API Routes)
+#### 5. `/app/api/admin/...` (API Routes)
 
 **Purpose**: Secure server-side endpoints for admin actions.
 
-- `delete-user/route.ts`: Deletes user from Auth and Firestore. Checks for admin privileges and prevents self-deletion.
-- `update-permissions/route.ts`: Updates pillar access.
-- `set-admin-claim/route.ts`: Promotes/demotes admins.
+- `delete-user/route.ts`: Deletes user from Auth and Firestore. Checks for admin privileges, prevents self-deletion, and **logs to `adminAuditLog`**.
+- `update-permissions/route.ts`: Updates pillar access for non-admin permissions.
+- `set-admin-claim/route.ts`: Promotes/demotes admins. Sets both custom claims and updates Firestore.
+
+**Additional API Route:**
+- `/app/api/auth/initialize-user/route.ts`: Fallback endpoint to manually initialize user permissions if `onUserCreate` trigger fails. Checks for pending permissions by email.
+
+## Understanding the Visual Indicators
+
+The dashboard uses visual cues to help you quickly assess user status and permissions:
+
+### 1. Role Badges
+- **Admin Badge** (`Shield Icon` + Blue Background): Indicates the user has full system access.
+- **User Badge** (Gray Background): Indicates a standard user with restricted access.
+
+### 2. Pillar Access Circles
+For non-admin users, access to specific pillars is shown via numbered circles (1-6):
+- **Blue Circle**: Access is **GRANTED** for this pillar.
+- **Gray Circle**: Access is **DENIED** for this pillar.
+- **"All Pillars (6/6)"**: Automatically shown for Admins since they have full access.
+
+### 3. Action Buttons
+- **Edit (Pencil)**: Open the permissions dialog.
+- **Delete (Trash)**: Remove the user.
+  - *Note*: The delete button is disabled (greyed out) for your own account to prevent accidental lockout.
 
 ---
 
@@ -253,6 +280,17 @@ frontend/
    - Number of administrators
    - Access breakdown for each pillar
 3. Scroll to the user management table
+
+#### Adding a New User
+
+1. Click the **Add User** button (top right of the user table).
+2. Enter the user's **Email Address**.
+3. Toggle permissions:
+   - **Administrator Access**: Grants full access.
+   - **Pillar Access**: Select specific pillars if not an admin.
+4. Click **Add User**.
+   - A success message will appear.
+   - The user will have these permissions applied automatically when they first sign in with that email.
 
 #### Searching for a User
 
@@ -286,19 +324,6 @@ frontend/
    - Click the **Delete User** button.
 4. The user is permanently removed from Authentication and Firestore.
 
-#### Understanding the Visual Indicators
-
-**Role Badges**:
-
-- Blue badge with shield icon = Administrator
-- Gray badge = Regular user
-
-**Pillar Access Circles**:
-
-- Blue circle with white number = Access granted to that pillar
-- Gray circle with gray number = Access denied to that pillar
-- "All Pillars (6/6)" text = User is an admin with full access
-
 ---
 
 ## Security Considerations
@@ -323,12 +348,10 @@ frontend/
 
 ### 4. Audit Trail
 
-- **Deletions**: All user deletions are logged to the `adminAuditLog` collection in Firestore with:
-  - Performed by (Admin Email/ID)
-  - Target User (Email/ID)
-  - Timestamp
-  - Action Type (`user_deleted`)
-- **Updates**: Currently tracked via `updatedAt` timestamps.
+- **Deletions**: Logged to `adminAuditLog` collection with action `user_deleted`.
+- **Permission Updates**: Logged to `adminAuditLog` collection with action `permissions_updated`.
+- **Admin Role Changes**: Logged to `adminAuditLog` collection with action `admin_claim_set`.
+- **Timestamps**: The `updatedAt` field on the user document is also updated on every change.
 
 ---
 
@@ -356,40 +379,14 @@ frontend/
 3. Check browser console for detailed error
 4. Ensure user has admin privileges
 
-### Issue: "Failed to update permissions"
+### Issue: "User not initialized" after adding them
 
-**Cause**: Firestore write error or network issue
-
-**Solution**:
-
-1. Check network connectivity
-2. Verify Firestore security rules allow writes
-3. Ensure user ID is valid
-4. Check browser console for error details
-
-### Issue: Admin Panel button not visible on dashboard
-
-**Cause**: User is not an admin or permissions not loaded
+**Cause**: Email mismatch or "Pending" logic failed.
 
 **Solution**:
-
-1. Verify `permissions.isAdmin === true` in browser console:
-   ```javascript
-   // In browser console
-   console.log(window.__NEXT_DATA__.props.pageProps.permissions);
-   ```
-2. Sign out and sign back in
-3. Check Firestore for correct permissions
-
-### Issue: Search not working
-
-**Cause**: JavaScript error or state issue
-
-**Solution**:
-
-1. Check browser console for errors
-2. Refresh the page
-3. Clear browser cache if needed
+1. Ensure the user signed in with the *exact* email address used in "Add User".
+2. Check if the user document exists in `userPermissions` with `isPending: true`.
+3. Check browser console for errors during the user's sign-in process.
 
 ---
 
@@ -402,28 +399,22 @@ frontend/
    - Select multiple users for batch permission updates
    - Import/export user permissions via CSV
 
-2. **Audit Logs**
+2. **Audit Log Viewer**
 
-   - Track all permission changes with timestamp and admin who made the change
-   - Export audit logs for compliance
+   - Create a UI in the admin panel to view the `adminAuditLog` collection.
+   - Filter logs by admin, target user, or action type.
 
-3. **User Invitation System**
+3. **Email Notifications**
 
-   - Pre-create user permissions before first sign-in
-   - Send invitation emails with custom messages
+   - Automatically send an invitation email when a user is added.
+   - Notify users when their permissions are updated.
 
-4. **Advanced Filtering**
-
-   - Filter by role (admin/user)
-   - Filter by pillar access
-   - Filter by last activity date
-
-5. **Permission Templates**
+4. **Permission Templates**
 
    - Create named permission templates (e.g., "Finance Team", "Engineering Lead")
    - Apply templates to multiple users
 
-6. **User Activity Dashboard**
+5. **User Activity Dashboard**
    - Last login timestamp
    - Pillar usage statistics per user
    - Active vs. inactive user reporting
@@ -439,18 +430,6 @@ frontend/
 
 ---
 
-## Support
-
-For issues or questions:
-
-1. Check this documentation
-2. Review browser console for errors
-3. Check Firestore database configuration
-4. Verify Firebase Admin SDK initialization
-5. Contact AIML COE development team
-
----
-
-**Version**: 1.0.0
-**Last Updated**: January 5, 2026
+**Version**: 1.1.0
+**Last Updated**: January 21, 2026
 **Status**: Production Ready

@@ -1,5 +1,8 @@
 # Google Cloud Platform Setup Guide
 
+**Last Updated**: January 22, 2026
+**Status**: ✅ Completed
+
 This guide shows you how to configure Google Cloud Platform for the CI/CD pipeline using **Workload Identity Federation** (WIF) - Google's recommended secure authentication method.
 
 ## Choose Your Setup Method
@@ -62,6 +65,8 @@ The automated CI/CD pipeline is fully configured and operational. This guide doc
   - `GCP_SERVICE_ACCOUNT`
   - `GCP_PROJECT_ID`
   - `DOCKER_IMAGE_NAME`
+  - `FIREBASE_API_KEY`, `FIREBASE_AUTH_DOMAIN`, `FIREBASE_PROJECT_ID`, `FIREBASE_STORAGE_BUCKET`, `FIREBASE_MESSAGING_SENDER_ID`, `FIREBASE_APP_ID`
+  - `PILLAR_1_URL` through `PILLAR_6_URL`
 - ✅ **Application Deployed**: https://aiml-coe-web-app-36231825761.us-central1.run.app
 
 ### For Reference Only
@@ -104,10 +109,10 @@ Before running Terraform, ensure you have:
 ### Step 1: Navigate to Terraform Directory
 
 ```bash
-cd terraform
+cd frontend/terraform
 ```
 
-All Terraform configuration files are in the `terraform/` directory.
+All Terraform configuration files are in the `frontend/terraform/` directory.
 
 ### Step 2: Review the Configuration
 
@@ -192,21 +197,32 @@ GitHub secrets have been configured with the following values:
 
 2. **Configured Secrets**:
 
-   **Secret 1: GCP_WORKLOAD_IDENTITY_PROVIDER** ✅
+   **GCP-Related Secrets:**
 
+   **Secret 1: GCP_WORKLOAD_IDENTITY_PROVIDER** ✅
    - Value: `projects/36231825761/locations/global/workloadIdentityPools/github-pool/providers/github-provider`
 
    **Secret 2: GCP_SERVICE_ACCOUNT** ✅
-
    - Value: `github-ci-cd@search-ahmed.iam.gserviceaccount.com`
 
    **Secret 3: GCP_PROJECT_ID** ✅
-
    - Value: `search-ahmed`
 
    **Secret 4: DOCKER_IMAGE_NAME** ✅
-
    - Value: `aiml-coe-web-app`
+
+   **Firebase Configuration Secrets:**
+   - `FIREBASE_API_KEY` ✅
+   - `FIREBASE_AUTH_DOMAIN` ✅
+   - `FIREBASE_PROJECT_ID` ✅
+   - `FIREBASE_STORAGE_BUCKET` ✅
+   - `FIREBASE_MESSAGING_SENDER_ID` ✅
+   - `FIREBASE_APP_ID` ✅
+
+   **Pillar Application URLs:**
+   - `PILLAR_1_URL` through `PILLAR_6_URL` ✅
+
+   **Note**: Firebase and Pillar URL secrets are used by the application during Docker build and runtime. For Firebase setup, see [Firebase Auth Documentation](./firebase/FIREBASE-AUTH-COMPLETE-SETUP.md).
 
 All secrets are properly configured and working.
 
@@ -231,6 +247,7 @@ View workflow runs: https://github.com/chiragpatil-lp/AIML-COE-Web-App/actions
 **View current state:**
 
 ```bash
+cd frontend/terraform
 terraform show
 ```
 
@@ -242,11 +259,11 @@ terraform destroy
 
 **Update configuration:**
 
-1. Edit `.tf` files
+1. Edit `.tf` files in `frontend/terraform/`
 2. Run `terraform plan` to preview
 3. Run `terraform apply` to update
 
-For detailed Terraform documentation, see [`terraform/README.md`](../terraform/README.md)
+For detailed Terraform documentation, see [`frontend/terraform/README.md`](../frontend/terraform/README.md)
 
 ---
 
@@ -446,11 +463,13 @@ GitHub Secrets securely store information that the CI/CD workflow needs.
 
 ### 3.2 Create Required Secrets
 
-You need to create **4 secrets**. For each one:
+You need to create **16 secrets** for full deployment functionality. For each one:
 
 1. Click **"New repository secret"** button
 2. Enter the **Name** and **Secret** value
 3. Click **"Add secret"**
+
+#### GCP Authentication Secrets (Required for Deployment)
 
 ---
 
@@ -530,16 +549,79 @@ aiml-coe-web-app
 
 ---
 
+#### Firebase Configuration Secrets (Required for Application)
+
+The application requires Firebase for authentication and database. You need these 6 secrets:
+
+**Secret 5-10: Firebase Configuration**
+
+1. `FIREBASE_API_KEY` - Your Firebase API key
+2. `FIREBASE_AUTH_DOMAIN` - Your Firebase auth domain
+3. `FIREBASE_PROJECT_ID` - Your Firebase project ID
+4. `FIREBASE_STORAGE_BUCKET` - Your Firebase storage bucket
+5. `FIREBASE_MESSAGING_SENDER_ID` - Your Firebase messaging sender ID
+6. `FIREBASE_APP_ID` - Your Firebase app ID
+
+**How to get these values:**
+- Go to [Firebase Console](https://console.firebase.google.com/)
+- Select your project (`search-ahmed`)
+- Go to Project Settings → General
+- Scroll to "Your apps" → Web app
+- Copy each value
+
+For detailed Firebase setup, see [Firebase Auth Complete Setup](./firebase/FIREBASE-AUTH-COMPLETE-SETUP.md).
+
+---
+
+#### Pillar Application URLs (Required for Application)
+
+The application integrates with 6 pillar applications. You need these secrets:
+
+**Secret 11-16: Pillar URLs**
+
+1. `PILLAR_1_URL` - URL for Pillar 1 application
+2. `PILLAR_2_URL` - URL for Pillar 2 application
+3. `PILLAR_3_URL` - URL for Pillar 3 application
+4. `PILLAR_4_URL` - URL for Pillar 4 application
+5. `PILLAR_5_URL` - URL for Pillar 5 application
+6. `PILLAR_6_URL` - URL for Pillar 6 application
+
+**Example format:**
+```
+https://aiml-coe-pillar-1-xxxxx-uc.a.run.app
+```
+
+**Note**: These should be the full URLs to your deployed pillar applications on Cloud Run or other hosting platforms.
+
+---
+
 ### 3.3 Verify Secrets
 
-After creating all four secrets, you should see:
+After creating all secrets, you should see these in your repository secrets list:
 
+**GCP Secrets (4):**
 - ✅ `GCP_WORKLOAD_IDENTITY_PROVIDER`
 - ✅ `GCP_SERVICE_ACCOUNT`
 - ✅ `GCP_PROJECT_ID`
 - ✅ `DOCKER_IMAGE_NAME`
 
-in your repository secrets list.
+**Firebase Secrets (6):**
+- ✅ `FIREBASE_API_KEY`
+- ✅ `FIREBASE_AUTH_DOMAIN`
+- ✅ `FIREBASE_PROJECT_ID`
+- ✅ `FIREBASE_STORAGE_BUCKET`
+- ✅ `FIREBASE_MESSAGING_SENDER_ID`
+- ✅ `FIREBASE_APP_ID`
+
+**Pillar URL Secrets (6):**
+- ✅ `PILLAR_1_URL`
+- ✅ `PILLAR_2_URL`
+- ✅ `PILLAR_3_URL`
+- ✅ `PILLAR_4_URL`
+- ✅ `PILLAR_5_URL`
+- ✅ `PILLAR_6_URL`
+
+**Total: 16 secrets**
 
 **Note**: GitHub will show when each secret was created/updated, but won't show the values (for security).
 
@@ -687,10 +769,24 @@ After completing this setup:
 
 ### GitHub Secrets
 
+**GCP Authentication (4 secrets):**
 1. `GCP_WORKLOAD_IDENTITY_PROVIDER` - Workload Identity Provider resource name
 2. `GCP_SERVICE_ACCOUNT` - `github-ci-cd@search-ahmed.iam.gserviceaccount.com`
 3. `GCP_PROJECT_ID` - `search-ahmed`
 4. `DOCKER_IMAGE_NAME` - `aiml-coe-web-app`
+
+**Firebase Configuration (6 secrets):**
+5. `FIREBASE_API_KEY`
+6. `FIREBASE_AUTH_DOMAIN`
+7. `FIREBASE_PROJECT_ID`
+8. `FIREBASE_STORAGE_BUCKET`
+9. `FIREBASE_MESSAGING_SENDER_ID`
+10. `FIREBASE_APP_ID`
+
+**Pillar URLs (6 secrets):**
+11. `PILLAR_1_URL` through `PILLAR_6_URL`
+
+**Total: 16 secrets required**
 
 ### Cloud Run Details
 
@@ -713,6 +809,6 @@ If you encounter issues:
 
 ---
 
-**Last Updated**: 2025-12-18
+**Last Updated**: 2026-01-21
 **Project**: AIML COE Web Application
 **Environment**: Production (`search-ahmed`)

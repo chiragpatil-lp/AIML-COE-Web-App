@@ -1,6 +1,6 @@
 # Pillar Authentication & Redirect Flow
 
-**Last Updated**: December 30, 2024
+**Last Updated**: January 22, 2026
 **Status**: ✅ Implemented and Tested
 
 ---
@@ -93,7 +93,7 @@ User sees Pillar 1 Dashboard
 **Important Implementation Details**:
 
 ```typescript
-// CRITICAL: In Next.js 15+, cookies() returns a Promise
+// CRITICAL: In Next.js 16, cookies() returns a Promise
 const cookieStore = await cookies(); // ✅ Must await
 
 // Construct verify URL with token
@@ -112,13 +112,18 @@ return NextResponse.redirect(verifyUrl.toString(), { status: 302 });
 **Key Functions**:
 
 ```typescript
-const handlePillarClick = (pillar: PillarInfo, hasAccess: boolean) => {
+const handlePillarClick = async (pillar: PillarInfo, hasAccess: boolean) => {
   if (!hasAccess || pillar.url === "#") {
     return;
   }
 
-  // Token is sent automatically via cookie set by AuthContext
-  const apiUrl = `/api/pillar/${pillar.number}`;
+  // Get fresh ID token from Firebase client SDK
+  // Force refresh to get a fresh token with full 1-hour validity
+  const { auth } = await import("@/lib/firebase/config");
+  const idToken = await auth?.currentUser?.getIdToken(true);
+
+  // Pass token as query parameter to the API route
+  const apiUrl = `/api/pillar/${pillar.number}?token=${encodeURIComponent(idToken)}`;
 
   // Open in new tab with the API endpoint that will verify and redirect
   window.open(apiUrl, "_blank", "noopener,noreferrer");
@@ -188,10 +193,10 @@ This allows Firebase Admin SDK to work locally without service account JSON file
 
 ### Step 2: Configure Main App
 
-Create `.env.local` in the main app:
+Create `.env.local` in the main app's `frontend/` directory:
 
 ```bash
-# /home/lordpatil/AIML-COE-Web-App/frontend/.env.local
+# AIML-COE-Web-App/frontend/.env.local
 NEXT_PUBLIC_PILLAR_1_URL=http://localhost:3001
 NEXT_PUBLIC_PILLAR_2_URL=http://localhost:3002
 # ... etc
@@ -229,14 +234,14 @@ Ensure your user has permissions in Firestore:
 **Terminal 1 - Main App**:
 
 ```bash
-cd /home/lordpatil/AIML-COE-Web-App/frontend
+cd AIML-COE-Web-App/frontend
 pnpm dev
 ```
 
 **Terminal 2 - Pillar 1**:
 
 ```bash
-cd /home/lordpatil/aiml-coe-pillar-strategy-value-dashboard/frontend
+cd aiml-coe-pillar-strategy-value-dashboard/frontend
 pnpm dev --port 3001
 ```
 
@@ -364,13 +369,13 @@ Update the `PILLAR_1_URL` secret in the main app's GitHub repository, then redep
 
 ### Issue: "An error occurred while processing your request"
 
-**Cause**: Missing `await` for `cookies()` in Next.js 15+
+**Cause**: Missing `await` for `cookies()` in Next.js 16
 
 **Solution**: Ensure the API route uses:
 
 ```typescript
 const cookieStore = await cookies(); // ✅ Correct
-// NOT: const cookieStore = cookies();  // ❌ Wrong in Next.js 15+
+// NOT: const cookieStore = cookies();  // ❌ Wrong in Next.js 16
 ```
 
 ### Issue: "User not found in database"
@@ -694,7 +699,7 @@ Both main app and Pillar apps scale automatically with Cloud Run. Ensure:
 - [Firebase Admin SDK Docs](https://firebase.google.com/docs/admin/setup)
 - [iron-session Documentation](https://github.com/vvo/iron-session)
 - [Cloud Run Documentation](https://cloud.google.com/run/docs)
-- [Next.js 16 Documentation](https://nextjs.org/docs)
+- [Next.js Documentation](https://nextjs.org/docs)
 
 ---
 

@@ -1,4 +1,7 @@
-# Production Deployment Guide - Firebase Authentication
+# Production Deployment Guide
+
+**Last Updated**: January 22, 2026
+**Status**: ✅ Production Ready
 
 **Project**: AIML COE Web App
 **GCP Project**: search-ahmed
@@ -9,17 +12,15 @@
 
 ## Overview
 
-This guide provides step-by-step instructions to deploy Firebase Authentication to production after merging the `feat/firebase-auth-implementation` branch.
+This guide provides step-by-step instructions to deploy the AIML COE Web App to production.
 
 ## Prerequisites Checklist
 
-- [x] Branch `feat/firebase-auth-implementation` created and tested
-- [x] Local Firebase authentication working
-- [x] GitHub Actions workflow updated with Firebase env vars
-- [x] Dockerfile updated to accept Firebase build arguments
 - [ ] Firebase credentials ready (from Firebase Console)
 - [ ] GitHub repository admin access
 - [ ] gcloud CLI installed and authenticated
+- [ ] All code changes tested locally
+- [ ] Pillar app URLs identified (if deploying pillar integration)
 
 ---
 
@@ -83,6 +84,14 @@ Name: FIREBASE_APP_ID
 Value: [Your app ID from Firebase Console]
 ```
 
+#### Secret 7-12: PILLAR_URLS
+Add secrets for each pillar application URL (Required for integration):
+```
+Name: PILLAR_1_URL
+Value: [URL for Pillar 1]
+```
+Repeat for `PILLAR_2_URL` through `PILLAR_6_URL`.
+
 ### 1.4 Verify Secrets
 
 After adding all secrets, you should see:
@@ -96,6 +105,7 @@ After adding all secrets, you should see:
 - ✅ GCP_SERVICE_ACCOUNT (already exists)
 - ✅ GCP_PROJECT_ID (already exists)
 - ✅ DOCKER_IMAGE_NAME (already exists)
+- ✅ PILLAR_1_URL through PILLAR_6_URL (required for pillar integration)
 
 ---
 
@@ -105,9 +115,15 @@ The production Cloud Run URL must be authorized in Firebase to allow OAuth popup
 
 ### 2.1 Get Production URL
 
-Your production URL is:
+```bash
+gcloud run services describe aiml-coe-web-app \
+  --region=us-central1 \
+  --format='value(status.url)'
 ```
-aiml-coe-web-app-36231825761.us-central1.run.app
+
+Your production URL will be in the format:
+```
+https://aiml-coe-web-app-[hash].us-central1.run.app
 ```
 
 ### 2.2 Add to Firebase Authorized Domains
@@ -116,47 +132,37 @@ aiml-coe-web-app-36231825761.us-central1.run.app
 2. Click the **Settings** tab
 3. Scroll to **Authorized domains**
 4. Click **Add domain**
-5. Enter: `aiml-coe-web-app-36231825761.us-central1.run.app`
+5. Enter your Cloud Run domain (without `https://`): `aiml-coe-web-app-[hash].us-central1.run.app`
 6. Click **Add**
 
 ✅ Firebase will now accept OAuth requests from production
 
 ---
 
-## Step 3: Create Pull Request and Merge
+## Step 3: Deploy to Production
 
-### 3.1 Create Pull Request
+### 3.1 Commit and Push Changes
 
 ```bash
-# Make sure you're on the feature branch
-git checkout feat/firebase-auth-implementation
+# Make sure you're on the main branch
+git checkout main
 
-# Push to remote (if not already pushed)
-git push origin feat/firebase-auth-implementation
+# Ensure all changes are committed
+git status
+
+# Commit your changes if needed
+git add .
+git commit -m "feat: your deployment description"
+
+# Push to trigger deployment
+git push origin main
 ```
-
-Then on GitHub:
-1. Go to your repository
-2. Click **"Pull requests"** → **"New pull request"**
-3. Base: `main` ← Compare: `feat/firebase-auth-implementation`
-4. Click **"Create pull request"**
-5. Add title: `feat: Firebase Authentication Implementation`
-6. Add description with key changes
-7. Click **"Create pull request"**
 
 ### 3.2 Verify CI Checks Pass
 
-Wait for the CI validation workflow to complete:
-- ✅ Code formatting check
-- ✅ Linter check
-- ✅ Docker build validation
-
-### 3.3 Merge Pull Request
-
-Once all checks pass:
-1. Click **"Merge pull request"**
-2. Click **"Confirm merge"**
-3. Optionally delete the feature branch
+GitHub Actions workflows will run automatically:
+- ✅ CI Validation (linting, formatting, build validation)
+- ✅ Deploy to Cloud Run (builds and deploys)
 
 ---
 
@@ -186,11 +192,16 @@ Once all checks pass:
 
 ### 5.1 Access Production App
 
-**URL**: https://aiml-coe-web-app-36231825761.us-central1.run.app
+Get your production URL:
+```bash
+gcloud run services describe aiml-coe-web-app \
+  --region=us-central1 \
+  --format='value(status.url)'
+```
 
 ### 5.2 Test Sign-In Flow
 
-1. Navigate to: https://aiml-coe-web-app-36231825761.us-central1.run.app/auth/signin
+1. Navigate to your production URL + `/auth/signin`
 2. Click **"Sign in with Google"**
 3. Verify OAuth popup opens (no popup blocked errors)
 4. Sign in with your Google account
@@ -198,7 +209,7 @@ Once all checks pass:
 
 ### 5.3 Test Dashboard
 
-1. Navigate to: https://aiml-coe-web-app-36231825761.us-central1.run.app/dashboard
+1. Navigate to your production URL + `/dashboard`
 2. Verify you see:
    - Your name and email
    - Sign Out button
@@ -216,7 +227,7 @@ Once all checks pass:
 
 ---
 
-## Step 6: Create First Admin User (Optional)
+## Step 6: Create First Admin User
 
 To make yourself an admin in production:
 
@@ -236,8 +247,9 @@ To make yourself an admin in production:
 2. Navigate to `/auth/signin`
 3. Sign in again
 4. Go to dashboard
-5. Verify you see **"Administrator"** badge
-6. All pillars should show **"Admin Access"**
+5. Verify you see **"Administrator"** badge in your profile
+6. All pillars should show appropriate access based on permissions
+7. Access Admin Dashboard at `/admin` to manage other users
 
 ---
 
@@ -371,24 +383,24 @@ https://console.cloud.google.com/run/detail/us-central1/aiml-coe-web-app?project
 After production deployment:
 
 1. **Grant Access to Team Members**:
-   - Team members sign in once
-   - Admin edits their Firestore document
-   - Set `isAdmin: true` or individual pillar permissions
+   - Team members sign in once to create their Firestore document
+   - Admin uses Admin Dashboard (`/admin`) to manage permissions
+   - Or manually edit Firestore documents to set `isAdmin: true` or individual pillar permissions
 
 2. **Configure Pillar URLs** (if not already done):
-   - Add env vars for each pillar URL
+   - Add GitHub secrets for each pillar URL (PILLAR_1_URL through PILLAR_6_URL)
    - Redeploy to enable pillar navigation
 
 3. **Monitor Usage**:
    - Check Cloud Run logs for errors
    - Monitor Firestore usage
    - Review authentication metrics
+   - Monitor Admin Dashboard usage
 
-4. **Plan Phase 2 Features**:
-   - Admin panel for user management
-   - Auto-redirect after sign-in
-   - Cloud Functions for admin claims
-   - Email notifications
+4. **Additional Configuration**:
+   - Set up alerting for errors
+   - Configure backup schedules for Firestore
+   - Review and update Firestore security rules as needed
 
 ---
 
@@ -404,6 +416,5 @@ If you encounter issues:
 
 ---
 
-**Last Updated**: January 7, 2026
-**Author**: Claude Code
-**Status**: Ready for Production Deployment
+**Last Updated**: January 21, 2026
+**Status**: Active - Production Deployment Guide

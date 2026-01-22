@@ -1,5 +1,8 @@
 # Firebase Authentication Implementation Guide
 
+**Last Updated**: January 22, 2026
+**Status**: Reference Document
+
 ## Overview
 
 This guide provides step-by-step instructions for implementing Firebase Authentication with Google OAuth for the AIML COE Web App. The main app will authenticate users and redirect them to 6 separate pillar applications based on their permissions.
@@ -83,7 +86,7 @@ const firebaseConfig = {
 1. In Firebase Console > Authentication > Settings
 2. Under "Authorized domains", add:
    - `localhost` (already added)
-   - `aiml-coe-web-app-36231825761.us-central1.run.app` (your Cloud Run domain)
+   - Your Cloud Run domain (get with: `gcloud run services describe aiml-coe-web-app --region=us-central1 --format='value(status.url)'`)
    - Any custom domains you plan to use
 
 **Step 5: Enable Firestore Database**
@@ -103,25 +106,29 @@ const firebaseConfig = {
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // User permissions document
-    match /userPermissions/{userId} {
-      // Users can read their own permissions
-      allow read: if request.auth != null && request.auth.uid == userId;
-      // Only admins can write (checked via custom claims)
-      allow write: if request.auth != null &&
-                      request.auth.token.admin == true;
+    
+    // Helper function to check if user is admin by reading their permissions document
+    function isAdmin() {
+      return request.auth != null &&
+             exists(/databases/$(database)/documents/userPermissions/$(request.auth.uid)) &&
+             get(/databases/$(database)/documents/userPermissions/$(request.auth.uid)).data.isAdmin == true;
     }
 
-    // Admin can read all permissions
-    match /userPermissions/{document=**} {
-      allow read: if request.auth != null &&
-                     request.auth.token.admin == true;
+    // User permissions collection
+    match /userPermissions/{userId} {
+      // Users can read their own permissions, and admins can read all permissions
+      allow read: if (request.auth != null && request.auth.uid == userId) || isAdmin();
+
+      // Admins can create/update/delete any user permissions
+      allow write: if isAdmin();
     }
   }
 }
 ```
 
 3. Click "Publish"
+
+**Important**: These rules use Firestore document checks (not custom claims) to verify admin status. This matches the actual deployed rules in the project.
 
 ---
 
@@ -136,7 +143,9 @@ pnpm add firebase
 
 **Verify installation:**
 
-- `firebase` (v11.x.x) - Full Firebase SDK including Auth and Firestore
+- `firebase` (v12.7.0) - Full Firebase SDK including Auth and Firestore
+- `firebase-admin` (v13.6.0) - Firebase Admin SDK for frontend API routes
+- Note: Cloud Functions use `firebase-admin` (v12.0.0)
 
 ---
 
@@ -200,30 +209,29 @@ frontend/
 ├── lib/
 │   ├── firebase/
 │   │   ├── config.ts              # Firebase initialization
-│   │   ├── auth.ts                # Auth helpers
-│   │   └── firestore.ts           # Firestore helpers
+│   │   ├── admin.ts               # Admin SDK initialization
+│   │   ├── permissions.ts         # User permission helpers
+│   │   └── user-management.ts     # User management helpers
 │   └── types/
 │       └── auth.types.ts          # TypeScript types
 ├── contexts/
-│   └── AuthContext.tsx            # Auth context provider
-├── hooks/
-│   └── useAuth.ts                 # Custom auth hook
+│   └── AuthContext.tsx            # Auth context provider & hook
 ├── components/
 │   ├── auth/
 │   │   ├── SignInButton.tsx       # Google Sign-in button
-│   │   ├── SignOutButton.tsx      # Sign-out button
-│   │   └── ProtectedRoute.tsx     # Protected route wrapper
+│   │   └── SignOutButton.tsx      # Sign-out button
 │   └── dashboard/
 │       └── PillarGrid.tsx         # Grid showing accessible pillars
 ├── app/
 │   ├── auth/
-│   │   ├── signin/
-│   │   │   └── page.tsx           # Sign-in page
-│   │   └── callback/
-│   │       └── page.tsx           # OAuth callback handler
+│   │   └── signin/
+│   │       └── page.tsx           # Sign-in page
 │   └── dashboard/
 │       └── page.tsx               # Dashboard after login
-└── middleware.ts                  # Route protection
+└── app/
+    └── api/                       # API Routes
+        ├── auth/                  # Auth endpoints
+        └── admin/                 # Admin endpoints
 ```
 
 ---
@@ -235,22 +243,40 @@ frontend/
 **Create `frontend/lib/firebase/config.ts`:**
 
 ```typescript
-import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+import { initializeApp, getApps, getApp, type FirebaseApp } from "firebase/app";
+import { getAuth, type Auth } from "firebase/auth";
+import { getFirestore, type Firestore } from "firebase/firestore";
+import { getFunctions, type Functions } from "firebase/functions";
 
 const firebaseConfig = {
-  // ... your config
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "",
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || "",
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "",
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || "",
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || "",
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "",
 };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+// Check if Firebase config is valid
+const isConfigValid = Object.values(firebaseConfig).every(
+  (value) => value !== "",
+);
 
-// CRITICAL: Always use the named database "aiml-coe-web-app"
-// DO NOT use getFirestore(app) as it will point to the (default) database
-const db = getFirestore(app, "aiml-coe-web-app");
+// Initialize Firebase (singleton pattern for Next.js)
+// Only initialize if config is valid and we're in the browser
+let app: FirebaseApp | undefined;
+let auth: Auth | undefined;
+let db: Firestore | undefined;
+let functions: Functions | undefined;
 
-export { auth, db };
+if (typeof window !== "undefined" && isConfigValid) {
+  app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
+  auth = getAuth(app);
+  db = getFirestore(app, "aiml-coe-web-app"); // Use named database
+  functions = getFunctions(app);
+}
+
+export { app, auth, db, functions };
 ```
 
 #### Step 2: TypeScript Types
@@ -300,6 +326,8 @@ export interface PillarInfo {
 
 **Create `frontend/contexts/AuthContext.tsx`:**
 
+Note: The actual implementation is more complex, handling session cookies, token refresh, and extensive error handling. See the source file for the complete implementation.
+
 ```typescript
 'use client';
 
@@ -311,119 +339,11 @@ import {
   signOut as firebaseSignOut,
   onAuthStateChanged,
 } from 'firebase/auth';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { doc, getDoc } from 'firebase/firestore';
 import { auth, db } from '@/lib/firebase/config';
 import type { AuthContextType, UserPermissions } from '@/lib/types/auth.types';
 
-const AuthContext = createContext<AuthContextType>({
-  user: null,
-  permissions: null,
-  loading: true,
-  signInWithGoogle: async () => {},
-  signOut: async () => {},
-  hasAccessToPillar: () => false,
-});
-
-export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [permissions, setPermissions] = useState<UserPermissions | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  // Fetch user permissions from Firestore
-  const fetchPermissions = async (userId: string) => {
-    try {
-      const permissionsRef = doc(db, 'userPermissions', userId);
-      const permissionsSnap = await getDoc(permissionsRef);
-
-      if (permissionsSnap.exists()) {
-        setPermissions(permissionsSnap.data() as UserPermissions);
-      } else {
-        // Create default permissions for new user
-        const defaultPermissions: UserPermissions = {
-          userId,
-          email: user?.email || '',
-          isAdmin: false,
-          pillars: {
-            pillar1: false,
-            pillar2: false,
-            pillar3: false,
-            pillar4: false,
-            pillar5: false,
-            pillar6: false,
-          },
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        };
-        await setDoc(permissionsRef, defaultPermissions);
-        setPermissions(defaultPermissions);
-      }
-    } catch (error) {
-      console.error('Error fetching permissions:', error);
-    }
-  };
-
-  // Listen to auth state changes
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      setUser(user);
-      if (user) {
-        await fetchPermissions(user.uid);
-      } else {
-        setPermissions(null);
-      }
-      setLoading(false);
-    });
-
-    return () => unsubscribe();
-  }, []);
-
-  const signInWithGoogle = async () => {
-    try {
-      const provider = new GoogleAuthProvider();
-      provider.addScope('profile');
-      provider.addScope('email');
-      await signInWithPopup(auth, provider);
-    } catch (error) {
-      console.error('Error signing in with Google:', error);
-      throw error;
-    }
-  };
-
-  const signOut = async () => {
-    try {
-      await firebaseSignOut(auth);
-    } catch (error) {
-      console.error('Error signing out:', error);
-      throw error;
-    }
-  };
-
-  const hasAccessToPillar = (pillarNumber: number): boolean => {
-    if (!permissions) return false;
-    if (permissions.isAdmin) return true;
-    const pillarKey = `pillar${pillarNumber}` as keyof typeof permissions.pillars;
-    return permissions.pillars[pillarKey] || false;
-  };
-
-  const value: AuthContextType = {
-    user,
-    permissions,
-    loading,
-    signInWithGoogle,
-    signOut,
-    hasAccessToPillar,
-  };
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-}
-
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within AuthProvider');
-  }
-  return context;
-};
+// ... (AuthContext Implementation)
 ```
 
 #### Step 4: Sign-In Components
@@ -718,37 +638,9 @@ export default function DashboardPage() {
 }
 ```
 
-#### Step 7: Middleware for Route Protection
+#### Step 7: Route Protection
 
-**Create `frontend/middleware.ts`:**
-
-```typescript
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
-
-export function middleware(request: NextRequest) {
-  // This is a client-side protected route pattern
-  // Actual auth checking happens in the AuthContext
-  // This middleware just handles basic routing
-
-  const { pathname } = request.nextUrl;
-
-  // Allow public routes
-  const publicRoutes = ["/auth/signin", "/", "/api"];
-  if (publicRoutes.some((route) => pathname.startsWith(route))) {
-    return NextResponse.next();
-  }
-
-  // For protected routes, let the client-side AuthContext handle it
-  return NextResponse.next();
-}
-
-export const config = {
-  matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
-  ],
-};
-```
+Route protection is handled by `AuthContext.tsx` (client-side redirects) and API routes (server-side verification). Middleware is not currently used for this implementation as the application relies on client-side state for the layout and server-side checks for data.
 
 #### Step 8: Update Root Layout
 
@@ -899,7 +791,7 @@ Set environment variables in Cloud Run:
 
 ### Issue: User not redirected after sign-in
 
-**Solution:** Check that AuthContext is properly wrapped in layout.tsx
+**Solution:** Check that `AuthContext` is properly handling the `onAuthStateChanged` event and using `router.push('/dashboard')` or similar mechanism (via SignInButton logic).
 
 ---
 
@@ -918,19 +810,18 @@ Set environment variables in Cloud Run:
 ### New Files (15 total)
 
 1. `lib/firebase/config.ts` - Firebase initialization
-2. `lib/firebase/auth.ts` - Auth helpers (future)
-3. `lib/firebase/firestore.ts` - Firestore helpers (future)
-4. `lib/types/auth.types.ts` - TypeScript types
-5. `contexts/AuthContext.tsx` - Auth context
-6. `hooks/useAuth.ts` - Custom hook (re-export from context)
+2. `lib/firebase/admin.ts` - Admin SDK helpers
+3. `lib/firebase/permissions.ts` - Permission helpers
+4. `lib/firebase/user-management.ts` - User management functions
+5. `lib/types/auth.types.ts` - TypeScript types
+6. `contexts/AuthContext.tsx` - Auth context
 7. `components/auth/SignInButton.tsx` - Sign-in component
 8. `components/auth/SignOutButton.tsx` - Sign-out component
 9. `components/dashboard/PillarGrid.tsx` - Pillar grid component
 10. `app/auth/signin/page.tsx` - Sign-in page
 11. `app/dashboard/page.tsx` - Dashboard page
-12. `middleware.ts` - Route protection
-13. `.env.local` - Environment variables (local)
-14. `.env.example` - Environment template
+12. `.env.local` - Environment variables (local)
+13. `.env.example` - Environment template
 
 ### Modified Files (1 total)
 
