@@ -29,4 +29,5 @@
 ## Development Tools
 - **Linting:** ESLint
 - **Formatting:** Prettier
+- **Testing:** Vitest
 - **Version Control:** Git
