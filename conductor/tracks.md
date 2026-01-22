@@ -4,5 +4,5 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-## [ ] Track: Implement GCP-native automated email notifications for published newsletter blogs
+## [~] Track: Implement GCP-native automated email notifications for published newsletter blogs
 *Link: [./conductor/tracks/newsletter_email_20260114/](./conductor/tracks/newsletter_email_20260114/)*
