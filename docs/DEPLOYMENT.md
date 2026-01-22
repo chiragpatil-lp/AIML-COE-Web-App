@@ -1,5 +1,8 @@
 # Deployment Guide
 
+**Last Updated**: January 22, 2026
+**Status**: ✅ Production Ready
+
 This guide covers the CI/CD pipeline and deployment process for the AIML COE Web Application to Google Cloud Run.
 
 ## Table of Contents

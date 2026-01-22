@@ -1,5 +1,8 @@
 # Firestore Security Rules for AIML COE Web App
 
+**Last Updated**: January 22, 2026
+**Status**: ✅ Active
+
 ## Overview
 
 The AIML COE Web App uses a **hybrid approach** for admin authorization:
