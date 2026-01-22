@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { ArrowDown } from "lucide-react";
 
 export const NewsletterHero = () => {
   const [typingComplete, setTypingComplete] = useState(false);
@@ -11,13 +10,6 @@ export const NewsletterHero = () => {
     const timer = setTimeout(() => setTypingComplete(true), 1000);
     return () => clearTimeout(timer);
   }, []);
-
-  const scrollToSubscribe = () => {
-    const subscribeSection = document.getElementById("subscribe");
-    if (subscribeSection) {
-      subscribeSection.scrollIntoView({ behavior: "smooth" });
-    }
-  };
 
   return (
     <div className="w-full overflow-hidden bg-white">
@@ -97,19 +89,6 @@ export const NewsletterHero = () => {
             Excellence.
           </motion.p>
 
-          <motion.button
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.6 }}
-            onClick={scrollToSubscribe}
-            className="relative inline-flex justify-center items-center leading-4 text-center cursor-pointer whitespace-nowrap outline-none font-medium h-10 text-white bg-[#146e96] shadow-lg transition-all duration-200 ease-in-out rounded-full px-6 text-sm group hover:bg-[#0f5a7a] hover:shadow-xl"
-          >
-            <span className="relative z-10 flex items-center gap-2">
-              Subscribe Now
-              <ArrowDown className="w-4 h-4 transition-transform duration-150 group-hover:translate-y-1" />
-            </span>
-          </motion.button>
-
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -127,7 +106,7 @@ export const NewsletterHero = () => {
                 Weekly
               </div>
               <p className="text-sm text-[#666666]">
-                Expert insights delivered to your inbox
+                Expert insights published regularly on our blog
               </p>
             </div>
             <div className="text-center">

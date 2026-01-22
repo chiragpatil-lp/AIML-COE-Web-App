@@ -64,8 +64,8 @@ export const PortfolioNavbar = () => {
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           <div className="flex-shrink-0">
-            <button
-              onClick={() => handleLinkClick("#home")}
+            <Link
+              href="/"
               className="flex items-end gap-3 text-xl font-bold text-foreground hover:text-primary transition-colors duration-200"
             >
               <Image
@@ -84,7 +84,7 @@ export const PortfolioNavbar = () => {
               >
                 AI Center of Excellence
               </span>
-            </button>
+            </Link>
           </div>
 
           <div className="hidden md:block">
