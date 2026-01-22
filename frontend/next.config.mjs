@@ -50,11 +50,9 @@ const nextConfig = {
             key: "Permissions-Policy",
             value: "geolocation=(), microphone=(), camera=()",
           },
-          {
-            key: "X-XSS-Protection",
-            value: "1; mode=block",
-          },
           // Content-Security-Policy - adjusted to allow necessary resources
+          // Note: 'unsafe-inline' and 'unsafe-eval' are required by Next.js (Turbopack in dev mode) and Google Sign-In.
+          // These can be replaced with nonces/hashes in a future security hardening phase.
           {
             key: "Content-Security-Policy",
             value: [
