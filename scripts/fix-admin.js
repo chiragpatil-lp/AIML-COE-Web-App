@@ -1,10 +1,31 @@
 /**
- * Quick script to fix admin permissions for chirag.patil@onixnet.com
- * Run with: node fix-admin.js
+ * Generic script to fix admin permissions for any user
+ * Usage: node fix-admin.js <email> <uid>
+ * Example: node fix-admin.js user@example.com abc123xyz456
  */
 
 const admin = require('firebase-admin');
 const { getFirestore } = require('firebase-admin/firestore');
+
+// Get email and UID from command-line arguments
+const email = process.argv[2];
+const uid = process.argv[3];
+
+// Validate arguments
+if (!email || !uid) {
+  console.error('ERROR: Missing required arguments');
+  console.error('\nUsage: node fix-admin.js <email> <uid>');
+  console.error('Example: node fix-admin.js user@example.com abc123xyz456\n');
+  process.exit(1);
+}
+
+// Validate email format
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+if (!emailRegex.test(email)) {
+  console.error('ERROR: Invalid email format');
+  console.error('Please provide a valid email address\n');
+  process.exit(1);
+}
 
 // Initialize with project ID
 admin.initializeApp({
@@ -14,8 +35,6 @@ admin.initializeApp({
 const db = getFirestore('aiml-coe-web-app');
 
 async function fixAdminPermissions() {
-  const email = 'chirag.patil@onixnet.com';
-  const uid = 'I1MmPgyzZwaij1mH3aAgPHwvk8c2';
 
   console.log('Starting admin permission fix...\n');
 
@@ -62,14 +81,14 @@ async function fixAdminPermissions() {
       console.log('✓ Deleted old document:', email);
     }
 
-    console.log('\n✅ SUCCESS! Admin permissions fixed for', email);
+    console.log('\nSUCCESS! Admin permissions fixed for', email);
     console.log('\nNext steps:');
     console.log('1. Sign out of the application');
     console.log('2. Sign in again');
     console.log('3. You should now have full admin access!\n');
 
   } catch (error) {
-    console.error('\n❌ ERROR:', error.message);
+    console.error('\nERROR:', error.message);
     console.error('\nFull error:', error);
     process.exit(1);
   }
