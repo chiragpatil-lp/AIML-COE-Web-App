@@ -70,6 +70,7 @@ async function checkUser(uid) {
     } else {
       console.error('❌ Error:', error.message);
     }
+    process.exit(1);
   }
 }
 
