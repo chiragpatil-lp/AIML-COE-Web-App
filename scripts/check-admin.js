@@ -26,7 +26,7 @@ if (!userId) {
 // Initialize Firebase Admin with Application Default Credentials (ADC)
 // This uses the same approach as fix-admin.js - no hardcoded service account
 admin.initializeApp({
-  projectId: 'search-ahmed'
+  projectId: process.env.FIREBASE_PROJECT_ID || 'search-ahmed'
 });
 
 const db = admin.firestore();

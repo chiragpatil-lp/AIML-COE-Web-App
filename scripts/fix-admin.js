@@ -29,7 +29,7 @@ if (!emailRegex.test(email)) {
 
 // Initialize with project ID
 admin.initializeApp({
-  projectId: 'search-ahmed'
+  projectId: process.env.FIREBASE_PROJECT_ID || 'search-ahmed'
 });
 
 const db = getFirestore('aiml-coe-web-app');

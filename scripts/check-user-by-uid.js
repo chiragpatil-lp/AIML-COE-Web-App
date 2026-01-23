@@ -20,7 +20,7 @@ if (!uid) {
   process.exit(1);
 }
 
-admin.initializeApp({ projectId: 'search-ahmed' });
+admin.initializeApp({ projectId: process.env.FIREBASE_PROJECT_ID || 'search-ahmed' });
 const db = admin.firestore();
 
 async function checkUser(uid) {
