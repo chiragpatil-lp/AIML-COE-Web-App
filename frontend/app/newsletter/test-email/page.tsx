@@ -6,7 +6,8 @@ import { CATEGORIES } from "@/lib/newsletter/constants";
 export default function TestEmailPage() {
   const allPosts = getAllPosts();
   const featuredPosts = getFeaturedPosts();
-  
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://nexus.example.com";
+
   const successStories = allPosts
     .filter((post) => post.categories.includes("Customer Success Story"))
     .slice(0, 5)
@@ -15,17 +16,21 @@ export default function TestEmailPage() {
       title: post.title,
       description: post.excerpt,
       impact: "Customer Success",
-      image: post.coverImage,
-      link: `/newsletter/${post.slug}`,
+      image:
+        post.coverImage ||
+        "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=600",
+      link: `${baseUrl}/newsletter/${post.slug}`,
     }));
 
   const mainFeatured = featuredPosts[0] || allPosts[0];
-  
+
   const featuredArticle = {
     title: mainFeatured?.title || "Latest AI Innovations",
     excerpt: mainFeatured?.excerpt || "Discover the latest updates from Nexus.",
-    image: mainFeatured?.coverImage || "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=600",
-    link: mainFeatured ? `/newsletter/${mainFeatured.slug}` : "#",
+    image:
+      mainFeatured?.coverImage ||
+      "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=600",
+    link: mainFeatured ? `${baseUrl}/newsletter/${mainFeatured.slug}` : "#",
     readTime: `${mainFeatured?.readingTime || 5} min read`,
   };
 
@@ -42,14 +47,16 @@ Try the AI Assistant here: TaxMate`,
     },
     {
       title: "Nexus Core Platform Update",
-      description: "We've successfully rebranded and updated our strategic pillars to better serve enterprise AI needs.",
+      description:
+        "We've successfully rebranded and updated our strategic pillars to better serve enterprise AI needs.",
       icon: "🚀",
     },
   ];
 
   // Logic to find other categories with posts (excluding Success Stories which is already handled)
-  const otherCategories = CATEGORIES
-    .filter((category) => category.name !== "Customer Success Story")
+  const otherCategories = CATEGORIES.filter(
+    (category) => category.name !== "Customer Success Story",
+  )
     .map((category) => {
       const posts = allPosts
         .filter((post) => post.categories.includes(category.name))
@@ -61,7 +68,7 @@ Try the AI Assistant here: TaxMate`,
           id: post.id,
           title: post.title,
           type: "Article",
-          link: `/newsletter/${post.slug}`,
+          link: `${baseUrl}/newsletter/${post.slug}`,
         })),
       };
     })
@@ -74,7 +81,8 @@ Try the AI Assistant here: TaxMate`,
       year: "numeric",
     }),
     issue: "#43",
-    intro: "Welcome to this month's edition of the Nexus Newsletter. Discover the latest AI innovations, insights, and success stories from our team and the broader AI community.",
+    intro:
+      "Welcome to this month's edition of the Nexus Newsletter. Discover the latest AI innovations, insights, and success stories from our team and the broader AI community.",
   };
 
   return (
