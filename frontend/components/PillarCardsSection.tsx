@@ -73,11 +73,13 @@ const PILLARS: PillarInfo[] = [
     id: "adoption",
     number: 7,
     name: "Internal AI Adoption & Automation",
-    description: "Driving enterprise AI transformation with purpose-built agentic assistants",
+    description:
+      "Driving enterprise AI transformation with purpose-built agentic assistants",
     url: process.env.NEXT_PUBLIC_PILLAR_7_URL || "#",
     accentColor: "#f2545b",
     enabled: true,
-    image: "https://storage.googleapis.com/aiml-coe-web-app/pillars-landing/ai-adoption.jpg",
+    image:
+      "https://storage.googleapis.com/aiml-coe-web-app/pillars-landing/ai-adoption.jpg",
   },
 ];
 

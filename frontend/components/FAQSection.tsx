@@ -24,8 +24,7 @@ const defaultFAQs: FAQItem[] = [
       "Nexus acts as a bridge between technical teams and business units. We provide standardized tools, shared infrastructure, and expert guidance to help departments—from HR to Finance—identify high-impact AI use cases, develop prototypes, and scale successful solutions responsibly across the enterprise.",
   },
   {
-    question:
-      "What governance and security measures does Nexus implement?",
+    question: "What governance and security measures does Nexus implement?",
     answer:
       "Nexus establishes robust governance frameworks that include ethical AI guidelines, data privacy protocols, and rigorous security assessments for all AI models. We ensure that every AI implementation complies with industry regulations and organizational security policies, protecting both sensitive data and brand reputation.",
   },
