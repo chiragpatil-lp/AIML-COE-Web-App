@@ -5,7 +5,8 @@ import { CATEGORIES } from "@/lib/newsletter/constants";
 export async function GET() {
   const allPosts = getAllPosts();
   const featuredPosts = getFeaturedPosts();
-  const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://nexus.example.com";
+  const BASE_URL =
+    process.env.NEXT_PUBLIC_APP_URL || "https://nexus.example.com";
 
   const successStories = allPosts
     .filter((post) => post.categories.includes("Customer Success Story"))
@@ -101,7 +102,7 @@ Try the AI Assistant here: TaxMate`,
                       <tbody>
                         <tr>
                           <td>
-                            <img src="${mainFeatured?.coverImage || ''}" alt="${mainFeatured?.title || 'Featured Image'}" width="520" height="240" style="display: block; width: 100%; height: 240px; object-fit: cover;" />
+                            <img src="${mainFeatured?.coverImage || ""}" alt="${mainFeatured?.title || "Featured Image"}" width="520" height="240" style="display: block; width: 100%; height: 240px; object-fit: cover;" />
                           </td>
                         </tr>
                         <tr>

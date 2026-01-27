@@ -6,7 +6,8 @@ import { CATEGORIES } from "@/lib/newsletter/constants";
 export default function TestEmailPage() {
   const allPosts = getAllPosts();
   const featuredPosts = getFeaturedPosts();
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://nexus.example.com";
+  const baseUrl =
+    process.env.NEXT_PUBLIC_APP_URL || "https://nexus.example.com";
 
   const successStories = allPosts
     .filter((post) => post.categories.includes("Customer Success Story"))
