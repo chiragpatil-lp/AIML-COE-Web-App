@@ -58,9 +58,10 @@ export const ProductTeaserCard = (props: ProductTeaserCardProps) => {
             className="col-span-12 lg:col-span-6 bg-[#e9e9e9] rounded-[40px] p-12 lg:p-16 flex flex-col justify-end aspect-square overflow-hidden"
           >
             <a
-              href={primaryButtonHref}
-              onClick={(e) => e.preventDefault()}
-              className="flex flex-col gap-1 text-[#9a9a9a]"
+              href="https://aiml-interactive-hub-frontend-36231825761.us-central1.run.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex flex-col gap-1 text-[#9a9a9a] hover:text-[#146e96] transition-colors"
             >
               <motion.span
                 initial={{
