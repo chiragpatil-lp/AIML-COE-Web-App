@@ -3,9 +3,9 @@
 ## Phase 1: Global Branding and Static Content Updates
 This phase focuses on the rebranding to "Nexus" and updating the pillar information on the landing page.
 
-- [x] Task: Rebrand "AI Center of Excellence" to "Nexus"
-- [x] Task: Update Landing Page Pillars
-- [x] Task: Conductor - User Manual Verification 'Branding and Pillars' (Protocol in workflow.md) [checkpoint: Phase 1]
+- [x] Task: Rebrand "AI Center of Excellence" to "Nexus" [0672aae]
+- [x] Task: Update Landing Page Pillars [0672aae]
+- [x] Task: Conductor - User Manual Verification 'Branding and Pillars' (Protocol in workflow.md) [checkpoint: 0672aae]
 
 ## Phase 2: Newsletter Logic and Content Fixes
 This phase addresses the filtering issues and content updates within the newsletter section.
