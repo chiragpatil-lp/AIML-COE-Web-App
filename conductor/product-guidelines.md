@@ -1,4 +1,4 @@
-# Product Guidelines - AIML COE Web Application
+# Product Guidelines - Nexus
 
 ## Visual Identity & Design Aesthetic
 - **Modern & Technical:** The application utilizes a clean, high-contrast design system built on **Next.js 16**, **Tailwind CSS 4**, and **DaisyUI 5**.
@@ -10,7 +10,7 @@
 - **Components:** Uses **Radix UI** primitives for accessible, high-quality interactive elements (modals, dropdowns, etc.) with consistent border radii (`0.625rem`).
 
 ## Tone of Voice & Communication
-- **Authoritative & Expert:** Content should reflect the COE's position as a leader in AI/ML. Use confident, well-researched, and definitive language.
+- **Authoritative & Expert:** Content should reflect Nexus's position as a leader in AI. Use confident, well-researched, and definitive language.
 - **Technical yet Accessible:** While maintaining technical accuracy, complex concepts should be explained clearly to ensure managers and potential customers can grasp the value without being overwhelmed by jargon.
 - **Professional & Precise:** Avoid fluff. Focus on delivering high-value information with clarity and purpose.
 
@@ -23,4 +23,4 @@
 ## User Experience Principles
 - **Efficiency First:** Design workflows that minimize clicks to reach core resources or administrative tools.
 - **Responsive by Default:** Every feature must be fully functional and visually polished across mobile, tablet, and desktop breakpoints.
-- **Accessibility:** Adhere to WCAG standards to ensure the COE's resources are available to all organization employees regardless of ability.
+- **Accessibility:** Adhere to WCAG standards to ensure Nexus's resources are available to all organization employees regardless of ability.
