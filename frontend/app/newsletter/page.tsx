@@ -13,7 +13,7 @@ export default function NewsletterPage() {
   const categoriesWithCounts = CATEGORIES.map((cat) => ({
     ...cat,
     postCount: posts.filter((p) => p.categories.includes(cat.name)).length,
-  }));
+  })).filter((cat) => cat.postCount > 0);
 
   return (
     <>

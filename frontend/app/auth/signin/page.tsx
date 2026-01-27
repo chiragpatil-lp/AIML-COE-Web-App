@@ -12,7 +12,7 @@ export default function SignInPage() {
               fontWeight: "500",
             }}
           >
-            AIML COE
+            Nexus
           </h1>
           <p
             className="text-lg text-[#404040]"
@@ -20,7 +20,7 @@ export default function SignInPage() {
               fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
             }}
           >
-            Sign in to access the Center of Excellence platform
+            Sign in to access the Nexus platform
           </p>
         </div>
 

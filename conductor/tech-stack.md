@@ -1,4 +1,4 @@
-# Technology Stack - AIML COE Web Application
+# Technology Stack - Nexus
 
 ## Frontend
 - **Framework:** Next.js 16.0.10 (App Router)

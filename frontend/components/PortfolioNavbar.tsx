@@ -72,7 +72,7 @@ export const PortfolioNavbar = () => {
             >
               <Image
                 src={getAssetUrl("/icon.svg")}
-                alt="CoE Logo"
+                alt="Nexus Logo"
                 width={32}
                 height={32}
                 className="h-8 w-auto"
@@ -84,7 +84,7 @@ export const PortfolioNavbar = () => {
                   fontWeight: "600",
                 }}
               >
-                AI Center of Excellence
+                Nexus
               </span>
             </Link>
           </div>

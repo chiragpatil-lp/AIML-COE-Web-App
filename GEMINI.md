@@ -1,8 +1,8 @@
-# AIML COE Web Application - Project Context
+# Nexus - Project Context
 
 ## Project Overview
 
-The **AIML COE Web Application** is a modern platform built to showcase and manage the AI/ML Center of Excellence's resources, pillars, and case studies. It utilizes a **Next.js 16** frontend with **React 19**, styled with **Tailwind CSS 4** and **DaisyUI**. The backend logic is supported by **Firebase Cloud Functions**, and the infrastructure is managed via **Terraform** and deployed to **Google Cloud Run**.
+**Nexus** is a modern platform built to showcase and manage the AI Center of Excellence's resources, pillars, and case studies. It utilizes a **Next.js 16** frontend with **React 19**, styled with **Tailwind CSS 4** and **DaisyUI**. The backend logic is supported by **Firebase Cloud Functions**, and the infrastructure is managed via **Terraform** and deployed to **Google Cloud Run**.
 
 ## Tech Stack
 

@@ -178,7 +178,7 @@ const caseStudies: CaseStudy[] = [
   },
   {
     id: "notion-2",
-    company: "COE Delivery Goverance",
+    company: "Engagement & Continuous Improvement",
     logo: (
       <svg
         fill="none"
@@ -237,16 +237,56 @@ const caseStudies: CaseStudy[] = [
       </svg>
     ),
     title:
-      "Market alignment, AI trends, and amplification of COE achievements.",
-    features: ["Market Insights", "Success Stories", "COE Showcase"],
+      "Market alignment, AI trends, and amplification of Nexus achievements.",
+    features: ["Market Insights", "Success Stories", "Nexus Showcase"],
     quote:
-      "Strategic communication and market intelligence keep the COE aligned with industry trends and showcase our impact.",
+      "Strategic communication and market intelligence keep Nexus aligned with industry trends and showcase our impact.",
     attribution: "Strategic Pillar 6",
     accentColor: "#2c3e50",
     image: getAssetUrl("/pillars-landing/communication-intelligence.jpg"),
     cards: [
       {
         type: "stripe",
+        delay: 0,
+        zIndex: 1,
+      },
+      {
+        type: "slack",
+        delay: 0.1,
+        zIndex: 2,
+      },
+    ],
+  },
+  {
+    id: "adoption",
+    company: "Internal AI Adoption & Automation",
+    logo: (
+      <svg
+        fill="none"
+        height="48"
+        viewBox="0 0 48 48"
+        width="48"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <rect width="48" height="48" rx="12" fill="#f2545b" />
+        <path d="M24 12L14 32H22L18 42L34 22H26L30 12H24Z" fill="white" />
+      </svg>
+    ),
+    title:
+      "Driving enterprise AI transformation with purpose-built agentic assistants.",
+    features: [
+      "Agentic Assistants",
+      "Enterprise Automation",
+      "AI Transformation",
+    ],
+    quote:
+      "Empowering internal teams with intelligent agents accelerates digital transformation and operational efficiency.",
+    attribution: "Strategic Pillar 7",
+    accentColor: "#f2545b",
+    image: getAssetUrl("/pillars-landing/ai-adoption.jpg"),
+    cards: [
+      {
+        type: "sentiment",
         delay: 0,
         zIndex: 1,
       },
@@ -469,7 +509,7 @@ export const CaseStudiesCarousel = () => {
               fontSize: "40px",
             }}
           >
-            The 6 Strategic Pillars of Our AI/ML COE
+            The Strategic Pillars of Nexus
           </h1>
           <p
             className="text-lg leading-7 text-muted-foreground max-w-2xl mx-auto"
@@ -477,9 +517,9 @@ export const CaseStudiesCarousel = () => {
               fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
             }}
           >
-            Our Centre of Excellence is architected around six strategic pillars
-            that enable innovation, scale, quality, and measurable business
-            impact across the enterprise.
+            Nexus is architected around strategic pillars that enable
+            innovation, scale, quality, and measurable business impact across
+            the enterprise.
           </p>
         </div>
 
