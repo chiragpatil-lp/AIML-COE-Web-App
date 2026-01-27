@@ -36,10 +36,9 @@ export function NewsletterClient({
     selectedCategory === "All Posts" ? "all" : selectedCategory,
   );
 
-  // Exclude featured posts from the regular posts grid
-  const regularPosts = filteredPosts.filter((post) => !post.featured);
-  const visiblePosts = regularPosts.slice(0, visibleCount);
-  const hasMorePosts = visibleCount < regularPosts.length;
+  // Keep all posts in the grid, including featured ones, so they show up in category filters
+  const visiblePosts = filteredPosts.slice(0, visibleCount);
+  const hasMorePosts = visibleCount < filteredPosts.length;
 
   const handleLoadMore = () => {
     setVisibleCount((prev) => prev + POSTS_PER_PAGE);

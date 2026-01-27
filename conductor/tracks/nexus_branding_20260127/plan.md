@@ -10,16 +10,10 @@ This phase focuses on the rebranding to "Nexus" and updating the pillar informat
 ## Phase 2: Newsletter Logic and Content Fixes
 This phase addresses the filtering issues and content updates within the newsletter section.
 
-- [ ] Task: Implement "Interactive demo hub" Success Story
-    - [ ] Create a new blog/post file for "Interactive demo hub" with mock content and the "Customer Success Story" tag.
-- [ ] Task: Fix Newsletter Filtering and Featured Posts
-    - [ ] Update post metadata to make `staples-mlops-success-story` featured.
-    - [ ] Debug and fix the "All Posts" filter in `NewsletterClient.tsx` or equivalent.
-    - [ ] Verify "Gen AI" tag filtering logic.
-- [ ] Task: Dynamic Tag Filter Sidebar
-    - [ ] Modify the tag filtering logic to only display tags that have at least one associated post.
-    - [ ] Verify that `AgentOps` and `Security` tags are hidden if they are empty.
-- [ ] Task: Conductor - User Manual Verification 'Newsletter Logic' (Protocol in workflow.md)
+- [x] Task: Implement "Interactive demo hub" Success Story
+- [x] Task: Fix Newsletter Filtering and Featured Posts
+- [x] Task: Dynamic Tag Filter Sidebar
+- [~] Task: Conductor - User Manual Verification 'Newsletter Logic' (Protocol in workflow.md)
 
 ## Phase 3: Email Template Automation and Test Email Page
 This phase focuses on the email template enhancements and the new API for template generation.

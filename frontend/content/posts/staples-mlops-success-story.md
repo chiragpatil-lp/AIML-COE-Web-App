@@ -9,7 +9,7 @@ author:
   role: "Engineering Team"
 publishedAt: "2026-01-21"
 readingTime: 10
-featured: false
+featured: true
 ---
 
 Staples.com supports a high-velocity ecommerce business where data science teams need to iterate quickly, but production systems must stay stable. The team faced a familiar set of scaling pains: ad hoc feature engineering that led to duplication and inconsistencies, DEV/PROD separation that wasn’t programmatically enforced, and manual deployments with limited review and no consistent CI/CD standards.
