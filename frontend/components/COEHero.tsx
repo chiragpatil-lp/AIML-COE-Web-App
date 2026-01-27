@@ -142,7 +142,7 @@ export const COEHero = () => {
                 fontWeight: "400",
               }}
             >
-              Building the Foundation for Enterprise AI Excellence{" "}
+              Building the Foundation for AI Excellence with Nexus{" "}
               <span
                 className="opacity-40"
                 style={{
@@ -160,7 +160,7 @@ export const COEHero = () => {
                 fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
               }}
             >
-              Our Center of Excellence empowers internal teams with reusable
+              Nexus empowers internal teams with reusable
               assets and standardized governance, ensuring every AI initiative
               delivers consistent quality and a competitive edge for our
               clients.

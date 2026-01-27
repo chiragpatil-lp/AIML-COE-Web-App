@@ -8,7 +8,7 @@ const NEWSLETTER_DATA = {
   date: "January 15, 2026",
   issue: "#42",
   intro:
-    "Welcome to this month's edition of the AIML COE Newsletter. Discover the latest AI innovations, insights, and success stories from our team and the broader AI community.",
+    "Welcome to this month's edition of the Nexus Newsletter. Discover the latest AI innovations, insights, and success stories from our team and the broader AI community.",
 };
 
 const FEATURED_ARTICLE = {
@@ -195,7 +195,7 @@ export default function EmailTemplatePreview() {
                                 fontFamily: "'Plus Jakarta Sans', sans-serif",
                               }}
                             >
-                              AI/ML Center of Excellence
+                              Nexus
                             </h1>
                             <p
                               style={{
@@ -735,7 +735,7 @@ export default function EmailTemplatePreview() {
                                 fontFamily: "'Plus Jakarta Sans', sans-serif",
                               }}
                             >
-                              AI/ML Center of Excellence
+                              Nexus
                             </p>
                             <p
                               style={{
@@ -749,7 +749,7 @@ export default function EmailTemplatePreview() {
                               }}
                             >
                               Driving innovation and excellence in Artificial
-                              Intelligence and Machine Learning
+                              Intelligence
                             </p>
                             <div style={{ marginBottom: "20px" }}>
                               <a

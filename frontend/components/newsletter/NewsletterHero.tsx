@@ -72,7 +72,7 @@ export const NewsletterHero = () => {
               fontWeight: "500",
             }}
           >
-            AI/ML CoE <span className="text-[#146e96]">Newsletter</span>
+            AI Nexus <span className="text-[#146e96]">Newsletter</span>
           </motion.h1>
 
           <motion.p
@@ -85,8 +85,7 @@ export const NewsletterHero = () => {
             }}
           >
             Stay updated with the latest in AI innovation, industry insights,
-            best practices, and real-world case studies from our Center of
-            Excellence.
+            best practices, and real-world case studies from Nexus.
           </motion.p>
 
           <motion.div

@@ -24,8 +24,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Onix AI/ML CoE",
-  description: "Onix AI/ML CoE",
+  title: "Nexus",
+  description: "Nexus",
   generator: "v0.app",
   icons: {
     icon: "https://storage.googleapis.com/aiml-coe-web-app/icon.svg",

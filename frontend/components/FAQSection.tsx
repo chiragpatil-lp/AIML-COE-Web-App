@@ -13,24 +13,24 @@ type FAQSectionProps = {
 };
 const defaultFAQs: FAQItem[] = [
   {
-    question: "What is an AI Center of Excellence (CoE)?",
+    question: "What is Nexus?",
     answer:
-      "An AI Center of Excellence (CoE) is a specialized team within an organization dedicated to the strategic implementation and governance of Artificial Intelligence. It serves as a central hub for sharing best practices, driving innovation, and ensuring that AI initiatives align with broader business goals while maintaining security and compliance standards.",
+      "Nexus is a specialized team within our organization dedicated to the strategic implementation and governance of Artificial Intelligence. It serves as a central hub for sharing best practices, driving innovation, and ensuring that AI initiatives align with broader business goals while maintaining security and compliance standards.",
   },
   {
     question:
-      "How does the CoE support AI adoption across different departments?",
+      "How does Nexus support AI adoption across different departments?",
     answer:
-      "The CoE acts as a bridge between technical teams and business units. We provide standardized tools, shared infrastructure, and expert guidance to help departments—from HR to Finance—identify high-impact AI use cases, develop prototypes, and scale successful solutions responsibly across the enterprise.",
+      "Nexus acts as a bridge between technical teams and business units. We provide standardized tools, shared infrastructure, and expert guidance to help departments—from HR to Finance—identify high-impact AI use cases, develop prototypes, and scale successful solutions responsibly across the enterprise.",
   },
   {
     question:
-      "What governance and security measures does the AI CoE implement?",
+      "What governance and security measures does Nexus implement?",
     answer:
-      "Our CoE establishes robust governance frameworks that include ethical AI guidelines, data privacy protocols, and rigorous security assessments for all AI models. We ensure that every AI implementation complies with industry regulations and organizational security policies, protecting both sensitive data and brand reputation.",
+      "Nexus establishes robust governance frameworks that include ethical AI guidelines, data privacy protocols, and rigorous security assessments for all AI models. We ensure that every AI implementation complies with industry regulations and organizational security policies, protecting both sensitive data and brand reputation.",
   },
   {
-    question: "How can I collaborate with the AI CoE on a new project?",
+    question: "How can I collaborate with Nexus on a new project?",
     answer:
       "Getting started is easy. You can submit a project proposal through our internal portal. Our team will then work with you to evaluate the feasibility, potential ROI, and resource requirements. Once approved, we provide the technical expertise and project management support needed to bring your AI vision to life.",
   },

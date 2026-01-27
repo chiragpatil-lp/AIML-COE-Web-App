@@ -1,10 +1,6 @@
-# AIML COE Web Application
+# Nexus
 
-A modern Next.js web application for the AIML Center of Excellence, built with React 19, Next.js 16, Firebase, and Tailwind CSS.
-
-## Overview
-
-This is a full-stack application for the AIML COE platform, featuring:
+This is a full-stack application for Nexus, featuring:
 - **Frontend**: Next.js 16 application with responsive UI, modern components, and animations
 - **Backend**: Firebase Cloud Functions for authentication, user management, and admin operations
 - **Database**: Firestore with role-based access control and pillar-based permissions
@@ -487,4 +483,4 @@ Private - All Rights Reserved
 
 ## Support
 
-For issues or questions, please contact the AIML COE team.
+For issues or questions, please contact the Nexus team.

@@ -52,7 +52,7 @@ const PILLARS: PillarInfo[] = [
   {
     id: "governance",
     number: 5,
-    name: "COE Delivery Governance",
+    name: "Engagement & Continuous Improvement",
     description: "Quality assurance and continuous improvement",
     url: process.env.NEXT_PUBLIC_PILLAR_5_URL || "#",
     accentColor: "#f2545b",
@@ -63,11 +63,21 @@ const PILLARS: PillarInfo[] = [
     id: "communication",
     number: 6,
     name: "Communication & Market Intelligence",
-    description: "Market insights, AI trends, and COE showcase",
+    description: "Market insights, AI trends, and Nexus showcase",
     url: process.env.NEXT_PUBLIC_PILLAR_6_URL || "#",
     accentColor: "#2c3e50",
     enabled: true,
     image: getAssetUrl("/pillars-landing/communication-intelligence.jpg"),
+  },
+  {
+    id: "adoption",
+    number: 7,
+    name: "Internal AI Adoption & Automation",
+    description: "Driving enterprise AI transformation with purpose-built agentic assistants",
+    url: process.env.NEXT_PUBLIC_PILLAR_7_URL || "#",
+    accentColor: "#f2545b",
+    enabled: true,
+    image: "https://storage.googleapis.com/aiml-coe-web-app/pillars-landing/ai-adoption.jpg",
   },
 ];
 
