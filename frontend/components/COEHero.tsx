@@ -160,18 +160,31 @@ export const COEHero = () => {
                 fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
               }}
             >
-              Nexus empowers internal teams with reusable
-              assets and standardized governance, ensuring every AI initiative
-              delivers consistent quality and a competitive edge for our
-              clients.
+              Nexus empowers internal teams with reusable assets and
+              standardized governance, ensuring every AI initiative delivers
+              consistent quality and a competitive edge for our clients.
             </p>
 
-            <button className="relative inline-flex justify-center items-center leading-4 text-center cursor-pointer whitespace-nowrap outline-none font-medium h-9 text-[#232730] bg-white/50 backdrop-blur-sm shadow-[0_1px_1px_0_rgba(255,255,255,0),0_0_0_1px_rgba(87,90,100,0.12)] transition-all duration-200 ease-in-out rounded-lg px-4 mt-5 text-sm group hover:shadow-[0_1px_2px_0_rgba(0,0,0,0.05),0_0_0_1px_rgba(87,90,100,0.18)]">
-              <span className="relative z-10 flex items-center gap-1">
-                Learn about our platform
-                <ArrowRight className="w-4 h-4 -mr-1 transition-transform duration-150 group-hover:translate-x-1" />
-              </span>
-            </button>
+            <div className="flex flex-wrap items-center gap-4 mt-5">
+              <button className="relative inline-flex justify-center items-center leading-4 text-center cursor-pointer whitespace-nowrap outline-none font-medium h-9 text-[#232730] bg-white/50 backdrop-blur-sm shadow-[0_1px_1px_0_rgba(255,255,255,0),0_0_0_1px_rgba(87,90,100,0.12)] transition-all duration-200 ease-in-out rounded-lg px-4 text-sm group hover:shadow-[0_1px_2px_0_rgba(0,0,0,0.05),0_0_0_1px_rgba(87,90,100,0.18)]">
+                <span className="relative z-10 flex items-center gap-1">
+                  Learn about our platform
+                  <ArrowRight className="w-4 h-4 -mr-1 transition-transform duration-150 group-hover:translate-x-1" />
+                </span>
+              </button>
+
+              <a
+                href="https://aiml-interactive-hub-frontend-36231825761.us-central1.run.app/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="relative inline-flex justify-center items-center leading-4 text-center cursor-pointer whitespace-nowrap outline-none font-medium h-9 text-white bg-[#146e96] shadow-[0_1px_1px_0_rgba(0,0,0,0.05)] transition-all duration-200 ease-in-out rounded-lg px-4 text-sm group hover:bg-[#0f5a7a] hover:shadow-[0_1px_2px_0_rgba(0,0,0,0.1)]"
+              >
+                <span className="relative z-10 flex items-center gap-1">
+                  Interactive Demo Hub
+                  <ArrowRight className="w-4 h-4 -mr-1 transition-transform duration-150 group-hover:translate-x-1" />
+                </span>
+              </a>
+            </div>
           </div>
 
           <div className="col-span-12 md:col-span-6">
