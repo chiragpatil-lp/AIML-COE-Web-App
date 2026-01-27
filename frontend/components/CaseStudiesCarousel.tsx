@@ -269,19 +269,21 @@ const caseStudies: CaseStudy[] = [
         xmlns="http://www.w3.org/2000/svg"
       >
         <rect width="48" height="48" rx="12" fill="#f2545b" />
-        <path
-          d="M24 12L14 32H22L18 42L34 22H26L30 12H24Z"
-          fill="white"
-        />
+        <path d="M24 12L14 32H22L18 42L34 22H26L30 12H24Z" fill="white" />
       </svg>
     ),
-    title: "Driving enterprise AI transformation with purpose-built agentic assistants.",
-    features: ["Agentic Assistants", "Enterprise Automation", "AI Transformation"],
+    title:
+      "Driving enterprise AI transformation with purpose-built agentic assistants.",
+    features: [
+      "Agentic Assistants",
+      "Enterprise Automation",
+      "AI Transformation",
+    ],
     quote:
       "Empowering internal teams with intelligent agents accelerates digital transformation and operational efficiency.",
     attribution: "Strategic Pillar 7",
     accentColor: "#f2545b",
-    image: "https://storage.googleapis.com/aiml-coe-web-app/pillars-landing/ai-adoption.jpg",
+    image: getAssetUrl("/pillars-landing/ai-adoption.jpg"),
     cards: [
       {
         type: "sentiment",
@@ -515,8 +517,9 @@ export const CaseStudiesCarousel = () => {
               fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
             }}
           >
-            Nexus is architected around strategic pillars that enable innovation,
-            scale, quality, and measurable business impact across the enterprise.
+            Nexus is architected around strategic pillars that enable
+            innovation, scale, quality, and measurable business impact across
+            the enterprise.
           </p>
         </div>
 
