@@ -13,17 +13,11 @@ This phase addresses the filtering issues and content updates within the newslet
 - [x] Task: Implement "Interactive demo hub" Success Story [c2d9842]
 - [x] Task: Fix Newsletter Filtering and Featured Posts [c2d9842]
 - [x] Task: Dynamic Tag Filter Sidebar [c2d9842]
-- [~] Task: Conductor - User Manual Verification 'Newsletter Logic' (Protocol in workflow.md) [checkpoint: c2d9842]
+- [x] Task: Conductor - User Manual Verification 'Newsletter Logic' (Protocol in workflow.md) [checkpoint: 0db2fbf]
 
 ## Phase 3: Email Template Automation and Test Email Page
 This phase focuses on the email template enhancements and the new API for template generation.
 
-- [ ] Task: Update Test Email Page UI and Content
-    - [ ] Add the TaxMate bullet points to the "Tech Updates" section as a text/list block.
-    - [ ] Remove the "Resources & Learning" section.
-    - [ ] Implement the automated "Success Stories" section that pulls 3-5 latest "Customer Success Story" posts.
-- [ ] Task: Create Email Template API Route
-    - [ ] Create `frontend/app/api/newsletter/render-template/route.ts`.
-    - [ ] Implement logic to fetch posts and render the newsletter HTML.
-    - [ ] Remove social links (LinkedIn, Twitter, Website) from the rendered HTML template.
-- [ ] Task: Conductor - User Manual Verification 'Email Automation' (Protocol in workflow.md)
+- [x] Task: Update Test Email Page UI and Content
+- [x] Task: Create Email Template API Route
+- [~] Task: Conductor - User Manual Verification 'Email Automation' (Protocol in workflow.md)
