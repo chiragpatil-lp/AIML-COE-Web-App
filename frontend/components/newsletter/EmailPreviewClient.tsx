@@ -29,6 +29,15 @@ interface EmailPreviewClientProps {
     description: string;
     icon: string;
   }>;
+  otherCategories: Array<{
+    categoryName: string;
+    posts: Array<{
+      id: string;
+      title: string;
+      type: string;
+      link: string;
+    }>;
+  }>;
 }
 
 export function EmailPreviewClient({
@@ -36,6 +45,7 @@ export function EmailPreviewClient({
   featuredArticle,
   successStories,
   techUpdates,
+  otherCategories,
 }: EmailPreviewClientProps) {
   const emailRef = useRef<HTMLDivElement>(null);
   const [copyStatus, setCopyStatus] = useState("Copy Email Content");
@@ -440,7 +450,7 @@ export function EmailPreviewClient({
                                       <div
                                         style={{
                                           width: "48px",
-                                          height: "48px",
+                                          height: 48px;
                                           backgroundColor: "#e0f2f1",
                                           borderRadius: "10px",
                                           display: "flex",
@@ -488,6 +498,100 @@ export function EmailPreviewClient({
                               </table>
                             </td>
                           </tr>
+                        ))}
+
+                        {/* Other Categories Loop */}
+                        {otherCategories.map((category) => (
+                          <React.Fragment key={category.categoryName}>
+                            <tr>
+                              <td style={{ padding: "30px 40px 24px" }}>
+                                <h3
+                                  style={{
+                                    margin: "0 0 24px",
+                                    color: "#202020",
+                                    fontSize: "20px",
+                                    fontWeight: "600",
+                                    fontFamily:
+                                      "'Plus Jakarta Sans', sans-serif",
+                                  }}
+                                >
+                                  📚 {category.categoryName}
+                                </h3>
+                              </td>
+                            </tr>
+                            {category.posts.map((post) => (
+                              <tr key={post.id}>
+                                <td style={{ padding: "0 40px 14px" }}>
+                                  <a
+                                    href={post.link}
+                                    style={{
+                                      display: "block",
+                                      padding: "18px 20px",
+                                      backgroundColor: "#ffffff",
+                                      border: "1px solid #e5e7eb",
+                                      borderRadius: "8px",
+                                      textDecoration: "none",
+                                      color: "#202020",
+                                      transition: "all 0.2s",
+                                    }}
+                                  >
+                                    <table
+                                      cellPadding="0"
+                                      cellSpacing="0"
+                                      border={0}
+                                      width="100%"
+                                    >
+                                      <tbody>
+                                        <tr>
+                                          <td
+                                            style={{ verticalAlign: "middle" }}
+                                          >
+                                            <div
+                                              style={{
+                                                fontSize: "15px",
+                                                fontWeight: "600",
+                                                color: "#202020",
+                                                marginBottom: "6px",
+                                                lineHeight: "1.4",
+                                                fontFamily:
+                                                  "'Plus Jakarta Sans', sans-serif",
+                                              }}
+                                            >
+                                              {post.title}
+                                            </div>
+                                            <div
+                                              style={{
+                                                fontSize: "13px",
+                                                color: "#666666",
+                                                lineHeight: "1.4",
+                                              }}
+                                            >
+                                              {post.type}
+                                            </div>
+                                          </td>
+                                          <td
+                                            width="30"
+                                            align="right"
+                                            style={{ verticalAlign: "middle" }}
+                                          >
+                                            <div
+                                              style={{
+                                                color: "#f35959",
+                                                fontSize: "20px",
+                                                fontWeight: "bold",
+                                              }}
+                                            >
+                                              →
+                                            </div>
+                                          </td>
+                                        </tr>
+                                      </tbody>
+                                    </table>
+                                  </a>
+                                </td>
+                              </tr>
+                            ))}
+                          </React.Fragment>
                         ))}
 
                         <tr>
@@ -688,6 +792,7 @@ export function EmailPreviewClient({
                   <li>• Featured Article</li>
                   <li>• Success Stories</li>
                   <li>• Tech Updates</li>
+                  <li>• Other Categories</li>
                   <li>• CTA Section</li>
                 </ul>
               </div>

@@ -1,6 +1,7 @@
 import React from "react";
 import { EmailPreviewClient } from "@/components/newsletter/EmailPreviewClient";
 import { getAllPosts, getFeaturedPosts } from "@/lib/newsletter/content";
+import { CATEGORIES } from "@/lib/newsletter/constants";
 
 export default function TestEmailPage() {
   const allPosts = getAllPosts();
@@ -46,6 +47,26 @@ Try the AI Assistant here: TaxMate`,
     },
   ];
 
+  // Logic to find other categories with posts (excluding Success Stories which is already handled)
+  const otherCategories = CATEGORIES
+    .filter((category) => category.name !== "Customer Success Story")
+    .map((category) => {
+      const posts = allPosts
+        .filter((post) => post.categories.includes(category.name))
+        .filter((post) => post.id !== mainFeatured?.id) // Exclude featured post to avoid duplicates
+        .slice(0, 3);
+      return {
+        categoryName: category.name,
+        posts: posts.map((post) => ({
+          id: post.id,
+          title: post.title,
+          type: "Article",
+          link: `/newsletter/${post.slug}`,
+        })),
+      };
+    })
+    .filter((category) => category.posts.length > 0);
+
   const newsletterData = {
     date: new Date().toLocaleDateString("en-US", {
       month: "long",
@@ -62,6 +83,7 @@ Try the AI Assistant here: TaxMate`,
       featuredArticle={featuredArticle}
       successStories={successStories}
       techUpdates={techUpdates}
+      otherCategories={otherCategories}
     />
   );
 }

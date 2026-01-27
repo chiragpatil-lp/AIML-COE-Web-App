@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getAllPosts, getFeaturedPosts } from "@/lib/newsletter/content";
+import { CATEGORIES } from "@/lib/newsletter/constants";
 
 export async function GET() {
   const allPosts = getAllPosts();
@@ -10,6 +11,26 @@ export async function GET() {
     .slice(0, 5);
 
   const mainFeatured = featuredPosts[0] || allPosts[0];
+
+  // Logic to find other categories with posts (excluding Success Stories which is already handled)
+  const otherCategories = CATEGORIES
+    .filter((category) => category.name !== "Customer Success Story")
+    .map((category) => {
+      const posts = allPosts
+        .filter((post) => post.categories.includes(category.name))
+        .filter((post) => post.id !== mainFeatured?.id) // Exclude featured post to avoid duplicates
+        .slice(0, 3);
+      return {
+        categoryName: category.name,
+        posts: posts.map((post) => ({
+          id: post.id,
+          title: post.title,
+          type: "Article",
+          link: `https://nexus.example.com/newsletter/${post.slug}`,
+        })),
+      };
+    })
+    .filter((category) => category.posts.length > 0);
 
   const newsletterData = {
     date: new Date().toLocaleDateString("en-US", {
@@ -140,6 +161,34 @@ Try the AI Assistant here: TaxMate`,
                     </table>
                   </td>
                 </tr>
+                `).join('')}
+                ${otherCategories.map(category => `
+                <tr>
+                  <td style="padding: 30px 40px 24px">
+                    <h3 style="margin: 0 0 24px; color: #202020; fontSize: 20px; fontWeight: 600;">📚 ${category.categoryName}</h3>
+                  </td>
+                </tr>
+                ${category.posts.map(post => `
+                <tr>
+                  <td style="padding: 0 40px 14px">
+                    <a href="${post.link}" style="display: block; padding: 18px 20px; background-color: #ffffff; border: 1px solid #e5e7eb; border-radius: 8px; text-decoration: none; color: #202020; transition: all 0.2s;">
+                      <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                        <tbody>
+                          <tr>
+                            <td style="vertical-align: middle">
+                              <div style="font-size: 15px; font-weight: 600; color: #202020; margin-bottom: 6px; line-height: 1.4; font-family: 'Plus Jakarta Sans', sans-serif;">${post.title}</div>
+                              <div style="font-size: 13px; color: #666666; line-height: 1.4;">${post.type}</div>
+                            </td>
+                            <td width="30" align="right" style="vertical-align: middle">
+                              <div style="color: #f35959; font-size: 20px; font-weight: bold;">→</div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </a>
+                  </td>
+                </tr>
+                `).join('')}
                 `).join('')}
                 <tr>
                   <td style="background-color: #f8fafb; padding: 36px 40px 32px; text-align: center; border-top: 1px solid #e5e7eb;">
