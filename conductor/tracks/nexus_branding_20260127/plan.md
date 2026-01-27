@@ -10,10 +10,10 @@ This phase focuses on the rebranding to "Nexus" and updating the pillar informat
 ## Phase 2: Newsletter Logic and Content Fixes
 This phase addresses the filtering issues and content updates within the newsletter section.
 
-- [x] Task: Implement "Interactive demo hub" Success Story
-- [x] Task: Fix Newsletter Filtering and Featured Posts
-- [x] Task: Dynamic Tag Filter Sidebar
-- [~] Task: Conductor - User Manual Verification 'Newsletter Logic' (Protocol in workflow.md)
+- [x] Task: Implement "Interactive demo hub" Success Story [c2d9842]
+- [x] Task: Fix Newsletter Filtering and Featured Posts [c2d9842]
+- [x] Task: Dynamic Tag Filter Sidebar [c2d9842]
+- [~] Task: Conductor - User Manual Verification 'Newsletter Logic' (Protocol in workflow.md) [checkpoint: c2d9842]
 
 ## Phase 3: Email Template Automation and Test Email Page
 This phase focuses on the email template enhancements and the new API for template generation.
