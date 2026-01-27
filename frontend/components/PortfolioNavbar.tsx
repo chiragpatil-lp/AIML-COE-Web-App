@@ -6,11 +6,12 @@ import { Menu, X } from "lucide-react";
 import Image from "next/image";
 import { useAuth } from "@/contexts/AuthContext";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { getAssetUrl } from "@/lib/image-loader";
 const navigationLinks = [
   {
-    name: "Features",
-    href: "#features",
+    name: "Newsletter",
+    href: "/newsletter",
   },
   {
     name: "Solutions",
@@ -24,6 +25,7 @@ const navigationLinks = [
 
 // @component: PortfolioNavbar
 export const PortfolioNavbar = () => {
+  const router = useRouter();
   const { user } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -42,6 +44,12 @@ export const PortfolioNavbar = () => {
   };
   const handleLinkClick = (href: string) => {
     closeMobileMenu();
+    // If it's a page route (starts with /), navigate to it
+    if (href.startsWith("/")) {
+      router.push(href);
+      return;
+    }
+    // Otherwise, treat as anchor link
     const element = document.querySelector(href);
     if (element) {
       element.scrollIntoView({
@@ -58,8 +66,8 @@ export const PortfolioNavbar = () => {
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           <div className="flex-shrink-0">
-            <button
-              onClick={() => handleLinkClick("#home")}
+            <Link
+              href="/"
               className="flex items-end gap-3 text-xl font-bold text-foreground hover:text-primary transition-colors duration-200"
             >
               <Image
@@ -78,7 +86,7 @@ export const PortfolioNavbar = () => {
               >
                 AI Center of Excellence
               </span>
-            </button>
+            </Link>
           </div>
 
           <div className="hidden md:block">
