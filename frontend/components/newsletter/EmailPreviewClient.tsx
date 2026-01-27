@@ -450,7 +450,7 @@ export function EmailPreviewClient({
                                       <div
                                         style={{
                                           width: "48px",
-                                          height: 48px;
+                                          height: "48px",
                                           backgroundColor: "#e0f2f1",
                                           borderRadius: "10px",
                                           display: "flex",
