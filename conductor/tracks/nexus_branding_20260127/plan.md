@@ -18,6 +18,6 @@ This phase addresses the filtering issues and content updates within the newslet
 ## Phase 3: Email Template Automation and Test Email Page
 This phase focuses on the email template enhancements and the new API for template generation.
 
-- [x] Task: Update Test Email Page UI and Content
-- [x] Task: Create Email Template API Route
-- [~] Task: Conductor - User Manual Verification 'Email Automation' (Protocol in workflow.md)
+- [x] Task: Update Test Email Page UI and Content [9a97c3b]
+- [x] Task: Create Email Template API Route [9a97c3b]
+- [~] Task: Conductor - User Manual Verification 'Email Automation' (Protocol in workflow.md) [checkpoint: 9a97c3b]
