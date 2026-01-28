@@ -26,6 +26,7 @@ const PILLAR_NAMES: Record<string, string> = {
   pillar4: "People & Capability Enablement",
   pillar5: "COE Delivery Governance",
   pillar6: "Communication & Market Intelligence",
+  pillar7: "Internal AI Adoption & Automation",
 };
 
 export function AddUserDialog({
@@ -42,6 +43,7 @@ export function AddUserDialog({
     pillar4: false,
     pillar5: false,
     pillar6: false,
+    pillar7: false,
   });
   const [isSaving, setIsSaving] = useState(false);
 
@@ -91,6 +93,7 @@ export function AddUserDialog({
         pillar4: false,
         pillar5: false,
         pillar6: false,
+        pillar7: false,
       });
 
       onSuccess();
@@ -114,6 +117,7 @@ export function AddUserDialog({
         pillar4: false,
         pillar5: false,
         pillar6: false,
+        pillar7: false,
       });
       onOpenChange(false);
     }

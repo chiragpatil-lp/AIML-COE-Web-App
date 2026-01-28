@@ -62,7 +62,9 @@ exports.onUserCreate = (0, identity_1.beforeUserCreated)(async (event) => {
     }
     const { uid, email } = user;
     if (!email) {
-        console.error('User created without email:', uid);
+        console.error('User created without email - skipping permission creation');
+        // PII: User ID commented out
+        // console.error('User created without email:', uid);
         return;
     }
     try {
@@ -85,11 +87,16 @@ exports.onUserCreate = (0, identity_1.beforeUserCreated)(async (event) => {
             };
             await db.collection('userPermissions').doc(uid).set(defaultPermissions);
             await pendingDoc.ref.delete(); // Clean up pending document
-            console.log('Created user permissions from pending record:', {
-                uid,
-                email,
+            console.log('Created user permissions from pending record successfully', {
+                source: 'pending',
                 originalPendingId: pendingDoc.id
             });
+            // PII: User ID and email commented out
+            // console.log('Created user permissions from pending record:', {
+            //   uid,
+            //   email,
+            //   originalPendingId: pendingDoc.id
+            // });
             return;
         }
         const defaultPermissions = {
@@ -103,15 +110,18 @@ exports.onUserCreate = (0, identity_1.beforeUserCreated)(async (event) => {
                 pillar4: false,
                 pillar5: false,
                 pillar6: false,
+                pillar7: false,
             },
             createdAt: admin.firestore.FieldValue.serverTimestamp(),
             updatedAt: admin.firestore.FieldValue.serverTimestamp(),
         };
         await db.collection('userPermissions').doc(uid).set(defaultPermissions);
-        console.log('Created default permissions for user:', {
-            uid,
-            email,
-        });
+        console.log('Created default permissions for new user successfully');
+        // PII: User ID and email commented out
+        // console.log('Created default permissions for user:', {
+        //   uid,
+        //   email,
+        // });
     }
     catch (error) {
         console.error('Error creating user permissions:', error);
@@ -176,11 +186,15 @@ exports.setAdminClaim = (0, https_1.onCall)({
             performedByEmail: context.auth.token.email,
             timestamp: admin.firestore.FieldValue.serverTimestamp(),
         });
-        console.log('Admin claim set:', {
-            targetUserId: userId,
+        console.log('Admin claim set successfully:', {
             isAdmin,
-            performedBy: context.auth.uid,
         });
+        // PII: User IDs commented out - check audit logs for tracking
+        // console.log('Admin claim set:', {
+        //   targetUserId: userId,
+        //   isAdmin,
+        //   performedBy: context.auth.uid,
+        // });
         return {
             success: true,
             message: `Admin claim ${isAdmin ? 'granted' : 'revoked'} for user ${userId}`,
@@ -227,7 +241,7 @@ exports.updateUserPermissions = (0, https_1.onCall)({
         throw new https_1.HttpsError('invalid-argument', 'pillars must be an object');
     }
     // Validate pillars object structure
-    const validPillarKeys = ['pillar1', 'pillar2', 'pillar3', 'pillar4', 'pillar5', 'pillar6'];
+    const validPillarKeys = ['pillar1', 'pillar2', 'pillar3', 'pillar4', 'pillar5', 'pillar6', 'pillar7'];
     for (const key of Object.keys(pillars)) {
         if (!validPillarKeys.includes(key)) {
             throw new https_1.HttpsError('invalid-argument', `Invalid pillar key: ${key}`);
@@ -256,11 +270,15 @@ exports.updateUserPermissions = (0, https_1.onCall)({
             performedByEmail: context.auth.token.email,
             timestamp: admin.firestore.FieldValue.serverTimestamp(),
         });
-        console.log('User permissions updated:', {
-            targetUserId: userId,
-            pillars,
-            performedBy: context.auth.uid,
+        console.log('User permissions updated successfully:', {
+            pillarCount: Object.keys(pillars).filter(k => pillars[k]).length,
         });
+        // PII: User IDs commented out - check audit logs for tracking
+        // console.log('User permissions updated:', {
+        //   targetUserId: userId,
+        //   pillars,
+        //   performedBy: context.auth.uid,
+        // });
         return {
             success: true,
             message: `Permissions updated for user ${userId}`,
@@ -377,6 +395,7 @@ exports.initializeUser = (0, https_1.onCall)({
                 pillar4: false,
                 pillar5: false,
                 pillar6: false,
+                pillar7: false,
             },
             createdAt: admin.firestore.FieldValue.serverTimestamp(),
             updatedAt: admin.firestore.FieldValue.serverTimestamp(),

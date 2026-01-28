@@ -44,6 +44,7 @@ export async function getAllUserPermissions(): Promise<UserPermissions[]> {
           pillar4: data.pillars?.pillar4 || false,
           pillar5: data.pillars?.pillar5 || false,
           pillar6: data.pillars?.pillar6 || false,
+          pillar7: data.pillars?.pillar7 || false,
         },
         createdAt: data.createdAt?.toDate() || new Date(),
         updatedAt: data.updatedAt?.toDate() || new Date(),
@@ -172,6 +173,7 @@ export async function createUserPermissions(
       pillar4: boolean;
       pillar5: boolean;
       pillar6: boolean;
+      pillar7: boolean;
     };
   },
 ): Promise<void> {
@@ -248,6 +250,7 @@ export async function getPillarAccessSummary(): Promise<{
       pillar4: 0,
       pillar5: 0,
       pillar6: 0,
+      pillar7: 0,
     };
 
     users.forEach((user) => {
@@ -260,6 +263,7 @@ export async function getPillarAccessSummary(): Promise<{
         summary.pillar4 += 1;
         summary.pillar5 += 1;
         summary.pillar6 += 1;
+        summary.pillar7 += 1;
       } else {
         if (user.pillars.pillar1) summary.pillar1 += 1;
         if (user.pillars.pillar2) summary.pillar2 += 1;
@@ -267,6 +271,7 @@ export async function getPillarAccessSummary(): Promise<{
         if (user.pillars.pillar4) summary.pillar4 += 1;
         if (user.pillars.pillar5) summary.pillar5 += 1;
         if (user.pillars.pillar6) summary.pillar6 += 1;
+        if (user.pillars.pillar7) summary.pillar7 += 1;
       }
     });
 

@@ -1,7 +1,7 @@
 ---
-title: "The Future of AI in Enterprise: Trends to Watch in 2026"
+title: "Enterprise AI 2026: The Shift to Agentic Reasoning"
 excerpt: "From Yann LeCun's pivot to neurosymbolic AI to the rise of 'Bounded Autonomy' in agentic systems, explore the defining AI shifts of 2026."
-coverImage: "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=2000"
+coverImage: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&q=80&w=2000"
 tag: "AI Trends"
 author:
   name: "Nexus Team"

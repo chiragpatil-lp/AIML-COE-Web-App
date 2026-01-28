@@ -2,7 +2,7 @@
 title: "Turning manual model releases into a production-ready MLOps workflow"
 excerpt: "Staples.com supports a high-velocity ecommerce business where data science teams need to iterate quickly, but production systems must stay stable. The team faced a familiar set of scaling pains..."
 coverImage: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=2000"
-tag: "MLOps"
+tag: "Customer Success Story"
 author:
   name: "Nexus Team"
   role: "Engineering Team"
@@ -17,7 +17,7 @@ The team faced a familiar set of scaling pains: ad hoc feature engineering that 
 
 At the same time, the organization saw a gap between agility and reliability. BigQuery ML enabled fast experimentation, while more robust orchestration (such as Vertex Pipelines) required additional development effort, leaving the team looking for a scalable middle ground to productionize mature models.
 
-### Implementing end-to-end MLOps: CI/CD, evaluation gates, deployment, and monitoring
+## Implementing end-to-end MLOps: CI/CD, evaluation gates, deployment, and monitoring
 
 To close these gaps, an end-to-end MLOps workflow was implemented and demonstrated for Staples.com—from source control to production rollout. 
 
@@ -28,7 +28,7 @@ The workflow established:
 
 In parallel, the data science team received actionable guidance to strengthen observability across the model lifecycle. That included consistent logging patterns, monitoring dashboards for model performance, and practical approaches to detecting drift and regressions earlier—reducing troubleshooting time and improving day-to-day release confidence.
 
-### Reducing risk while enabling faster iteration
+## Reducing risk while enabling faster iteration
 
 A key challenge was environment management: DEV vs PROD separation existed in practice, but it wasn’t enforced in a way that prevented accidental production changes. 
 
@@ -38,14 +38,14 @@ Another friction point was external data ingestion. With limited engineering ban
 
 Gemini and Vertex AI-style managed capabilities were also explored as future accelerators for real-time and on-demand predictions. Because enterprise architecture constraints can shape what’s feasible, the approach emphasized clear decision points and governance requirements so the team can adopt managed tooling without surprises.
 
-### Building confidence with stronger CI/CD and observability
+## Building confidence with stronger CI/CD and observability
 
 With formalized CI/CD, a reviewable release process, and monitoring that surfaces issues proactively, Staples.com can ship models more reliably and spend less time reacting to production incidents. The new workflow also helps the team scale model operations across more use cases by reusing patterns rather than reinventing deployment, evaluation, and logging each time.
 
 > “Once you can trust the pipeline, you can move faster without breaking things. The biggest shift wasn’t just automation—it was consistency across how we build, ship, and monitor models.”
 > — *Spokesperson Last Name*
 
-### What’s next
+## What’s next
 
 Next, Staples.com plans to continue maturing feature engineering reuse, further standardize ingestion and ownership boundaries, and expand real-time prediction options where business workflows demand low-latency decisions. 
 

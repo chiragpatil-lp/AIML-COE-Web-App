@@ -1,8 +1,8 @@
 ---
 title: "IPG Weber: Accelerating AI Agent Migration with Automation"
 excerpt: "Delivered a large-scale AI agent migration to Vertex AI using a custom-built automation framework, enabling a shift away from manual and error-prone development processes."
-coverImage: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=600"
-tag: "Automation"
+coverImage: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&q=80&w=2000"
+tag: "Customer Success Story"
 author:
   name: "Nexus Team"
   role: "Editor"
