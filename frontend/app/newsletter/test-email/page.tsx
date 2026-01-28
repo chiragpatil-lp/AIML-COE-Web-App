@@ -1,7 +1,6 @@
 import React from "react";
 import { EmailPreviewClient } from "@/components/newsletter/EmailPreviewClient";
 import { getAllPosts, getFeaturedPosts } from "@/lib/newsletter/content";
-import { CATEGORIES } from "@/lib/newsletter/constants";
 
 export default function TestEmailPage() {
   const allPosts = getAllPosts();
@@ -9,71 +8,95 @@ export default function TestEmailPage() {
   const baseUrl =
     process.env.NEXT_PUBLIC_APP_URL || "https://nexus.example.com";
 
-  const successStories = allPosts
+  // Section 2: AI Delivery Wins (Customer Success Stories)
+  const deliveryWins = allPosts
     .filter((post) => post.categories.includes("Customer Success Story"))
     .slice(0, 5)
     .map((post) => ({
       id: post.id,
       title: post.title,
-      description: post.excerpt,
-      impact: "Customer Success",
-      image:
-        post.coverImage ||
-        "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=600",
+      excerpt: post.excerpt,
+      tags: post.tags || ["Success Story"],
       link: `${baseUrl}/newsletter/${post.slug}`,
     }));
 
-  const mainFeatured = featuredPosts[0] || allPosts[0];
+  // Section 1: Flagship Achievement
+  const mainFeatured =
+    featuredPosts.length > 0 ? featuredPosts[0] : allPosts[0];
 
-  const featuredArticle = {
-    title: mainFeatured?.title || "Latest AI Innovations",
-    excerpt: mainFeatured?.excerpt || "Discover the latest updates from Nexus.",
+  const flagshipAchievement = {
+    title: mainFeatured?.title || "Introducing Nexus: Our AI COE Platform",
+    excerpt:
+      mainFeatured?.excerpt ||
+      "Nexus, our new AI COE platform, is now operational in its first phase, featuring the Interactive Demo Hub, the automated newsletter system, and AI accelerators.",
     image:
       mainFeatured?.coverImage ||
       "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=600",
     link: mainFeatured ? `${baseUrl}/newsletter/${mainFeatured.slug}` : "#",
-    readTime: `${mainFeatured?.readingTime || 5} min read`,
+    slug: mainFeatured?.slug || "#",
   };
 
-  const techUpdates = [
+  // Section 3: COE Execution Updates
+  const coeUpdates = [
     {
-      title: "Meet TaxMate: Your AI Tax Assistant",
-      description: `With the January 17th deadline for Investment Proof submission approaching, we've developed TaxMate to simplify your queries:
-• Clarify valid proofs for Investment Declarations (80C, 80D, etc.)
-• Answer queries on specific claims (NPS, HRA, etc.)
-• Guide you on Darwinbox upload requirements
-
-Try the AI Assistant here: TaxMate`,
-      icon: "🤖",
+      title: "🚀 Interactive Demo Hub Expanded",
+      description:
+        "Added five new conversational agents: OrderFlow AI for order processing, ThinkStack for reasoning workflows, and SQLGenie for SQL generation. All agents now support live sales demonstrations with pre-loaded datasets.",
+      date: "Week of Jan 20, 2026",
     },
     {
-      title: "Nexus Core Platform Update",
+      title: "📰 AI Newsletter System Live",
       description:
-        "We've successfully rebranded and updated our strategic pillars to better serve enterprise AI needs.",
-      icon: "🚀",
+        "Phase 1 MVP deployed with manual content creation and SendGrid integration. Archive functionality allows browsing past editions. Phase 2 AI news aggregation module begins development next sprint.",
+      date: "Week of Jan 13, 2026",
+    },
+    {
+      title: "🛠️ MLOps Templates Development",
+      description:
+        "Building reusable Vertex AI Pipeline templates for common ML workflows. First template covers data preprocessing, model training, and deployment automation. Documentation and best practices guide in progress.",
+      date: "In Progress",
     },
   ];
 
-  // Logic to find other categories with posts (excluding Success Stories which is already handled)
-  const otherCategories = CATEGORIES.filter(
-    (category) => category.name !== "Customer Success Story",
-  )
-    .map((category) => {
-      const posts = allPosts
-        .filter((post) => post.categories.includes(category.name))
-        .filter((post) => post.id !== mainFeatured?.id) // Exclude featured post to avoid duplicates
-        .slice(0, 3);
-      return {
-        categoryName: category.name,
-        posts: posts.map((post) => ({
-          id: post.id,
-          title: post.title,
-          type: "Article",
-          link: `${baseUrl}/newsletter/${post.slug}`,
-        })),
-      };
-    })
-    .filter((category) => category.posts.length > 0);
+  // Section 4: AI Industry Signals
+  const industrySignals = [
+    {
+      category: "LLMs",
+      title: "OpenAI Releases GPT-5 with Multimodal Reasoning",
+      description:
+        "Latest model demonstrates significant improvements in complex reasoning tasks, combining text, image, and audio inputs seamlessly.",
+      source: "TechCrunch • Jan 24, 2026",
+      link: "#",
+      style: {
+        bg: "#eff6ff",
+        color: "#1e40af",
+      },
+    },
+    {
+      category: "AI Agents",
+      title: "Google Vertex AI Adds Native Agent Builder",
+      description:
+        "New low-code platform enables rapid development of AI agents with built-in tool integration and monitoring capabilities for enterprise use cases.",
+      source: "Google Cloud Blog • Jan 22, 2026",
+      link: "#",
+      style: {
+        bg: "#f0fdf4",
+        color: "#15803d",
+      },
+    },
+    {
+      category: "MLOps",
+      title: "Databricks Launches Unified ML Pipeline Framework",
+      description:
+        "New framework streamlines ML workflows from data preparation to production deployment with automated versioning and lineage tracking.",
+      source: "VentureBeat • Jan 20, 2026",
+      link: "#",
+      style: {
+        bg: "#fef3c7",
+        color: "#92400e",
+      },
+    },
+  ];
 
   const newsletterData = {
     date: new Date().toLocaleDateString("en-US", {
@@ -81,18 +104,18 @@ Try the AI Assistant here: TaxMate`,
       day: "numeric",
       year: "numeric",
     }),
-    issue: "#43",
+    issue: "#1",
     intro:
-      "Welcome to this month's edition of the Nexus Newsletter. Discover the latest AI innovations, insights, and success stories from our team and the broader AI community.",
+      "Welcome to this month's AI Newsletter. This edition highlights our key COE initiatives, recent AI delivery wins, and key AI trends shaping the AI landscape.",
   };
 
   return (
     <EmailPreviewClient
       newsletterData={newsletterData}
-      featuredArticle={featuredArticle}
-      successStories={successStories}
-      techUpdates={techUpdates}
-      otherCategories={otherCategories}
+      flagshipAchievement={flagshipAchievement}
+      deliveryWins={deliveryWins}
+      coeUpdates={coeUpdates}
+      industrySignals={industrySignals}
     />
   );
 }
