@@ -144,7 +144,7 @@ export const PostContent = ({ post, relatedPosts = [] }: PostContentProps) => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="prose prose-lg max-w-none mb-12 prose-headings:font-medium prose-a:text-[#146e96]"
+          className="prose prose-lg max-w-none mb-12 prose-headings:font-medium prose-a:text-[#2563EB]"
           style={{
             fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
           }}
@@ -153,7 +153,54 @@ export const PostContent = ({ post, relatedPosts = [] }: PostContentProps) => {
             remarkPlugins={[remarkGfm, remarkBreaks]}
             components={{
               p: ({ children }) => (
-                <p className="mb-6 leading-relaxed">{children}</p>
+                <p className="mb-6 leading-relaxed text-[#202020]">
+                  {children}
+                </p>
+              ),
+              h1: ({ children }) => (
+                <h1 className="text-3xl font-bold text-[#202020] mt-10 mb-6">
+                  {children}
+                </h1>
+              ),
+              h2: ({ children }) => (
+                <h2 className="text-2xl font-bold text-[#202020] mt-10 mb-5 border-b pb-2 border-gray-100">
+                  {children}
+                </h2>
+              ),
+              h3: ({ children }) => (
+                <h3 className="text-xl font-semibold text-[#202020] mt-8 mb-4">
+                  {children}
+                </h3>
+              ),
+              ul: ({ children }) => (
+                <ul className="list-disc pl-6 mb-6 space-y-2 text-[#202020]">
+                  {children}
+                </ul>
+              ),
+              ol: ({ children }) => (
+                <ol className="list-decimal pl-6 mb-6 space-y-2 text-[#202020]">
+                  {children}
+                </ol>
+              ),
+              li: ({ children }) => (
+                <li className="leading-relaxed">{children}</li>
+              ),
+              blockquote: ({ children }) => (
+                <blockquote className="border-l-4 border-[#146e96] pl-4 italic my-8 text-gray-700 bg-gray-50 py-2 pr-4 rounded-r-lg">
+                  {children}
+                </blockquote>
+              ),
+              a: ({ href, children }) => (
+                <a
+                  href={href}
+                  className="text-[#2563EB] hover:underline hover:text-[#1d4ed8] transition-colors"
+                  target={href?.startsWith("http") ? "_blank" : undefined}
+                  rel={
+                    href?.startsWith("http") ? "noopener noreferrer" : undefined
+                  }
+                >
+                  {children}
+                </a>
               ),
             }}
           >

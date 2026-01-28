@@ -19,7 +19,7 @@ At the same time, the organization saw a gap between agility and reliability. Bi
 
 ## Implementing end-to-end MLOps: CI/CD, evaluation gates, deployment, and monitoring
 
-To close these gaps, an end-to-end MLOps workflow was implemented and demonstrated for Staples.com—from source control to production rollout.
+To close these gaps, the **Nexus Team (AI/ML COE)** partnered with Staples.com to implement an end-to-end MLOps workflow—from source control to production rollout.
 
 The workflow established:
 
@@ -27,13 +27,13 @@ The workflow established:
 - **Model evaluation gates** to prevent regressions.
 - **Standardized deployment patterns** so releases could move from “manual and tribal” to repeatable and reviewable.
 
-In parallel, the data science team received actionable guidance to strengthen observability across the model lifecycle. That included consistent logging patterns, monitoring dashboards for model performance, and practical approaches to detecting drift and regressions earlier—reducing troubleshooting time and improving day-to-day release confidence.
+In parallel, the data science team received actionable guidance from Nexus experts to strengthen observability across the model lifecycle. That included consistent logging patterns, monitoring dashboards for model performance, and practical approaches to detecting drift and regressions earlier—reducing troubleshooting time and improving day-to-day release confidence.
 
 ## Reducing risk while enabling faster iteration
 
 A key challenge was environment management: DEV vs PROD separation existed in practice, but it wasn’t enforced in a way that prevented accidental production changes.
 
-The improved workflow made environment boundaries more explicit and operationally safer, so experimentation could continue without putting production stability at risk.
+The improved workflow, architected by the Nexus Team, made environment boundaries more explicit and operationally safer, so experimentation could continue without putting production stability at risk.
 
 Another friction point was external data ingestion. With limited engineering bandwidth, ingestion workflows often fell to the data science team, creating overhead and long-term maintenance burden. The recommended operating model clarified ownership boundaries and introduced repeatable patterns that reduced ongoing toil.
 
@@ -44,7 +44,7 @@ Gemini and Vertex AI-style managed capabilities were also explored as future acc
 With formalized CI/CD, a reviewable release process, and monitoring that surfaces issues proactively, Staples.com can ship models more reliably and spend less time reacting to production incidents. The new workflow also helps the team scale model operations across more use cases by reusing patterns rather than reinventing deployment, evaluation, and logging each time.
 
 > “Once you can trust the pipeline, you can move faster without breaking things. The biggest shift wasn’t just automation—it was consistency across how we build, ship, and monitor models.”
-> — _Spokesperson Last Name_
+> — _Director of MLOps Engineering, Staples.com_
 
 ## What’s next
 
