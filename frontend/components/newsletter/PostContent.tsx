@@ -162,7 +162,12 @@ export const PostContent = ({ post, relatedPosts = [] }: PostContentProps) => {
             fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
           }}
         >
-          <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>
+          <ReactMarkdown
+            remarkPlugins={[remarkGfm, remarkBreaks]}
+            components={{
+              p: ({ children }) => <p className="mb-6 leading-relaxed">{children}</p>,
+            }}
+          >
             {post.content}
           </ReactMarkdown>
         </motion.article>
