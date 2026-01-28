@@ -25,10 +25,7 @@ export default function NewsletterPage() {
   return (
     <>
       <PortfolioNavbar />
-      <NewsletterClient
-        initialPosts={posts}
-        categories={categories}
-      />
+      <NewsletterClient initialPosts={posts} categories={categories} />
       <Footer />
     </>
   );

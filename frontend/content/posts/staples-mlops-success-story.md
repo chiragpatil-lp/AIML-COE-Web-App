@@ -11,7 +11,7 @@ readingTime: 10
 featured: true
 ---
 
-Staples.com supports a high-velocity ecommerce business where data science teams need to iterate quickly, but production systems must stay stable. 
+Staples.com supports a high-velocity ecommerce business where data science teams need to iterate quickly, but production systems must stay stable.
 
 The team faced a familiar set of scaling pains: ad hoc feature engineering that led to duplication and inconsistencies, DEV/PROD separation that wasn’t programmatically enforced, and manual deployments with limited review and no consistent CI/CD standards.
 
@@ -19,18 +19,19 @@ At the same time, the organization saw a gap between agility and reliability. Bi
 
 ## Implementing end-to-end MLOps: CI/CD, evaluation gates, deployment, and monitoring
 
-To close these gaps, an end-to-end MLOps workflow was implemented and demonstrated for Staples.com—from source control to production rollout. 
+To close these gaps, an end-to-end MLOps workflow was implemented and demonstrated for Staples.com—from source control to production rollout.
 
 The workflow established:
-*   **Automated CI/CD** to streamline releases.
-*   **Model evaluation gates** to prevent regressions.
-*   **Standardized deployment patterns** so releases could move from “manual and tribal” to repeatable and reviewable.
+
+- **Automated CI/CD** to streamline releases.
+- **Model evaluation gates** to prevent regressions.
+- **Standardized deployment patterns** so releases could move from “manual and tribal” to repeatable and reviewable.
 
 In parallel, the data science team received actionable guidance to strengthen observability across the model lifecycle. That included consistent logging patterns, monitoring dashboards for model performance, and practical approaches to detecting drift and regressions earlier—reducing troubleshooting time and improving day-to-day release confidence.
 
 ## Reducing risk while enabling faster iteration
 
-A key challenge was environment management: DEV vs PROD separation existed in practice, but it wasn’t enforced in a way that prevented accidental production changes. 
+A key challenge was environment management: DEV vs PROD separation existed in practice, but it wasn’t enforced in a way that prevented accidental production changes.
 
 The improved workflow made environment boundaries more explicit and operationally safer, so experimentation could continue without putting production stability at risk.
 
@@ -43,11 +44,11 @@ Gemini and Vertex AI-style managed capabilities were also explored as future acc
 With formalized CI/CD, a reviewable release process, and monitoring that surfaces issues proactively, Staples.com can ship models more reliably and spend less time reacting to production incidents. The new workflow also helps the team scale model operations across more use cases by reusing patterns rather than reinventing deployment, evaluation, and logging each time.
 
 > “Once you can trust the pipeline, you can move faster without breaking things. The biggest shift wasn’t just automation—it was consistency across how we build, ship, and monitor models.”
-> — *Spokesperson Last Name*
+> — _Spokesperson Last Name_
 
 ## What’s next
 
-Next, Staples.com plans to continue maturing feature engineering reuse, further standardize ingestion and ownership boundaries, and expand real-time prediction options where business workflows demand low-latency decisions. 
+Next, Staples.com plans to continue maturing feature engineering reuse, further standardize ingestion and ownership boundaries, and expand real-time prediction options where business workflows demand low-latency decisions.
 
 With CI/CD and observability foundations in place, the team is positioned to scale model deployment patterns across more domains while maintaining production stability.
 

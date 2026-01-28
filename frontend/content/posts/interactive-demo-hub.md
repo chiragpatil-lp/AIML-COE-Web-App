@@ -11,13 +11,13 @@ readingTime: 5
 featured: false
 ---
 
-The **Interactive Demo Hub** is a cornerstone of the Nexus platform, designed to bridge the gap between abstract AI concepts and tangible, real-world applications. 
+The **Interactive Demo Hub** is a cornerstone of the Nexus platform, designed to bridge the gap between abstract AI concepts and tangible, real-world applications.
 
 As organizations increasingly look to adopt Generative AI, the need for a safe, interactive environment to explore these technologies has never been greater.
 
 ## Centralizing AI Discovery
 
-Before the Demo Hub, AI capabilities were often siloed within individual project teams or hidden behind technical documentation. Stakeholders frequently asked, "What can this AI actually do for my department?" 
+Before the Demo Hub, AI capabilities were often siloed within individual project teams or hidden behind technical documentation. Stakeholders frequently asked, "What can this AI actually do for my department?"
 
 The Demo Hub answers this by providing a "playground" where users can interact with live models, agentic assistants, and data visualization tools.
 
@@ -36,11 +36,11 @@ The Demo Hub answers this by providing a "playground" where users can interact w
 The Hub has already seen significant engagement across multiple business units. By providing hands-on experience, it reduces the "fear of the unknown" associated with AI and sparks innovation by allowing teams to visualize how AI could be integrated into their specific workflows.
 
 > "The Interactive Demo Hub has transformed how we communicate the value of AI to our stakeholders. It's one thing to talk about LLMs; it's another thing entirely to let someone sit down and have a conversation with one that understands their business context."
-> — *Nexus Platform Lead*
+> — _Nexus Platform Lead_
 
 ## Future Enhancements
 
-We are continuously expanding the Hub with new demos, including advanced multimodal capabilities, automated code generation tools, and deeper integrations with our strategic pillars. 
+We are continuously expanding the Hub with new demos, including advanced multimodal capabilities, automated code generation tools, and deeper integrations with our strategic pillars.
 
 Our goal is to make the Interactive Demo Hub the ultimate destination for AI discovery and experimentation within the enterprise.
 

@@ -152,7 +152,9 @@ export const PostContent = ({ post, relatedPosts = [] }: PostContentProps) => {
           <ReactMarkdown
             remarkPlugins={[remarkGfm, remarkBreaks]}
             components={{
-              p: ({ children }) => <p className="mb-6 leading-relaxed">{children}</p>,
+              p: ({ children }) => (
+                <p className="mb-6 leading-relaxed">{children}</p>
+              ),
             }}
           >
             {post.content}
