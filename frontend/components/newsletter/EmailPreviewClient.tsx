@@ -9,43 +9,43 @@ interface EmailPreviewClientProps {
     issue: string;
     intro: string;
   };
-  featuredArticle: {
+  flagshipAchievement: {
     title: string;
     excerpt: string;
     image: string;
     link: string;
-    readTime: string;
   };
-  successStories: Array<{
+  deliveryWins: Array<{
     id: string;
     title: string;
-    description: string;
-    impact: string;
-    image: string;
+    excerpt: string;
+    tags: string[];
     link: string;
   }>;
-  techUpdates: Array<{
+  coeUpdates: Array<{
     title: string;
     description: string;
-    icon: string;
+    date: string;
   }>;
-  otherCategories: Array<{
-    categoryName: string;
-    posts: Array<{
-      id: string;
-      title: string;
-      type: string;
-      link: string;
-    }>;
+  industrySignals: Array<{
+    category: string;
+    title: string;
+    description: string;
+    source: string;
+    link: string;
+    style: {
+      bg: string;
+      color: string;
+    };
   }>;
 }
 
 export function EmailPreviewClient({
   newsletterData,
-  featuredArticle,
-  successStories,
-  techUpdates,
-  otherCategories,
+  flagshipAchievement,
+  deliveryWins,
+  coeUpdates,
+  industrySignals,
 }: EmailPreviewClientProps) {
   const emailRef = useRef<HTMLDivElement>(null);
   const [copyStatus, setCopyStatus] = useState("Copy Email Content");
@@ -148,7 +148,7 @@ export function EmailPreviewClient({
                                 fontFamily: "'Plus Jakarta Sans', sans-serif",
                               }}
                             >
-                              Nexus
+                              AI Center of Excellence
                             </h1>
                             <p
                               style={{
@@ -183,6 +183,7 @@ export function EmailPreviewClient({
                           </td>
                         </tr>
 
+                        {/* Section 1: COE Spotlight */}
                         <tr>
                           <td style={{ padding: "30px 40px" }}>
                             <h3
@@ -194,7 +195,7 @@ export function EmailPreviewClient({
                                 fontFamily: "'Plus Jakarta Sans', sans-serif",
                               }}
                             >
-                              ⭐ Featured Article
+                              🎯 Flagship Achievement
                             </h3>
                             <table
                               cellPadding="0"
@@ -212,8 +213,8 @@ export function EmailPreviewClient({
                                 <tr>
                                   <td>
                                     <img
-                                      src={featuredArticle.image}
-                                      alt={featuredArticle.title}
+                                      src={flagshipAchievement.image}
+                                      alt={flagshipAchievement.title}
                                       width="520"
                                       height="240"
                                       style={{
@@ -245,7 +246,7 @@ export function EmailPreviewClient({
                                         letterSpacing: "0.3px",
                                       }}
                                     >
-                                      {featuredArticle.readTime}
+                                      Milestone
                                     </div>
                                     <h4
                                       style={{
@@ -258,7 +259,7 @@ export function EmailPreviewClient({
                                           "'Plus Jakarta Sans', sans-serif",
                                       }}
                                     >
-                                      {featuredArticle.title}
+                                      {flagshipAchievement.title}
                                     </h4>
                                     <p
                                       style={{
@@ -268,10 +269,10 @@ export function EmailPreviewClient({
                                         lineHeight: "1.7",
                                       }}
                                     >
-                                      {featuredArticle.excerpt}
+                                      {flagshipAchievement.excerpt}
                                     </p>
                                     <a
-                                      href={featuredArticle.link}
+                                      href={flagshipAchievement.link}
                                       style={{
                                         display: "inline-block",
                                         backgroundColor: "#f35959",
@@ -287,7 +288,7 @@ export function EmailPreviewClient({
                                           "0 2px 8px rgba(243, 89, 89, 0.2)",
                                       }}
                                     >
-                                      Read Full Article →
+                                      Read Full Story →
                                     </a>
                                   </td>
                                 </tr>
@@ -296,8 +297,9 @@ export function EmailPreviewClient({
                           </td>
                         </tr>
 
+                        {/* Section 2: Project Delivery Wins */}
                         <tr>
-                          <td style={{ padding: "30px 40px 24px" }}>
+                          <td style={{ padding: "30px 40px" }}>
                             <h3
                               style={{
                                 margin: "0 0 24px",
@@ -307,100 +309,91 @@ export function EmailPreviewClient({
                                 fontFamily: "'Plus Jakarta Sans', sans-serif",
                               }}
                             >
-                              🚀 Success Stories
+                              ✅ AI Delivery Wins
                             </h3>
-                          </td>
-                        </tr>
 
-                        {successStories.map((story) => (
-                          <tr key={story.id}>
-                            <td style={{ padding: "0 40px 20px" }}>
+                            {deliveryWins.map((win) => (
                               <table
+                                key={win.id}
                                 cellPadding="0"
                                 cellSpacing="0"
                                 border={0}
                                 width="100%"
                                 style={{
                                   border: "1px solid #e5e7eb",
-                                  borderRadius: "10px",
+                                  borderRadius: "12px",
                                   overflow: "hidden",
-                                  backgroundColor: "#ffffff",
-                                  boxShadow: "0 2px 4px rgba(0,0,0,0.04)",
+                                  marginBottom: "20px",
                                 }}
                               >
                                 <tbody>
                                   <tr>
-                                    <td
-                                      width="200"
-                                      style={{ verticalAlign: "top" }}
-                                    >
-                                      <img
-                                        src={story.image}
-                                        alt={story.title}
-                                        width="200"
-                                        height="180"
-                                        style={{
-                                          display: "block",
-                                          width: "200px",
-                                          height: "180px",
-                                          objectFit: "cover",
-                                        }}
-                                      />
-                                    </td>
-                                    <td
-                                      style={{
-                                        padding: "24px 20px",
-                                        verticalAlign: "top",
-                                      }}
-                                    >
+                                    <td style={{ padding: "24px 26px" }}>
                                       <div
                                         style={{
                                           display: "inline-block",
-                                          backgroundColor: "#ffe6e6",
-                                          color: "#f35959",
+                                          backgroundColor: "#10b981",
+                                          color: "#ffffff",
                                           padding: "5px 12px",
-                                          borderRadius: "6px",
+                                          borderRadius: "16px",
                                           fontSize: "11px",
+                                          marginBottom: "12px",
                                           fontWeight: "600",
-                                          marginBottom: "10px",
                                           textTransform: "uppercase",
                                           letterSpacing: "0.3px",
                                         }}
                                       >
-                                        {story.impact}
+                                        Completed
                                       </div>
                                       <h4
                                         style={{
-                                          margin: "0 0 10px",
+                                          margin: "0 0 12px",
                                           color: "#202020",
-                                          fontSize: "17px",
+                                          fontSize: "18px",
                                           fontWeight: "600",
                                           lineHeight: "1.4",
                                           fontFamily:
                                             "'Plus Jakarta Sans', sans-serif",
                                         }}
                                       >
-                                        {story.title}
+                                        {win.title}
                                       </h4>
                                       <p
                                         style={{
-                                          margin: "0 0 14px",
+                                          margin: "0 0 16px",
                                           color: "#666666",
                                           fontSize: "14px",
-                                          lineHeight: "1.6",
+                                          lineHeight: "1.7",
                                         }}
                                       >
-                                        {story.description}
+                                        {win.excerpt}
                                       </p>
+                                      <div style={{ marginBottom: "12px" }}>
+                                        {win.tags.slice(0, 3).map((tag) => (
+                                          <span
+                                            key={tag}
+                                            style={{
+                                              display: "inline-block",
+                                              backgroundColor: "#f0f9ff",
+                                              color: "#0369a1",
+                                              padding: "4px 10px",
+                                              borderRadius: "12px",
+                                              fontSize: "12px",
+                                              marginRight: "6px",
+                                              marginBottom: "6px",
+                                            }}
+                                          >
+                                            {tag}
+                                          </span>
+                                        ))}
+                                      </div>
                                       <a
-                                        href={story.link}
+                                        href={win.link}
                                         style={{
                                           color: "#f35959",
                                           textDecoration: "none",
                                           fontSize: "14px",
                                           fontWeight: "600",
-                                          fontFamily:
-                                            "'Plus Jakarta Sans', sans-serif",
                                         }}
                                       >
                                         Read Case Study →
@@ -409,12 +402,13 @@ export function EmailPreviewClient({
                                   </tr>
                                 </tbody>
                               </table>
-                            </td>
-                          </tr>
-                        ))}
+                            ))}
+                          </td>
+                        </tr>
 
+                        {/* Section 3: COE Updates & Initiatives */}
                         <tr>
-                          <td style={{ padding: "30px 40px 24px" }}>
+                          <td style={{ padding: "30px 40px" }}>
                             <h3
                               style={{
                                 margin: "0 0 24px",
@@ -424,175 +418,173 @@ export function EmailPreviewClient({
                                 fontFamily: "'Plus Jakarta Sans', sans-serif",
                               }}
                             >
-                              💡 Tech Updates
+                              📋 COE Execution Updates
                             </h3>
-                          </td>
-                        </tr>
 
-                        {techUpdates.map((update, index) => (
-                          <tr key={index}>
-                            <td style={{ padding: "0 40px 18px" }}>
-                              <table
-                                cellPadding="0"
-                                cellSpacing="0"
-                                border={0}
-                                width="100%"
+                            {coeUpdates.map((update, index) => (
+                              <div
+                                key={index}
+                                style={{
+                                  marginBottom: "24px",
+                                  paddingBottom: "24px",
+                                  borderBottom: "1px solid #e5e7eb",
+                                }}
                               >
-                                <tbody>
-                                  <tr>
-                                    <td
-                                      width="48"
-                                      style={{
-                                        verticalAlign: "top",
-                                        paddingTop: "2px",
-                                      }}
-                                    >
-                                      <div
-                                        style={{
-                                          width: "48px",
-                                          height: "48px",
-                                          backgroundColor: "#e0f2f1",
-                                          borderRadius: "10px",
-                                          display: "flex",
-                                          alignItems: "center",
-                                          justifyContent: "center",
-                                          fontSize: "22px",
-                                        }}
-                                      >
-                                        {update.icon}
-                                      </div>
-                                    </td>
-                                    <td
-                                      style={{
-                                        paddingLeft: "18px",
-                                        verticalAlign: "top",
-                                      }}
-                                    >
-                                      <h4
-                                        style={{
-                                          margin: "0 0 8px",
-                                          color: "#202020",
-                                          fontSize: "16px",
-                                          fontWeight: "600",
-                                          lineHeight: "1.4",
-                                          fontFamily:
-                                            "'Plus Jakarta Sans', sans-serif",
-                                        }}
-                                      >
-                                        {update.title}
-                                      </h4>
-                                      <div
-                                        style={{
-                                          margin: 0,
-                                          color: "#666666",
-                                          fontSize: "14px",
-                                          lineHeight: "1.6",
-                                          whiteSpace: "pre-wrap",
-                                        }}
-                                      >
-                                        {update.description}
-                                      </div>
-                                    </td>
-                                  </tr>
-                                </tbody>
-                              </table>
-                            </td>
-                          </tr>
-                        ))}
-
-                        {/* Other Categories Loop */}
-                        {otherCategories.map((category) => (
-                          <React.Fragment key={category.categoryName}>
-                            <tr>
-                              <td style={{ padding: "30px 40px 24px" }}>
-                                <h3
+                                <h4
                                   style={{
-                                    margin: "0 0 24px",
+                                    margin: "0 0 8px",
                                     color: "#202020",
-                                    fontSize: "20px",
+                                    fontSize: "16px",
                                     fontWeight: "600",
                                     fontFamily:
                                       "'Plus Jakarta Sans', sans-serif",
                                   }}
                                 >
-                                  📚 {category.categoryName}
-                                </h3>
-                              </td>
-                            </tr>
-                            {category.posts.map((post) => (
-                              <tr key={post.id}>
-                                <td style={{ padding: "0 40px 14px" }}>
-                                  <a
-                                    href={post.link}
-                                    style={{
-                                      display: "block",
-                                      padding: "18px 20px",
-                                      backgroundColor: "#ffffff",
-                                      border: "1px solid #e5e7eb",
-                                      borderRadius: "8px",
-                                      textDecoration: "none",
-                                      color: "#202020",
-                                      transition: "all 0.2s",
-                                    }}
-                                  >
-                                    <table
-                                      cellPadding="0"
-                                      cellSpacing="0"
-                                      border={0}
-                                      width="100%"
-                                    >
-                                      <tbody>
-                                        <tr>
-                                          <td
-                                            style={{ verticalAlign: "middle" }}
-                                          >
-                                            <div
-                                              style={{
-                                                fontSize: "15px",
-                                                fontWeight: "600",
-                                                color: "#202020",
-                                                marginBottom: "6px",
-                                                lineHeight: "1.4",
-                                                fontFamily:
-                                                  "'Plus Jakarta Sans', sans-serif",
-                                              }}
-                                            >
-                                              {post.title}
-                                            </div>
-                                            <div
-                                              style={{
-                                                fontSize: "13px",
-                                                color: "#666666",
-                                                lineHeight: "1.4",
-                                              }}
-                                            >
-                                              {post.type}
-                                            </div>
-                                          </td>
-                                          <td
-                                            width="30"
-                                            align="right"
-                                            style={{ verticalAlign: "middle" }}
-                                          >
-                                            <div
-                                              style={{
-                                                color: "#f35959",
-                                                fontSize: "20px",
-                                                fontWeight: "bold",
-                                              }}
-                                            >
-                                              →
-                                            </div>
-                                          </td>
-                                        </tr>
-                                      </tbody>
-                                    </table>
-                                  </a>
-                                </td>
-                              </tr>
+                                  {update.title}
+                                </h4>
+                                <p
+                                  style={{
+                                    margin: "0 0 8px",
+                                    color: "#666666",
+                                    fontSize: "14px",
+                                    lineHeight: "1.7",
+                                  }}
+                                >
+                                  {update.description}
+                                </p>
+                                <p
+                                  style={{
+                                    margin: 0,
+                                    color: "#94a3b8",
+                                    fontSize: "12px",
+                                  }}
+                                >
+                                  {update.date}
+                                </p>
+                              </div>
                             ))}
-                          </React.Fragment>
-                        ))}
+                          </td>
+                        </tr>
+
+                        {/* Section 4: AI World Roundup */}
+                        <tr>
+                          <td style={{ padding: "30px 40px" }}>
+                            <h3
+                              style={{
+                                margin: "0 0 24px",
+                                color: "#202020",
+                                fontSize: "20px",
+                                fontWeight: "600",
+                                fontFamily: "'Plus Jakarta Sans', sans-serif",
+                              }}
+                            >
+                              🌍 AI Industry Signals
+                            </h3>
+
+                            {industrySignals.map((signal, index) => (
+                              <a
+                                key={index}
+                                href={signal.link}
+                                style={{
+                                  display: "block",
+                                  textDecoration: "none",
+                                  marginBottom: "20px",
+                                }}
+                              >
+                                <table
+                                  cellPadding="0"
+                                  cellSpacing="0"
+                                  border={0}
+                                  width="100%"
+                                  style={{
+                                    border: "1px solid #e5e7eb",
+                                    borderRadius: "10px",
+                                    overflow: "hidden",
+                                    backgroundColor: "#ffffff",
+                                  }}
+                                >
+                                  <tbody>
+                                    <tr>
+                                      <td
+                                        style={{
+                                          padding: "20px 22px",
+                                          width: "85%",
+                                          textAlign: "left",
+                                          verticalAlign: "top",
+                                        }}
+                                      >
+                                        <div
+                                          style={{
+                                            display: "inline-block",
+                                            backgroundColor: signal.style.bg,
+                                            color: signal.style.color,
+                                            padding: "4px 10px",
+                                            borderRadius: "12px",
+                                            fontSize: "11px",
+                                            marginBottom: "10px",
+                                            fontWeight: "600",
+                                            textTransform: "uppercase",
+                                          }}
+                                        >
+                                          {signal.category}
+                                        </div>
+                                        <h5
+                                          style={{
+                                            margin: "0 0 10px",
+                                            color: "#202020",
+                                            fontSize: "15px",
+                                            fontWeight: "600",
+                                            lineHeight: "1.4",
+                                            fontFamily:
+                                              "'Plus Jakarta Sans', sans-serif",
+                                          }}
+                                        >
+                                          {signal.title}
+                                        </h5>
+                                        <p
+                                          style={{
+                                            margin: "0 0 8px",
+                                            color: "#666666",
+                                            fontSize: "13px",
+                                            lineHeight: "1.6",
+                                          }}
+                                        >
+                                          {signal.description}
+                                        </p>
+                                        <p
+                                          style={{
+                                            margin: 0,
+                                            color: "#94a3b8",
+                                            fontSize: "11px",
+                                          }}
+                                        >
+                                          {signal.source}
+                                        </p>
+                                      </td>
+                                      <td
+                                        width="15%"
+                                        style={{
+                                          textAlign: "right",
+                                          verticalAlign: "middle",
+                                        }}
+                                      >
+                                        <div
+                                          style={{
+                                            color: "#f35959",
+                                            fontSize: "20px",
+                                            fontWeight: "bold",
+                                          }}
+                                        >
+                                          →
+                                        </div>
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </a>
+                            ))}
+                          </td>
+                        </tr>
 
                         <tr>
                           <td style={{ padding: "40px 40px 35px" }}>
@@ -643,7 +635,7 @@ export function EmailPreviewClient({
                                       }}
                                     >
                                       Share your AI projects, insights, or
-                                      research with the community
+                                      success stories with the COE community
                                     </p>
                                     <a
                                       href="#"
@@ -688,7 +680,7 @@ export function EmailPreviewClient({
                                 fontFamily: "'Plus Jakarta Sans', sans-serif",
                               }}
                             >
-                              Nexus
+                              AI Center of Excellence
                             </p>
                             <p
                               style={{
@@ -702,7 +694,7 @@ export function EmailPreviewClient({
                               }}
                             >
                               Driving innovation and excellence in Artificial
-                              Intelligence
+                              Intelligence and Machine Learning
                             </p>
                             <p
                               style={{
@@ -789,11 +781,10 @@ export function EmailPreviewClient({
                   Newsletter Sections
                 </h3>
                 <ul className="text-xs text-[#666666] space-y-1.5">
-                  <li>• Featured Article</li>
-                  <li>• Success Stories</li>
-                  <li>• Tech Updates</li>
-                  <li>• Other Categories</li>
-                  <li>• CTA Section</li>
+                  <li>• Flagship Achievement</li>
+                  <li>• AI Delivery Wins</li>
+                  <li>• COE Updates</li>
+                  <li>• Industry Signals</li>
                 </ul>
               </div>
 

@@ -80,6 +80,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
           // Convert Firestore timestamps to Date objects
           setPermissions({
             ...data,
+            pillars: {
+              ...data.pillars,
+              pillar7: data.pillars.pillar7 ?? false,
+            },
             createdAt: toDate(data.createdAt),
             updatedAt: toDate(data.updatedAt),
           });
@@ -116,6 +120,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
               if (isValidUserPermissions(data)) {
                 setPermissions({
                   ...data,
+                  pillars: {
+                    ...data.pillars,
+                    pillar7: data.pillars.pillar7 ?? false,
+                  },
                   createdAt: toDate(data.createdAt),
                   updatedAt: toDate(data.updatedAt),
                 });

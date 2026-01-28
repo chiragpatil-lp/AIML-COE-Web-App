@@ -15,6 +15,7 @@ export interface FirestoreUserPermissions {
     pillar4: boolean;
     pillar5: boolean;
     pillar6: boolean;
+    pillar7: boolean;
   };
   createdAt?: { toDate(): Date } | Date;
   updatedAt?: { toDate(): Date } | Date;
@@ -43,7 +44,9 @@ export function isValidUserPermissions(
     typeof (d.pillars as Record<string, unknown>).pillar3 === "boolean" &&
     typeof (d.pillars as Record<string, unknown>).pillar4 === "boolean" &&
     typeof (d.pillars as Record<string, unknown>).pillar5 === "boolean" &&
-    typeof (d.pillars as Record<string, unknown>).pillar6 === "boolean"
+    typeof (d.pillars as Record<string, unknown>).pillar6 === "boolean" &&
+    (typeof (d.pillars as Record<string, unknown>).pillar7 === "boolean" ||
+      (d.pillars as Record<string, unknown>).pillar7 === undefined)
   );
 }
 
@@ -79,7 +82,10 @@ export function fromFirestore(data: FirestoreUserPermissions): UserPermissions {
     userId: data.userId,
     email: data.email,
     isAdmin: data.isAdmin,
-    pillars: data.pillars,
+    pillars: {
+      ...data.pillars,
+      pillar7: data.pillars.pillar7 ?? false,
+    },
     createdAt: toDate(data.createdAt),
     updatedAt: toDate(data.updatedAt),
   };

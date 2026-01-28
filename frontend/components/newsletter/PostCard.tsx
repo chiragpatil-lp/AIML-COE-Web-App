@@ -50,20 +50,17 @@ export const PostCard = ({ post, index = 0 }: PostCardProps) => {
               </div>
             )}
 
-            {/* Categories */}
-            <div className="absolute top-4 right-4 flex gap-2">
-              {post.categories.slice(0, 2).map((category) => (
-                <span
-                  key={category}
-                  className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-white/90 backdrop-blur-sm text-[#146e96]"
-                  style={{
-                    fontFamily:
-                      "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
-                  }}
-                >
-                  {category}
-                </span>
-              ))}
+            {/* Tag */}
+            <div className="absolute top-4 right-4">
+              <span
+                className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-white/90 backdrop-blur-sm text-[#146e96]"
+                style={{
+                  fontFamily:
+                    "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
+                }}
+              >
+                {post.tag}
+              </span>
             </div>
           </div>
         )}
@@ -95,16 +92,6 @@ export const PostCard = ({ post, index = 0 }: PostCardProps) => {
             <div className="flex items-center gap-3">
               {/* Author */}
               <div className="flex items-center gap-2">
-                {post.author.photoURL && (
-                  <div className="relative w-8 h-8 rounded-full overflow-hidden ring-2 ring-[#146e96]/20">
-                    <Image
-                      src={post.author.photoURL}
-                      alt={post.author.name}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                )}
                 <span
                   className="text-sm font-medium text-[#202020]"
                   style={{

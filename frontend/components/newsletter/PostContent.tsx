@@ -1,6 +1,8 @@
 "use client";
 
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import remarkBreaks from "remark-breaks";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
@@ -64,19 +66,16 @@ export const PostContent = ({ post, relatedPosts = [] }: PostContentProps) => {
           </Link>
         </nav>
 
-        {/* Categories */}
+        {/* Tag */}
         <div className="flex gap-2 mb-6">
-          {post.categories.map((category) => (
-            <span
-              key={category}
-              className="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-[#146e96]/10 text-[#146e96]"
-              style={{
-                fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
-              }}
-            >
-              {category}
-            </span>
-          ))}
+          <span
+            className="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-[#146e96]/10 text-[#146e96]"
+            style={{
+              fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
+            }}
+          >
+            {post.tag}
+          </span>
         </div>
 
         {/* Title */}
@@ -102,16 +101,6 @@ export const PostContent = ({ post, relatedPosts = [] }: PostContentProps) => {
         >
           {/* Author */}
           <div className="flex items-center gap-3">
-            {post.author.photoURL && (
-              <div className="relative w-12 h-12 rounded-full overflow-hidden ring-2 ring-[#146e96]/30">
-                <Image
-                  src={post.author.photoURL}
-                  alt={post.author.name}
-                  fill
-                  className="object-cover"
-                />
-              </div>
-            )}
             <div>
               <p
                 className="text-sm font-medium text-[#202020]"
@@ -160,51 +149,22 @@ export const PostContent = ({ post, relatedPosts = [] }: PostContentProps) => {
             fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
           }}
         >
-          <ReactMarkdown>{post.content}</ReactMarkdown>
+          <ReactMarkdown
+            remarkPlugins={[remarkGfm, remarkBreaks]}
+            components={{
+              p: ({ children }) => (
+                <p className="mb-6 leading-relaxed">{children}</p>
+              ),
+            }}
+          >
+            {post.content}
+          </ReactMarkdown>
         </motion.article>
-
-        {/* Tags */}
-        {post.tags && post.tags.length > 0 && (
-          <div className="mb-12 pb-8 border-b border-[#e5e5e5]">
-            <h3
-              className="text-sm font-medium text-[#666666] mb-4"
-              style={{
-                fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
-              }}
-            >
-              Tags
-            </h3>
-            <div className="flex flex-wrap gap-2">
-              {post.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium bg-[#f0f0f0] text-[#666666] hover:bg-[#146e96] hover:text-white transition-colors cursor-pointer"
-                  style={{
-                    fontFamily:
-                      "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
-                  }}
-                >
-                  #{tag}
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
 
         {/* Author Bio */}
         {post.author.bio && (
           <div className="mb-12 p-6 bg-[#fafafa] rounded-2xl">
             <div className="flex items-start gap-4">
-              {post.author.photoURL && (
-                <div className="relative w-16 h-16 rounded-full overflow-hidden ring-2 ring-[#146e96]/30 flex-shrink-0">
-                  <Image
-                    src={post.author.photoURL}
-                    alt={post.author.name}
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-              )}
               <div>
                 <h3
                   className="text-lg font-medium text-[#202020] mb-2"
