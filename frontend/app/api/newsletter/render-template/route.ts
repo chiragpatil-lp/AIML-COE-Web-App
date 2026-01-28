@@ -526,10 +526,9 @@ export async function GET() {
                         <tbody>
                           <tr>
                             <td
-                              style="padding: 20px 22px"
+                              style="padding: 20px 22px; vertical-align: top;"
                               width="85%"
                               align="left"
-                              style="vertical-align: top"
                             >
                               <div
                                 style="
@@ -748,7 +747,7 @@ export async function GET() {
                           color: #146e96;
                           text-decoration: none;
                           font-size: 13px;
-                          font-weight:;
+                          font-weight: 500;
                         "
                         >Website</a
                       >
