@@ -80,20 +80,17 @@ export const FeaturedPosts = ({ posts }: FeaturedPostsProps) => {
                     </span>
                   </div>
 
-                  {/* Categories */}
+                  {/* Tag */}
                   <div className="absolute bottom-6 left-6 flex gap-2 flex-wrap">
-                    {post.categories.map((category) => (
-                      <span
-                        key={category}
-                        className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium bg-white/90 backdrop-blur-sm text-[#146e96]"
-                        style={{
-                          fontFamily:
-                            "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
-                        }}
-                      >
-                        {category}
-                      </span>
-                    ))}
+                    <span
+                      className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium bg-white/90 backdrop-blur-sm text-[#146e96]"
+                      style={{
+                        fontFamily:
+                          "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
+                      }}
+                    >
+                      {post.tag}
+                    </span>
                   </div>
                 </div>
               )}
@@ -125,16 +122,6 @@ export const FeaturedPosts = ({ posts }: FeaturedPostsProps) => {
                 {/* Author & Meta */}
                 <div className="flex items-center justify-between pt-6 border-t border-[#e5e5e5]">
                   <div className="flex items-center gap-3">
-                    {post.author.photoURL && (
-                      <div className="relative w-10 h-10 rounded-full overflow-hidden ring-2 ring-[#146e96]/30">
-                        <Image
-                          src={post.author.photoURL}
-                          alt={post.author.name}
-                          fill
-                          className="object-cover"
-                        />
-                      </div>
-                    )}
                     <div>
                       <p
                         className="text-sm font-medium text-[#202020]"

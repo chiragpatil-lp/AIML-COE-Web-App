@@ -10,13 +10,13 @@ export default function TestEmailPage() {
 
   // Section 2: AI Delivery Wins (Customer Success Stories)
   const deliveryWins = allPosts
-    .filter((post) => post.categories.includes("Customer Success Story"))
+    .filter((post) => post.tag !== "AI Trends")
     .slice(0, 5)
     .map((post) => ({
       id: post.id,
       title: post.title,
       excerpt: post.excerpt,
-      tags: post.tags || ["Success Story"],
+      tags: [post.tag],
       link: `${baseUrl}/newsletter/${post.slug}`,
     }));
 

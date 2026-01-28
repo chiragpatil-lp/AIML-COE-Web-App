@@ -9,11 +9,11 @@ export async function GET() {
 
   // Section 2: AI Delivery Wins (Customer Success Stories)
   const deliveryWins = allPosts
-    .filter((post) => post.categories.includes("Customer Success Story"))
+    .filter((post) => post.tag !== "AI Trends")
     .slice(0, 5)
     .map((post) => ({
       ...post,
-      tags: post.tags || ["Success Story"], // Fallback tags
+      tags: [post.tag],
     }));
 
   // Section 1: Flagship Achievement (Featured Post)

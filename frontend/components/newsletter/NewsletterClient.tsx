@@ -21,22 +21,19 @@ export function NewsletterClient({
   const [selectedCategory, setSelectedCategory] = useState("All Posts");
   const [visibleCount, setVisibleCount] = useState(POSTS_PER_PAGE);
 
-  // Filter functions adapted for client-side usage with props
   const getFeaturedPosts = () => initialPosts.filter((post) => post.featured);
 
-  const getPostsByCategory = (category: string) => {
-    if (category === "all" || category === "All Posts") {
+  const getPostsByTag = (tag: string) => {
+    if (tag === "all" || tag === "All Posts") {
       return initialPosts;
     }
-    return initialPosts.filter((post) => post.categories.includes(category));
+    return initialPosts.filter((post) => post.tag === tag);
   };
 
   const featuredPosts = getFeaturedPosts();
-  const filteredPosts = getPostsByCategory(
-    selectedCategory === "All Posts" ? "all" : selectedCategory,
-  );
+  const filteredPosts = getPostsByTag(selectedCategory);
 
-  // Keep all posts in the grid, including featured ones, so they show up in category filters
+  // Keep all posts in the grid, including featured ones, so they show up in tag filters
   const visiblePosts = filteredPosts.slice(0, visibleCount);
   const hasMorePosts = visibleCount < filteredPosts.length;
 
@@ -95,7 +92,7 @@ export function NewsletterClient({
                     "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
                 }}
               >
-                No articles found in this category.
+                No articles found for this tag.
               </p>
             </div>
           )}
