@@ -95,16 +95,6 @@ export const PostCard = ({ post, index = 0 }: PostCardProps) => {
             <div className="flex items-center gap-3">
               {/* Author */}
               <div className="flex items-center gap-2">
-                {post.author.photoURL && (
-                  <div className="relative w-8 h-8 rounded-full overflow-hidden ring-2 ring-[#146e96]/20">
-                    <Image
-                      src={post.author.photoURL}
-                      alt={post.author.name}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                )}
                 <span
                   className="text-sm font-medium text-[#202020]"
                   style={{

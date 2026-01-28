@@ -3,9 +3,9 @@ title: "Turning manual model releases into a production-ready MLOps workflow"
 excerpt: "Staples.com supports a high-velocity ecommerce business where data science teams need to iterate quickly, but production systems must stay stable. The team faced a familiar set of scaling pains..."
 coverImage: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=2000"
 categories: ["Customer Success Story"]
+tags: ["MLOps"]
 author:
-  name: "Staples Engineering"
-  photoURL: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=200"
+  name: "Nexus Team"
   role: "Engineering Team"
 publishedAt: "2026-01-21"
 readingTime: 10

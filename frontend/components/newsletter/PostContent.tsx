@@ -104,16 +104,6 @@ export const PostContent = ({ post, relatedPosts = [] }: PostContentProps) => {
         >
           {/* Author */}
           <div className="flex items-center gap-3">
-            {post.author.photoURL && (
-              <div className="relative w-12 h-12 rounded-full overflow-hidden ring-2 ring-[#146e96]/30">
-                <Image
-                  src={post.author.photoURL}
-                  alt={post.author.name}
-                  fill
-                  className="object-cover"
-                />
-              </div>
-            )}
             <div>
               <p
                 className="text-sm font-medium text-[#202020]"
@@ -204,16 +194,6 @@ export const PostContent = ({ post, relatedPosts = [] }: PostContentProps) => {
         {post.author.bio && (
           <div className="mb-12 p-6 bg-[#fafafa] rounded-2xl">
             <div className="flex items-start gap-4">
-              {post.author.photoURL && (
-                <div className="relative w-16 h-16 rounded-full overflow-hidden ring-2 ring-[#146e96]/30 flex-shrink-0">
-                  <Image
-                    src={post.author.photoURL}
-                    alt={post.author.name}
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-              )}
               <div>
                 <h3
                   className="text-lg font-medium text-[#202020] mb-2"

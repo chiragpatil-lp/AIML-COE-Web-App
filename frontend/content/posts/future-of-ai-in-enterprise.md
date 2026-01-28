@@ -3,9 +3,9 @@ title: "The Future of AI in Enterprise: Trends to Watch in 2026"
 excerpt: "From Yann LeCun's pivot to neurosymbolic AI to the rise of 'Bounded Autonomy' in agentic systems, explore the defining AI shifts of 2026."
 coverImage: "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=2000"
 categories: ["Gen AI", "AI Agents", "Industry News"]
+tags: ["AI Trends"]
 author:
-  name: "Chirag Patil"
-  photoURL: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=200"
+  name: "Nexus Team"
   role: "AI Research Lead"
 publishedAt: "2026-01-28"
 readingTime: 10

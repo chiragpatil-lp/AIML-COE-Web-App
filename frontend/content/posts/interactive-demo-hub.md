@@ -3,9 +3,9 @@ title: "Interactive demo hub: Showcasing the Power of Enterprise AI"
 excerpt: "Learn how the Nexus Interactive Demo Hub provides a centralized platform for exploring, testing, and visualizing AI capabilities through hands-on, live demonstrations."
 coverImage: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=2000"
 categories: ["Customer Success Story"]
+tags: ["Demo Hub"]
 author:
-  name: "Nexus Core Team"
-  photoURL: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=200"
+  name: "Nexus Team"
   role: "Platform Engineering"
 publishedAt: "2026-01-27"
 readingTime: 5
