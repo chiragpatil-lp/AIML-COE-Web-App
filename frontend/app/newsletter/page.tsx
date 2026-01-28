@@ -1,27 +1,31 @@
 import { PortfolioNavbar } from "@/components/PortfolioNavbar";
 import { Footer } from "@/components/Footer";
 import { getAllPosts } from "@/lib/newsletter/content";
-import { CATEGORIES } from "@/lib/newsletter/constants";
 import { NewsletterClient } from "@/components/newsletter/NewsletterClient";
+import { Category } from "@/lib/types/newsletter.types";
 
 export default function NewsletterPage() {
   const posts = getAllPosts();
-  // We can calculate dynamic counts for categories if we want,
-  // but for now we'll pass the static categories.
-  // Ideally, we should compute post counts per category here.
 
-  const categoriesWithCounts = CATEGORIES.map((cat) => ({
-    ...cat,
-    postCount: posts.filter((p) => p.categories.includes(cat.name)).length,
-  })).filter((cat) => cat.postCount > 0);
+  // Dynamically infer tags from posts
+  const tagCounts: { [key: string]: number } = {};
+  posts.forEach((post) => {
+    if (post.tag) {
+      tagCounts[post.tag] = (tagCounts[post.tag] || 0) + 1;
+    }
+  });
+
+  const categories: Category[] = Object.keys(tagCounts).map((tag, index) => ({
+    id: `tag-${index}`,
+    name: tag,
+    slug: tag.toLowerCase().replace(/\s+/g, "-"),
+    postCount: tagCounts[tag],
+  }));
 
   return (
     <>
       <PortfolioNavbar />
-      <NewsletterClient
-        initialPosts={posts}
-        categories={categoriesWithCounts}
-      />
+      <NewsletterClient initialPosts={posts} categories={categories} />
       <Footer />
     </>
   );

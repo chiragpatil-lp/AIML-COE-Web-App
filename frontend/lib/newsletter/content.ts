@@ -30,8 +30,7 @@ export function getPostBySlug(slug: string): BlogPost | undefined {
     excerpt: data.excerpt,
     content: content,
     coverImage: data.coverImage,
-    categories: data.categories || [],
-    tags: data.tags || [],
+    tag: data.tag || "Uncategorized",
     author: {
       name: data.author?.name || "Unknown",
       photoURL: data.author?.photoURL || "/placeholder-avatar.png",
@@ -59,12 +58,12 @@ export function getFeaturedPosts(): BlogPost[] {
   return posts.filter((post) => post.featured);
 }
 
-export function getPostsByCategory(category: string): BlogPost[] {
+export function getPostsByTag(tag: string): BlogPost[] {
   const posts = getAllPosts();
-  if (category === "all" || category === "All Posts") {
+  if (tag === "all" || tag === "All Posts") {
     return posts;
   }
-  return posts.filter((post) => post.categories.includes(category));
+  return posts.filter((post) => post.tag === tag);
 }
 
 export function getRelatedPosts(

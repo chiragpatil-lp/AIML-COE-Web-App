@@ -17,10 +17,9 @@ export interface BlogPost {
   slug: string;
   title: string;
   excerpt: string;
-  content: string; // Made content required as it is in mockData.ts
+  content: string;
   coverImage?: string;
-  categories: string[];
-  tags?: string[];
+  tag: string; // Changed from categories[]/tags[] to single tag
   author: Author;
   publishedAt: string;
   readingTime?: number;

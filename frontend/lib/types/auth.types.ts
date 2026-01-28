@@ -11,6 +11,7 @@ export interface UserPermissions {
     pillar4: boolean; // People & Capability Enablement
     pillar5: boolean; // COE Delivery Governance
     pillar6: boolean; // Communication & Market Intelligence
+    pillar7: boolean; // Internal AI Adoption & Automation
   };
   createdAt: Date;
   updatedAt: Date;

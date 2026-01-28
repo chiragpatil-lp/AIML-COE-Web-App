@@ -29,6 +29,7 @@ interface UserPermissions {
     pillar4: boolean;
     pillar5: boolean;
     pillar6: boolean;
+    pillar7: boolean;
   };
   createdAt: admin.firestore.FieldValue;
   updatedAt: admin.firestore.FieldValue;
@@ -102,6 +103,7 @@ export const onUserCreate = beforeUserCreated(async (event) => {
         pillar4: false,
         pillar5: false,
         pillar6: false,
+        pillar7: false,
       },
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
       updatedAt: admin.firestore.FieldValue.serverTimestamp(),
@@ -262,7 +264,7 @@ export const updateUserPermissions = onCall(
   }
 
   // Validate pillars object structure
-  const validPillarKeys = ['pillar1', 'pillar2', 'pillar3', 'pillar4', 'pillar5', 'pillar6'];
+  const validPillarKeys = ['pillar1', 'pillar2', 'pillar3', 'pillar4', 'pillar5', 'pillar6', 'pillar7'];
   for (const key of Object.keys(pillars)) {
     if (!validPillarKeys.includes(key)) {
       throw new HttpsError('invalid-argument', `Invalid pillar key: ${key}`);
@@ -448,6 +450,7 @@ export const initializeUser = onCall(
         pillar4: false,
         pillar5: false,
         pillar6: false,
+        pillar7: false,
       },
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
       updatedAt: admin.firestore.FieldValue.serverTimestamp(),
