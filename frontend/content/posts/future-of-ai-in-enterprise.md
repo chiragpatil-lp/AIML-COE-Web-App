@@ -61,10 +61,18 @@ As highlighted by industry leaders like **Palantir**, deploying agents in produc
 - **Runtime Observability:** Real-time monitoring of agent "thought processes" and tool usage.
 - **Drift Prevention:** Mechanisms to detect when an agent deviates from its intended role (e.g., the "Assistant Axis").
 
+---
+
+## 🚀 The Nexus Advantage: Enabling the Shift
+
+At the forefront of this transformation is the **Nexus Platform**, the organization's unified **AI Center of Excellence (COE)**. Nexus is not just a repository of tools but a strategic enabler designed to operationalize these 2026 trends safely and effectively.
+
+By centralizing **governance, observability, and reusable agentic components**, the Nexus Team ensures that as our enterprise adopts autonomous workflows, we do so with "Bounded Autonomy" built into the core. Whether it is experimenting with neurosymbolic approaches or deploying self-correcting development loops, the Nexus Platform provides the robust infrastructure and expert guidance required to navigate this new era of enterprise AI.
+
 ### References
 
-- _Gary Marcus on Yann LeCun's Pivot_ - [Substack](https://substack.com/inbox/post/185586518)
-- _Comprehensive Survey on Agentic Reasoning_ - [arXiv/IntoAI](https://arxiv.org)
-- _Anthropic's Constitution & Assistant Axis_ - [Anthropic Research](https://anthropic.com)
-- _OpenAI Codex Agent Loop_ - [OpenAI Engineering](https://openai.com)
-- _Google DeepMind D4RT_ - [DeepMind Blog](https://deepmind.google)
+1. **[Gary Marcus on Yann LeCun's Pivot](https://substack.com/inbox/post/185586518)** – _Substack_
+2. **[Comprehensive Survey on Agentic Reasoning](https://arxiv.org)** – _arXiv/IntoAI_
+3. **[Anthropic's Constitution & Assistant Axis](https://anthropic.com)** – _Anthropic Research_
+4. **[OpenAI Codex Agent Loop](https://openai.com)** – _OpenAI Engineering_
+5. **[Google DeepMind D4RT](https://deepmind.google)** – _DeepMind Blog_
