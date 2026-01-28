@@ -142,6 +142,7 @@ export async function getUserPermissions(
         pillar4: data.pillars?.pillar4 || false,
         pillar5: data.pillars?.pillar5 || false,
         pillar6: data.pillars?.pillar6 || false,
+        pillar7: data.pillars?.pillar7 || false,
       },
       createdAt: data.createdAt?.toDate() || new Date(),
       updatedAt: data.updatedAt?.toDate() || new Date(),
