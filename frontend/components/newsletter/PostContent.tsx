@@ -1,6 +1,8 @@
 "use client";
 
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import remarkBreaks from "remark-breaks";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
@@ -160,7 +162,9 @@ export const PostContent = ({ post, relatedPosts = [] }: PostContentProps) => {
             fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
           }}
         >
-          <ReactMarkdown>{post.content}</ReactMarkdown>
+          <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>
+            {post.content}
+          </ReactMarkdown>
         </motion.article>
 
         {/* Tags */}
