@@ -82,22 +82,8 @@ export const NewsletterHero = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 1 }}
-            className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto"
+            className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-2xl mx-auto"
           >
-            <div className="text-center">
-              <div
-                className="text-3xl font-medium text-[#146e96] mb-2"
-                style={{
-                  fontFamily:
-                    "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
-                }}
-              >
-                Weekly
-              </div>
-              <p className="text-sm text-[#666666]">
-                Expert insights published regularly on our blog
-              </p>
-            </div>
             <div className="text-center">
               <div
                 className="text-3xl font-medium text-[#146e96] mb-2"
