@@ -61,19 +61,9 @@ export const NewsletterHero = () => {
             </div>
           </div>
 
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-[56px] font-normal leading-tight tracking-tight text-[#111A4A] mb-6"
-            style={{
-              fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
-              fontSize: "56px",
-              fontWeight: "500",
-            }}
-          >
-            AI Nexus <span className="text-[#146e96]">Newsletter</span>
-          </motion.h1>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-slate-900 mb-6 font-display">
+            Nexus <span className="text-[#146e96]">Newsletter</span>
+          </h1>
 
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -92,22 +82,8 @@ export const NewsletterHero = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 1 }}
-            className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto"
+            className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-2xl mx-auto"
           >
-            <div className="text-center">
-              <div
-                className="text-3xl font-medium text-[#146e96] mb-2"
-                style={{
-                  fontFamily:
-                    "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
-                }}
-              >
-                Weekly
-              </div>
-              <p className="text-sm text-[#666666]">
-                Expert insights published regularly on our blog
-              </p>
-            </div>
             <div className="text-center">
               <div
                 className="text-3xl font-medium text-[#146e96] mb-2"
