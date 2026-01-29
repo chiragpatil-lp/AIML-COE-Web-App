@@ -61,19 +61,9 @@ export const NewsletterHero = () => {
             </div>
           </div>
 
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-[56px] font-normal leading-tight tracking-tight text-[#111A4A] mb-6"
-            style={{
-              fontFamily: "var(--font-plus-jakarta-sans), Plus Jakarta Sans",
-              fontSize: "56px",
-              fontWeight: "500",
-            }}
-          >
-            AI Nexus <span className="text-[#146e96]">Newsletter</span>
-          </motion.h1>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-slate-900 mb-6 font-display">
+            Nexus <span className="text-[#146e96]">Newsletter</span>
+          </h1>
 
           <motion.p
             initial={{ opacity: 0, y: 20 }}
