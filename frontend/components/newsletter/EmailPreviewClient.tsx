@@ -482,12 +482,9 @@ export function EmailPreviewClient({
                             </h3>
 
                             {industrySignals.map((signal, index) => (
-                              <a
+                              <div
                                 key={index}
-                                href={signal.link}
                                 style={{
-                                  display: "block",
-                                  textDecoration: "none",
                                   marginBottom: "20px",
                                 }}
                               >
@@ -508,7 +505,7 @@ export function EmailPreviewClient({
                                       <td
                                         style={{
                                           padding: "20px 22px",
-                                          width: "85%",
+                                          width: "100%",
                                           textAlign: "left",
                                           verticalAlign: "top",
                                         }}
@@ -561,27 +558,10 @@ export function EmailPreviewClient({
                                           {signal.source}
                                         </p>
                                       </td>
-                                      <td
-                                        width="15%"
-                                        style={{
-                                          textAlign: "right",
-                                          verticalAlign: "middle",
-                                        }}
-                                      >
-                                        <div
-                                          style={{
-                                            color: "#f35959",
-                                            fontSize: "20px",
-                                            fontWeight: "bold",
-                                          }}
-                                        >
-                                          →
-                                        </div>
-                                      </td>
                                     </tr>
                                   </tbody>
                                 </table>
-                              </a>
+                              </div>
                             ))}
                           </td>
                         </tr>

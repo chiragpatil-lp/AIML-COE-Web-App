@@ -18,23 +18,22 @@ export async function GET(request: NextRequest) {
     }));
 
   // Section 1: Flagship Achievement (Featured Post)
-  // Logic: Latest blog which is NOT a Customer Success Story
-  const flagshipAchievement =
-    allPosts.find((post) => post.tag !== "Customer Success Story") ||
-    allPosts[0];
+  // Logic: Hardcoded as per user request
+  const flagshipAchievement = {
+    title: "🚀 Interactive Demo Hub Expanded",
+    excerpt:
+      "Added five new conversational agents: OrderFlow AI for order processing, ThinkStack for reasoning workflows, and SQLGenie for SQL generation. All agents now support live sales demonstrations with pre-loaded datasets.",
+    coverImage:
+      "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=600",
+    slug: "#",
+  };
 
   // Section 3: COE Execution Updates (Static for now, matching user request)
   const coeUpdates = [
     {
-      title: "🚀 Interactive Demo Hub Expanded",
-      description:
-        "Added five new conversational agents: OrderFlow AI for order processing, ThinkStack for reasoning workflows, and SQLGenie for SQL generation. All agents now support live sales demonstrations with pre-loaded datasets.",
-      date: "Week of Jan 20, 2026",
-    },
-    {
       title: "📰 AI Newsletter System Live",
       description:
-        "Phase 1 MVP deployed with manual content creation and SendGrid integration. Archive functionality allows browsing past editions. Phase 2 AI news aggregation module begins development next sprint.",
+        "Phase 1 MVP is deployed with blogs available in newsletter section and in the next phase automation with ai will be integration.",
       date: "Week of Jan 13, 2026",
     },
     {
@@ -229,8 +228,8 @@ export async function GET(request: NextRequest) {
                         <tr>
                           <td>
                             <img
-                              src="${flagshipAchievement?.coverImage || "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=600"}"
-                              alt="${flagshipAchievement?.title || "Flagship Achievement"}"
+                              src="${flagshipAchievement?.coverImage}"
+                              alt="${flagshipAchievement?.title}"
                               width="520"
                               height="240"
                               style="
@@ -275,7 +274,7 @@ export async function GET(request: NextRequest) {
                                   &quot;Plus Jakarta Sans&quot;, sans-serif;
                               "
                             >
-                              ${flagshipAchievement?.title || "Introducing Nexus: Our AI COE Platform"}
+                              ${flagshipAchievement?.title}
                             </h4>
                             <p
                               style="
@@ -285,10 +284,10 @@ export async function GET(request: NextRequest) {
                                 line-height: 1.7;
                               "
                             >
-                              ${flagshipAchievement?.excerpt || "Nexus, our new AI COE platform, is now operational in its first phase, featuring the Interactive Demo Hub, the automated newsletter system, and AI accelerators."}
+                              ${flagshipAchievement?.excerpt}
                             </p>
                             <a
-                              href="${BASE_URL}/newsletter/${flagshipAchievement?.slug}"
+                              href="${flagshipAchievement?.slug}"
                               style="
                                 display: inline-block;
                                 background-color: #f35959;
@@ -506,11 +505,8 @@ export async function GET(request: NextRequest) {
                       .map(
                         (signal) => `
                     <!-- News Item -->
-                    <a
-                      href="${signal.link}"
+                    <div
                       style="
-                        display: block;
-                        text-decoration: none;
                         margin-bottom: 20px;
                       "
                     >
@@ -530,7 +526,7 @@ export async function GET(request: NextRequest) {
                           <tr>
                             <td
                               style="padding: 20px 22px; vertical-align: top;"
-                              width="85%"
+                              width="100%"
                               align="left"
                             >
                               <div
@@ -581,25 +577,10 @@ export async function GET(request: NextRequest) {
                                 ${signal.source}
                               </p>
                             </td>
-                            <td
-                              width="15%"
-                              align="right"
-                              style="vertical-align: middle"
-                            >
-                              <div
-                                style="
-                                  color: #f35959;
-                                  font-size: 20px;
-                                  font-weight: bold;
-                                "
-                              >
-                                →
-                              </div>
-                            </td>
                           </tr>
                         </tbody>
                       </table>
-                    </a>
+                    </div>
                     `,
                       )
                       .join("")}
