@@ -5,7 +5,7 @@ import { getAllPosts, getFeaturedPosts } from "@/lib/newsletter/content";
 export default async function TestEmailPage() {
   const allPosts = getAllPosts();
   const featuredPosts = getFeaturedPosts();
-  
+
   const baseUrl = "https://aiml-coe-web-app-36231825761.us-central1.run.app";
 
   // Section 2: AI Delivery Wins (Customer Success Stories)
@@ -23,7 +23,9 @@ export default async function TestEmailPage() {
 
   // Section 1: Flagship Achievement
   // Logic: Latest blog which is NOT a Customer Success Story
-  const mainFeatured = allPosts.find((post) => post.tag !== "Customer Success Story") || allPosts[0];
+  const mainFeatured =
+    allPosts.find((post) => post.tag !== "Customer Success Story") ||
+    allPosts[0];
 
   const flagshipAchievement = {
     title: mainFeatured?.title || "Introducing Nexus: Our AI COE Platform",

@@ -4,7 +4,7 @@ import { getAllPosts, getFeaturedPosts } from "@/lib/newsletter/content";
 export async function GET(request: NextRequest) {
   const allPosts = getAllPosts();
   const featuredPosts = getFeaturedPosts();
-  
+
   const BASE_URL = "https://aiml-coe-web-app-36231825761.us-central1.run.app";
 
   // Section 2: AI Delivery Wins (Customer Success Stories)
@@ -19,7 +19,9 @@ export async function GET(request: NextRequest) {
 
   // Section 1: Flagship Achievement (Featured Post)
   // Logic: Latest blog which is NOT a Customer Success Story
-  const flagshipAchievement = allPosts.find((post) => post.tag !== "Customer Success Story") || allPosts[0];
+  const flagshipAchievement =
+    allPosts.find((post) => post.tag !== "Customer Success Story") ||
+    allPosts[0];
 
   // Section 3: COE Execution Updates (Static for now, matching user request)
   const coeUpdates = [
