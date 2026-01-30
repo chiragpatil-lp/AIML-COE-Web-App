@@ -116,3 +116,29 @@
 *   **CI/CD:** GitHub Actions pipelines in `.github/workflows`.
 *   **Target:** Google Cloud Run.
 *   **Process:** Push to `main` -> Lint/Test -> Build Docker Image -> Push to GCR -> Deploy to Cloud Run.
+
+## Newsletter Configuration
+
+The newsletter content is dynamically generated from blog posts. You can control which section a blog post appears in using the `newsletterSection` field in the markdown frontmatter.
+
+### Available Sections
+
+| Value | Section Name | Description |
+| :--- | :--- | :--- |
+| `flagship` | 🎯 Flagship Achievement | The main featured story at the top. |
+| `delivery-wins` | ✅ AI Delivery Wins | Customer success stories and delivery highlights. |
+| `industry-signals` | 🌍 AI Industry Signals | Industry news mixed with relevant blog updates. |
+
+### Usage Example
+
+Add the `newsletterSection` field to your blog post's YAML frontmatter:
+
+```yaml
+---
+title: "My New Blog Post"
+...
+newsletterSection: "delivery-wins"
+---
+```
+
+**Note:** If `newsletterSection` is not set, the blog post will be excluded from the generated newsletter email (though it will still appear on the website).

@@ -9,6 +9,7 @@ author:
 publishedAt: "2026-01-27"
 readingTime: 4
 featured: false
+newsletterSection: "delivery-wins"
 ---
 
 ## Unprecedented Operational Efficiency via Automation

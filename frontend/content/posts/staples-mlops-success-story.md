@@ -9,6 +9,7 @@ author:
 publishedAt: "2026-01-21"
 readingTime: 10
 featured: true
+newsletterSection: "delivery-wins"
 ---
 
 Staples.com supports a high-velocity ecommerce business where data science teams need to iterate quickly, but production systems must stay stable. The team faced a familiar set of scaling pains.

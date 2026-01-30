@@ -8,7 +8,7 @@ author:
   role: "AI Research Lead"
 publishedAt: "2026-01-28"
 readingTime: 10
-featured: true
+newsletterSection: "industry-signals"
 ---
 
 The enterprise AI landscape in 2026 is defined by a shift from pure generative models to grounded, reasoning-capable agents and a renewed focus on hybrid architectures.

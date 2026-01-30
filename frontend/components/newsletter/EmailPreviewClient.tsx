@@ -148,7 +148,7 @@ export function EmailPreviewClient({
                                 fontFamily: "'Plus Jakarta Sans', sans-serif",
                               }}
                             >
-                              AI Center of Excellence
+                              Nexus
                             </h1>
                             <p
                               style={{
@@ -418,7 +418,7 @@ export function EmailPreviewClient({
                                 fontFamily: "'Plus Jakarta Sans', sans-serif",
                               }}
                             >
-                              📋 COE Execution Updates
+                              📋 Nexus (AI CoE) Execution Updates
                             </h3>
 
                             {coeUpdates.map((update, index) => (
@@ -635,10 +635,11 @@ export function EmailPreviewClient({
                                       }}
                                     >
                                       Share your AI projects, insights, or
-                                      success stories with the COE community
+                                      success stories with the Nexus (AI CoE)
+                                      community
                                     </p>
                                     <a
-                                      href="#"
+                                      href="mailto:aiml_coe@onixnet.com"
                                       style={{
                                         display: "inline-block",
                                         backgroundColor: "#ffffff",
@@ -680,7 +681,7 @@ export function EmailPreviewClient({
                                 fontFamily: "'Plus Jakarta Sans', sans-serif",
                               }}
                             >
-                              AI Center of Excellence
+                              Nexus (AI CoE)
                             </p>
                             <p
                               style={{
@@ -695,34 +696,6 @@ export function EmailPreviewClient({
                             >
                               Driving innovation and excellence in Artificial
                               Intelligence and Machine Learning
-                            </p>
-                            <p
-                              style={{
-                                margin: 0,
-                                color: "#94a3b8",
-                                fontSize: "12px",
-                                lineHeight: "1.6",
-                              }}
-                            >
-                              <a
-                                href="#"
-                                style={{
-                                  color: "#94a3b8",
-                                  textDecoration: "underline",
-                                }}
-                              >
-                                Unsubscribe
-                              </a>
-                              <span style={{ margin: "0 6px" }}>•</span>
-                              <a
-                                href="#"
-                                style={{
-                                  color: "#94a3b8",
-                                  textDecoration: "underline",
-                                }}
-                              >
-                                View in Browser
-                              </a>
                             </p>
                           </td>
                         </tr>
