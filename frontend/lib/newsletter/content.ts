@@ -40,6 +40,7 @@ export function getPostBySlug(slug: string): BlogPost | undefined {
     publishedAt: data.publishedAt || new Date().toISOString(),
     readingTime: data.readingTime || 5,
     featured: data.featured || false,
+    newsletterSection: data.newsletterSection,
   } as BlogPost;
 }
 

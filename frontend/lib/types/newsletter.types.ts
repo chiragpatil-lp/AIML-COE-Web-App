@@ -24,4 +24,5 @@ export interface BlogPost {
   publishedAt: string;
   readingTime?: number;
   featured?: boolean;
+  newsletterSection?: "flagship" | "delivery-wins" | "industry-signals";
 }

@@ -8,9 +8,9 @@ export async function GET(request: NextRequest) {
   const BASE_URL = "https://aiml-coe-web-app-36231825761.us-central1.run.app";
 
   // Section 2: AI Delivery Wins (Customer Success Stories)
-  // Logic: Only blogs from Customer Success Stories (e.g., Staples and IPG Weber)
+  // Logic: Post with newsletterSection === 'delivery-wins'
   const deliveryWins = allPosts
-    .filter((post) => post.tag === "Customer Success Story")
+    .filter((post) => post.newsletterSection === "delivery-wins")
     .slice(0, 5)
     .map((post) => ({
       ...post,
@@ -18,74 +18,73 @@ export async function GET(request: NextRequest) {
     }));
 
   // Section 1: Flagship Achievement (Featured Post)
-  // Logic: Latest blog which is NOT a Customer Success Story
+  // Logic: Post with newsletterSection === 'flagship'
   const flagshipAchievement =
-    allPosts.find((post) => post.tag !== "Customer Success Story") ||
+    allPosts.find((post) => post.newsletterSection === "flagship") ||
     allPosts[0];
 
   // Section 3: COE Execution Updates (Static for now, matching user request)
   const coeUpdates = [
     {
-      title: "🚀 Interactive Demo Hub Expanded",
+      title: "🚀 Agentic Demo Platform Expanded",
       description:
-        "Added five new conversational agents: OrderFlow AI for order processing, ThinkStack for reasoning workflows, and SQLGenie for SQL generation. All agents now support live sales demonstrations with pre-loaded datasets.",
+        "Transformed the Interactive Demo Hub into a state-of-the-art Agentic Platform, featuring a sophisticated constellation of autonomous agents. This upgrade demonstrates the potential of next-generation cognitive architectures to drive enterprise value.",
       date: "Week of Jan 20, 2026",
     },
     {
-      title: "📰 AI Newsletter System Live",
+      title: "📰 Nexus Newsletter System Live",
       description:
-        "Phase 1 MVP deployed with manual content creation and SendGrid integration. Archive functionality allows browsing past editions. Phase 2 AI news aggregation module begins development next sprint.",
-      date: "Week of Jan 13, 2026",
-    },
-    {
-      title: "🛠️ MLOps Templates Development",
-      description:
-        "Building reusable Vertex AI Pipeline templates for common ML workflows. First template covers data preprocessing, model training, and deployment automation. Documentation and best practices guide in progress.",
-      date: "In Progress",
+        "Successfully operationalized the Nexus Newsletter Engine, an automated content ecosystem. This platform synthesizes internal engineering wins and global market signals into a unified intelligence briefing.",
+      date: "Week of Jan 30, 2026",
     },
   ];
 
   // Section 4: AI Industry Signals (Updated based on Jan 2026 search)
   // Focus: LLMs, Agents, and AgentOps
-  const industrySignals = [
+  const hardcodedSignals = [
     {
-      category: "AgentOps",
-      categoryColor: "bg-purple-50 text-purple-800",
-      title: "AgentOps Market to Reach $7.9B",
+      category: "Google Cloud",
+      categoryColor: "bg-teal-50 text-teal-800",
+      title: "Agentic Vision with Gemini 3 Flash",
       description:
-        "The market for AI agents is projected to grow rapidly in 2026, with a major shift towards 'AgentOps'—ensuring reliability, safety, and scalability of agentic workflows.",
-      source: "Global Market Estimates • Jan 28, 2026",
-      link: "#",
+        "Google introduces Gemini 3 Flash, designed for high-frequency agentic workflows with enhanced vision capabilities, enabling developers to build faster, more responsive multimodal agents.",
+      source: "Google Blog • Jan 29, 2026",
+      link: "https://blog.google/innovation-and-ai/technology/developers-tools/agentic-vision-gemini-3-flash/",
       style: {
-        bg: "#f3e8ff",
-        color: "#6b21a8",
+        bg: "#e0f2f1",
+        color: "#00695c",
       },
     },
     {
-      category: "AI Agents",
-      title: "Teradata Unveils Enterprise AgentStack",
+      category: "AI Startups",
+      title: "Viral 'Moltbot' AI Assistant Automates Your Digital Life",
       description:
-        "New toolkit accelerates building and deploying AI agents with a centralized AgentOps interface, marking a move towards production-ready enterprise agents.",
-      source: "Teradata News • Jan 27, 2026",
-      link: "#",
-      style: {
-        bg: "#f0fdf4",
-        color: "#15803d",
-      },
-    },
-    {
-      category: "LLMs",
-      title: "OpenAI Focuses on 'Practical Adoption'",
-      description:
-        "OpenAI's 2026 roadmap emphasizes practical enterprise adoption, enabling LLMs to act as semi-autonomous employees for tasks like coding and scheduling.",
-      source: "AI Forum • Jan 25, 2026",
-      link: "#",
+        "TechCrunch breaks down the rise of Moltbot (formerly Clawdbot), the personal AI agent that autonomously manages emails, scheduling, and apps, now rebranding as it scales.",
+      source: "TechCrunch • Jan 27, 2026",
+      link: "https://techcrunch.com/2026/01/27/everything-you-need-to-know-about-viral-personal-ai-assistant-clawdbot-now-moltbot/",
       style: {
         bg: "#eff6ff",
         color: "#1e40af",
       },
     },
   ];
+
+  const blogSignals = allPosts
+    .filter((post) => post.newsletterSection === "industry-signals")
+    .map((post) => ({
+      category: post.tag || "Blog Update",
+      categoryColor: "bg-blue-50 text-blue-800",
+      title: post.title,
+      description: post.excerpt,
+      source: "Nexus Blog • " + new Date(post.publishedAt).toLocaleDateString(),
+      link: `${BASE_URL}/newsletter/${post.slug}`,
+      style: {
+        bg: "#eff6ff",
+        color: "#1e40af",
+      },
+    }));
+
+  const industrySignals = [...hardcodedSignals, ...blogSignals];
 
   const newsletterData = {
     date: new Date().toLocaleDateString("en-US", {
@@ -95,7 +94,7 @@ export async function GET(request: NextRequest) {
     }),
     issue: "#1", // Resetting issue number as per new template
     intro:
-      "Welcome to this month's AI Newsletter. This edition highlights our key COE initiatives, recent AI delivery wins, and key AI trends shaping the AI landscape.",
+      "Welcome to this month's Nexus (AI CoE) Newsletter. This edition highlights our key Nexus (AI CoE) initiatives, recent AI delivery wins, and key AI trends shaping the AI landscape.",
   };
 
   const html = `
@@ -104,7 +103,7 @@ export async function GET(request: NextRequest) {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AIML COE Newsletter</title>
+    <title>Nexus Newsletter</title>
   </head>
   <body
     style="
@@ -163,7 +162,7 @@ export async function GET(request: NextRequest) {
                         font-family: &quot;Plus Jakarta Sans&quot;, sans-serif;
                       "
                     >
-                      AI Center of Excellence
+                      Nexus
                     </h1>
                     <p
                       style="
@@ -441,7 +440,7 @@ export async function GET(request: NextRequest) {
                         font-family: &quot;Plus Jakarta Sans&quot;, sans-serif;
                       "
                     >
-                      📋 COE Execution Updates
+                      📋 Nexus (AI CoE) Execution Updates
                     </h3>
 
                     ${coeUpdates
@@ -653,10 +652,10 @@ export async function GET(request: NextRequest) {
                               "
                             >
                               Share your AI projects, insights, or success
-                              stories with the COE community
+                              stories with the Nexus (AI CoE) community
                             </p>
                             <a
-                              href="#"
+                              href="mailto:aiml_coe@onixnet.com"
                               style="
                                 display: inline-block;
                                 background-color: #ffffff;
@@ -699,7 +698,7 @@ export async function GET(request: NextRequest) {
                         font-family: &quot;Plus Jakarta Sans&quot;, sans-serif;
                       "
                     >
-                      AI Center of Excellence
+                      Nexus (AI CoE)
                     </p>
                     <p
                       style="
@@ -714,66 +713,6 @@ export async function GET(request: NextRequest) {
                     >
                       Driving innovation and excellence in Artificial
                       Intelligence and Machine Learning
-                    </p>
-                    <div style="margin-bottom: 20px">
-                      <a
-                        href="#"
-                        style="
-                          display: inline-block;
-                          margin: 0 10px;
-                          color: #146e96;
-                          text-decoration: none;
-                          font-size: 13px;
-                          font-weight: 500;
-                        "
-                        >LinkedIn</a
-                      >
-                      <span style="color: #cbd5e1; margin: 0 4px">•</span>
-                      <a
-                        href="#"
-                        style="
-                          display: inline-block;
-                          margin: 0 10px;
-                          color: #146e96;
-                          text-decoration: none;
-                          font-size: 13px;
-                          font-weight: 500;
-                        "
-                        >Twitter</a
-                      >
-                      <span style="color: #cbd5e1; margin: 0 4px">•</span>
-                      <a
-                        href="#"
-                        style="
-                          display: inline-block;
-                          margin: 0 10px;
-                          color: #146e96;
-                          text-decoration: none;
-                          font-size: 13px;
-                          font-weight: 500;
-                        "
-                        >Website</a
-                      >
-                    </div>
-                    <p
-                      style="
-                        margin: 0;
-                        color: #94a3b8;
-                        font-size: 12px;
-                        line-height: 1.6;
-                      "
-                    >
-                      <a
-                        href="#"
-                        style="color: #94a3b8; text-decoration: underline"
-                        >Unsubscribe</a
-                      >
-                      <span style="margin: 0 6px">•</span>
-                      <a
-                        href="#"
-                        style="color: #94a3b8; text-decoration: underline"
-                        >View in Browser</a
-                      >
                     </p>
                   </td>
                 </tr>
