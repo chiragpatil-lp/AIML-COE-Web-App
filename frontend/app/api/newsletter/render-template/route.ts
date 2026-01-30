@@ -1,15 +1,16 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getAllPosts, getFeaturedPosts } from "@/lib/newsletter/content";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   const allPosts = getAllPosts();
   const featuredPosts = getFeaturedPosts();
-  const BASE_URL =
-    process.env.NEXT_PUBLIC_APP_URL || "https://nexus.example.com";
+  
+  const BASE_URL = "https://aiml-coe-web-app-36231825761.us-central1.run.app";
 
   // Section 2: AI Delivery Wins (Customer Success Stories)
+  // Logic: Only blogs from Customer Success Stories (e.g., Staples and IPG Weber)
   const deliveryWins = allPosts
-    .filter((post) => post.tag !== "AI Trends")
+    .filter((post) => post.tag === "Customer Success Story")
     .slice(0, 5)
     .map((post) => ({
       ...post,
@@ -17,9 +18,8 @@ export async function GET() {
     }));
 
   // Section 1: Flagship Achievement (Featured Post)
-  // Prefer a post tagged 'Milestone' or just the first featured post
-  const flagshipAchievement =
-    featuredPosts.length > 0 ? featuredPosts[0] : allPosts[0];
+  // Logic: Latest blog which is NOT a Customer Success Story
+  const flagshipAchievement = allPosts.find((post) => post.tag !== "Customer Success Story") || allPosts[0];
 
   // Section 3: COE Execution Updates (Static for now, matching user request)
   const coeUpdates = [
@@ -43,27 +43,28 @@ export async function GET() {
     },
   ];
 
-  // Section 4: AI Industry Signals (Static for now, matching user request)
+  // Section 4: AI Industry Signals (Updated based on Jan 2026 search)
+  // Focus: LLMs, Agents, and AgentOps
   const industrySignals = [
     {
-      category: "LLMs",
-      categoryColor: "bg-blue-50 text-blue-800", // Tailwind classes for reference, mapped to inline styles below
-      title: "OpenAI Releases GPT-5 with Multimodal Reasoning",
+      category: "AgentOps",
+      categoryColor: "bg-purple-50 text-purple-800",
+      title: "AgentOps Market to Reach $7.9B",
       description:
-        "Latest model demonstrates significant improvements in complex reasoning tasks, combining text, image, and audio inputs seamlessly.",
-      source: "TechCrunch • Jan 24, 2026",
+        "The market for AI agents is projected to grow rapidly in 2026, with a major shift towards 'AgentOps'—ensuring reliability, safety, and scalability of agentic workflows.",
+      source: "Global Market Estimates • Jan 28, 2026",
       link: "#",
       style: {
-        bg: "#eff6ff",
-        color: "#1e40af",
+        bg: "#f3e8ff",
+        color: "#6b21a8",
       },
     },
     {
       category: "AI Agents",
-      title: "Google Vertex AI Adds Native Agent Builder",
+      title: "Teradata Unveils Enterprise AgentStack",
       description:
-        "New low-code platform enables rapid development of AI agents with built-in tool integration and monitoring capabilities for enterprise use cases.",
-      source: "Google Cloud Blog • Jan 22, 2026",
+        "New toolkit accelerates building and deploying AI agents with a centralized AgentOps interface, marking a move towards production-ready enterprise agents.",
+      source: "Teradata News • Jan 27, 2026",
       link: "#",
       style: {
         bg: "#f0fdf4",
@@ -71,15 +72,15 @@ export async function GET() {
       },
     },
     {
-      category: "MLOps",
-      title: "Databricks Launches Unified ML Pipeline Framework",
+      category: "LLMs",
+      title: "OpenAI Focuses on 'Practical Adoption'",
       description:
-        "New framework streamlines ML workflows from data preparation to production deployment with automated versioning and lineage tracking.",
-      source: "VentureBeat • Jan 20, 2026",
+        "OpenAI's 2026 roadmap emphasizes practical enterprise adoption, enabling LLMs to act as semi-autonomous employees for tasks like coding and scheduling.",
+      source: "AI Forum • Jan 25, 2026",
       link: "#",
       style: {
-        bg: "#fef3c7",
-        color: "#92400e",
+        bg: "#eff6ff",
+        color: "#1e40af",
       },
     },
   ];
